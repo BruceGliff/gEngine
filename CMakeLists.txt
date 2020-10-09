@@ -17,3 +17,6 @@ add_subdirectory(external/glfw)
 
 #link glfw library
 target_link_libraries(${PROGECT_NAME} glfw)
+
+add_subdirectory(external/glad)
+target_link_libraries(${PROGECT_NAME} glad)
