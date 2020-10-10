@@ -5,7 +5,11 @@ project(${PROGECT_NAME})
 
 
 
-add_executable(${PROGECT_NAME} src/main.cc)
+add_executable(${PROGECT_NAME} 
+	src/main.cc
+	src/Renderer/ShaderProgram.cc
+	src/Renderer/ShaderProgram.h
+)
 
 #template from GLFW Documentation
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
