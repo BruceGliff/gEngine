@@ -7,6 +7,45 @@ int g_sizeX = 640;
 int g_sizeY = 480;
 
 
+//Easiest way of Vertex implimentation
+GLfloat points[] =
+{
+    0.5f,   0.f,    0.f,
+    0.0f,   0.5f,   0.f,
+    0.f,    0.f,    0.f
+};
+GLfloat colors[] = 
+{
+    1.f,    0.f,    0.f,
+    0.0f,   1.f,    0.f,
+    0.f,    0.f,    1.f
+};
+
+// VS
+// color for FS for interpoliation. 
+// gl_position must be normalize, but we already have it in propreate form
+// gl_position is a vec4 with additional perspective value
+char const* vertex_shader =
+"#version 460\n"
+"layout(location = 0) in vec3 vertex_position;"
+"layout(location = 1) in vec3 vertex_color;"
+"out vec3 color;"
+"void main() {"
+"    color = vertex_color;"
+"    gl_Position = vec4(vertex_position, 1.0);"
+"}";
+// FS
+// color for each fragment(mb pixel) 
+// color actually is a vec4 with additioanly alpha channel
+char const* fragment_shader =
+"#version 460\n"
+"in vec3 color;"
+"out vec4 frag_color;"
+"void main() {"
+"    frag_color = vec4(color, 1.0);"
+"}";
+// Now sheders have to pass in GPU
+
 /// Functions what overrides behavior
 // Override size changes
 void glfwWindowSizeCallback(GLFWwindow* window, int width, int height)
@@ -67,14 +106,75 @@ int main(void)
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL ver: " << glGetString(GL_VERSION) << std::endl;
 
+    // Fill bachground with color
+    glClearColor(0.f, 0.f, 0.f, 1.f);
 
-    glClearColor(0.f, 1.f, 0.f, 1.f);
+    // Create shader discription of shader
+    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+    // Load shader code
+    glShaderSource(vs, 1, &vertex_shader, nullptr);
+    // Compile shader
+    glCompileShader(vs);
+
+    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fs, 1, &fragment_shader, nullptr);
+    glCompileShader(fs);
+    
+    // When we have to attach these shaders to program and link them
+    // At sheders names should be same for linking stage
+    GLuint shader_program = glCreateProgram();
+    glAttachShader(shader_program, vs);
+    glAttachShader(shader_program, fs);
+    glLinkProgram(shader_program);
+
+    // Now sheders unecessary and we can delete them
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+
+    // VBO = Vertex buffer object
+    // We have to pass data to the GPU
+    GLuint point_vbo = 0;
+    // Generate 1 vbo
+    glGenBuffers(1, &point_vbo);
+    // Now we have to bind to make it current buffer
+    glBindBuffer(GL_ARRAY_BUFFER, point_vbo);
+    // Finnaly load data to GPU. This command executes for current buffer (prev step)
+    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+
+    GLuint color_vbo = 0;
+    glGenBuffers(1, &color_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, color_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+
+    // To bind our variables and variables on GPU we should create VAO = vertex array object
+    GLuint vao = 0;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    // By default layaout disabled, so we have to enable it
+    glEnableVertexAttribArray(0); // location = 0 <-> position
+    // Should make point_vbo current buffer as we change it to color_vbo. CURRENT IS ONLY ONE
+    glBindBuffer(GL_ARRAY_BUFFER, point_vbo);
+    // Bind data. location, vec3 for 3 vertexies(3 = vertexies), 
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    // For color
+    glEnableVertexAttribArray(1); // location = 1 <-> color
+    glBindBuffer(GL_ARRAY_BUFFER, color_vbo);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    // Now we are ready for drawing
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Drawing
+        glUseProgram(shader_program);
+        // Now we connect vao to draw. it is already current, but it can be different for different obejcts in future
+        glBindVertexArray(vao);
+        // Draw current VAO
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
