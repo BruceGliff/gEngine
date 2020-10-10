@@ -28,7 +28,7 @@ namespace Renderer
 		// Check if Program in the appropriate state
 		bool IsCompiled() const noexcept;
 		// Drawing
-		bool use() const noexcept;
+		void Use() const noexcept;
 	};
 
 };

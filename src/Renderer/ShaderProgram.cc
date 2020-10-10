@@ -42,6 +42,8 @@ Renderer::ShaderProgram& Renderer::ShaderProgram::operator=(ShaderProgram&& sp) 
 {
     std::swap(sp.id, id);
     std::swap(sp.isCompiled, isCompiled);
+
+    return *this;
 }
 
 Renderer::ShaderProgram::~ShaderProgram()
@@ -55,10 +57,9 @@ bool Renderer::ShaderProgram::IsCompiled() const noexcept
     return isCompiled;
 }
 
-bool Renderer::ShaderProgram::use() const noexcept
+void Renderer::ShaderProgram::Use() const noexcept
 {
     glUseProgram(id);
-    return true;
 }
 
 Renderer::ShaderProgram::ShaderProgram(std::string const& vertex_shader, std::string const& fragment_shader) noexcept

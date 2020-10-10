@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "Renderer/ShaderProgram.h"
+
 int g_sizeX = 640;
 int g_sizeY = 480;
 
@@ -109,27 +111,14 @@ int main(void)
     // Fill bachground with color
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
-    // Create shader discription of shader
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    // Load shader code
-    glShaderSource(vs, 1, &vertex_shader, nullptr);
-    // Compile shader
-    glCompileShader(vs);
-
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs, 1, &fragment_shader, nullptr);
-    glCompileShader(fs);
-    
-    // When we have to attach these shaders to program and link them
-    // At sheders names should be same for linking stage
-    GLuint shader_program = glCreateProgram();
-    glAttachShader(shader_program, vs);
-    glAttachShader(shader_program, fs);
-    glLinkProgram(shader_program);
-
-    // Now sheders unecessary and we can delete them
-    glDeleteShader(vs);
-    glDeleteShader(fs);
+    // Shader program
+    Renderer::ShaderProgram shaderProgram{ std::string{vertex_shader}, std::string{fragment_shader} };
+    if (!shaderProgram.IsCompiled())
+    {
+        std::cerr << "ERROR:: Creating Shader program in main\n" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
 
     // VBO = Vertex buffer object
     // We have to pass data to the GPU
@@ -170,7 +159,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Drawing
-        glUseProgram(shader_program);
+        shaderProgram.Use();
         // Now we connect vao to draw. it is already current, but it can be different for different obejcts in future
         glBindVertexArray(vao);
         // Draw current VAO
