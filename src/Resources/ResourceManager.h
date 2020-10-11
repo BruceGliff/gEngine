@@ -17,6 +17,7 @@ namespace Resources
 		typedef std::map<std::string const, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
 		ShaderProgramsMap shaderPrograms;
 
+		// Path to executable file
 		std::string const path;
 
 		// Calculate path of the res/ directory. Throws run_time exception if errors occured
@@ -40,5 +41,8 @@ namespace Resources
 																std::string const & fragmentPath);
 		// Return ShaderProgram by name or nullptr if it did not find (map<>.find() may throw an exception?>
 		std::shared_ptr <Renderer::ShaderProgram> getShaderProgram(std::string const& shaderProgramName) const noexcept;
+
+		// Load texture
+		void loadTexture(std::string const& textureName, std::string const & relevantPath) const noexcept;
 	};
 }

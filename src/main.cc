@@ -102,6 +102,7 @@ int main(int argc, char * argv[])
             glfwTerminate();
             return -1;
         }
+        resMng.loadTexture("DefaultTexture", "res/textures/justForTest.jpg");
 
         // VBO = Vertex buffer object
         // We have to pass data to the GPU

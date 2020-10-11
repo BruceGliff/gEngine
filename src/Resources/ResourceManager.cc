@@ -6,6 +6,9 @@
 #include <fstream>
 #include <exception>
 
+#define STBI_ONLY_JPEG
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 std::string Resources::ResourcesManager::computePath(std::string const & path) const
 {
@@ -35,10 +38,7 @@ std::string Resources::ResourcesManager::getFile(std::string const& relativePath
 }
 
 Resources::ResourcesManager::ResourcesManager(std::string const& execPath) : path{computePath(execPath)}
-{
-
-
-}
+{}
 
 std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::loadShaders(std::string const& shaderName, std::string const& vertexPath, std::string const& fragmentPath)
 {
@@ -59,4 +59,23 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::getShaderP
 
     std::cerr << "ERROR:: run-time:\n" << "No shader program with name: " << shaderName << std::endl;
     return nullptr;
+}
+
+void Resources::ResourcesManager::loadTexture(std::string const& textureName, std::string const& relevantPath) const noexcept
+{
+    int channels = 0;
+    int width = 0;
+    int height = 0;
+
+    // Load texture upside down
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* rawCode = stbi_load(std::string{ path + '/' + relevantPath }.c_str(), &width, &height, &channels, 0);
+
+    if (!rawCode)
+    {
+        std::cerr << "ERROR:: run-time:\n" << "Can not load texture: " << relevantPath;
+        return;
+    }
+
+    stbi_image_free(rawCode);
 }
