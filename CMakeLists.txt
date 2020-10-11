@@ -7,8 +7,12 @@ add_executable(${PROGECT_NAME}
 	src/main.cc
 	src/Renderer/ShaderProgram.cc
 	src/Renderer/ShaderProgram.h
+	src/Renderer/TextureGL.cc
+	src/Renderer/TextureGL.h
 	src/Resources/ResourceManager.cc
 	src/Resources/ResourceManager.h
+	src/Resources/Texture_base.cc
+	src/Resources/Texture_base.h
 	src/Resources/stb_image.h
 )
 

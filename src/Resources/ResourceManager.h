@@ -8,14 +8,20 @@
 namespace Renderer
 {
 	class ShaderProgram;
+	class TextureGL;
 }
 
 namespace Resources
 {
 	class ResourcesManager final
 	{
+		// Map of the saders programs
 		typedef std::map<std::string const, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
 		ShaderProgramsMap shaderPrograms;
+
+		// Map of the textures
+		typedef std::map<std::string const, std::shared_ptr<Renderer::TextureGL>> TexturesMap;
+		TexturesMap textures;
 
 		// Path to executable file
 		std::string const path;
@@ -43,6 +49,8 @@ namespace Resources
 		std::shared_ptr <Renderer::ShaderProgram> getShaderProgram(std::string const& shaderProgramName) const noexcept;
 
 		// Load texture
-		void loadTexture(std::string const& textureName, std::string const & relevantPath) const noexcept;
+		std::shared_ptr <Renderer::TextureGL> loadTexture(std::string const& textureName, std::string const & relevantPath);
+		// Return texture by name or nullptr if it did ont find
+		std::shared_ptr <Renderer::TextureGL> getTexture(std::string const& textureName) const noexcept;
 	};
 }

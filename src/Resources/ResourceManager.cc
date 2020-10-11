@@ -1,14 +1,11 @@
 #include "ResourceManager.h"
 #include "../Renderer/ShaderProgram.h"
+#include "../Renderer/TextureGL.h"
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <exception>
-
-#define STBI_ONLY_JPEG
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 std::string Resources::ResourcesManager::computePath(std::string const & path) const
 {
@@ -61,21 +58,21 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::getShaderP
     return nullptr;
 }
 
-void Resources::ResourcesManager::loadTexture(std::string const& textureName, std::string const& relevantPath) const noexcept
+std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::string const& textureName, std::string const& relevantPath)
 {
-    int channels = 0;
-    int width = 0;
-    int height = 0;
+    return textures.emplace(textureName, std::make_shared<Renderer::TextureGL>(path + '/' + relevantPath)).first->second;
+}
 
-    // Load texture upside down
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* rawCode = stbi_load(std::string{ path + '/' + relevantPath }.c_str(), &width, &height, &channels, 0);
-
-    if (!rawCode)
+std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std::string const& textureName) const noexcept
+{
+    TexturesMap::const_iterator it = textures.find(textureName);
+    if (it != textures.end())
     {
-        std::cerr << "ERROR:: run-time:\n" << "Can not load texture: " << relevantPath;
-        return;
+        return it->second;
     }
 
-    stbi_image_free(rawCode);
+    std::cerr << "ERROR:: run-time:\n" << "No shader program with name: " << textureName << std::endl;
+    return nullptr;
 }
+
+
