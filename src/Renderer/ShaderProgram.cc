@@ -62,6 +62,12 @@ void Renderer::ShaderProgram::Use() const noexcept
     glUseProgram(id);
 }
 
+void Renderer::ShaderProgram::SetID(std::string const& name, GLint const value)
+{
+    // By id and name get location of uniform variable
+    glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+}
+
 Renderer::ShaderProgram::ShaderProgram(std::string const& vertex_shader, std::string const& fragment_shader) noexcept
 {
     GLuint vsID = 0;

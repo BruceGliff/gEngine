@@ -10,10 +10,13 @@ Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLe
 		break;
 	case 3:
 		tex_mode = GL_RGB;
+		break;
 	}
 
 
 	glGenTextures(1, &ID);
+	// set ap an active texture at the first slot (0 actually) 
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ID);
 	glTexImage2D(GL_TEXTURE_2D, 0, tex_mode, width, height, 0, tex_mode, GL_UNSIGNED_BYTE, data);
 

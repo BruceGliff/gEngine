@@ -4,6 +4,8 @@
 #include <iostream>
 #include <exception>
 
+#include <fstream>
+
 #define STBI_ONLY_JPEG
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -20,6 +22,11 @@ Resources::Texture_base::Texture_base(std::string const& path) noexcept
         data = whiteErrorTexture;
         isError = true;
     }
+
+    std::ofstream ppm{ "C:\\Code\\gEngine\\out.ppm" };
+    ppm << "P6\n" << width << " " << height << "\n255\n";
+    ppm.write(reinterpret_cast<char const*>(data), height * width * channels);
+    
 }
 
 Resources::Texture_base::~Texture_base()

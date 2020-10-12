@@ -37,6 +37,7 @@ std::string Resources::ResourcesManager::getFile(std::string const& relativePath
 Resources::ResourcesManager::ResourcesManager(std::string const& execPath) : path{computePath(execPath)}
 {}
 
+
 std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::loadShaders(std::string const& shaderName, std::string const& vertexPath, std::string const& fragmentPath)
 {
     std::string const vertexCode{ getFile(vertexPath) };

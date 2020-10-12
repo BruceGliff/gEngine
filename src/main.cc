@@ -5,6 +5,7 @@
 
 #include "Renderer/ShaderProgram.h"
 #include "Resources/ResourceManager.h"
+#include "Renderer/TextureGL.h"
 
 int g_sizeX = 640;
 int g_sizeY = 480;
@@ -22,6 +23,12 @@ GLfloat colors[] =
     1.f,    0.f,    0.f,
     0.0f,   1.f,    0.f,
     0.f,    0.f,    1.f
+};
+GLfloat textures[] =
+{
+    1.f,    0.f,
+    0.0f,   1.f,
+    0.f,    0.f
 };
 
 // VS
@@ -102,7 +109,7 @@ int main(int argc, char * argv[])
             glfwTerminate();
             return -1;
         }
-        resMng.loadTexture("DefaultTexture", "res/textures/justForTest.jpg");
+        auto texture = resMng.loadTexture("DefaultTexture", "res/textures/justForTest.jpg");
 
         // VBO = Vertex buffer object
         // We have to pass data to the GPU
@@ -119,6 +126,11 @@ int main(int argc, char * argv[])
         glBindBuffer(GL_ARRAY_BUFFER, color_vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 
+        GLuint texture_vbo = 0;
+        glGenBuffers(1, &texture_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, texture_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(textures), textures, GL_STATIC_DRAW);
+
         // To bind our variables and variables on GPU we should create VAO = vertex array object
         GLuint vao = 0;
         glGenVertexArrays(1, &vao);
@@ -130,12 +142,21 @@ int main(int argc, char * argv[])
         glBindBuffer(GL_ARRAY_BUFFER, point_vbo);
         // Bind data. location, vec3 for 3 vertexies(3 = vertexies), 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-        // For color
+
         glEnableVertexAttribArray(1); // location = 1 <-> color
         glBindBuffer(GL_ARRAY_BUFFER, color_vbo);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-        // Now we are ready for drawing
 
+        glEnableVertexAttribArray(2); // location = 2 <-> texture
+        glBindBuffer(GL_ARRAY_BUFFER, texture_vbo);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+        // make shaderProgramm active to bind texture at shader and texture at RAM
+        pShaderProgram->Use();
+        pShaderProgram->SetID("tex", 0);
+
+
+        // Now we are ready for drawing
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
@@ -146,6 +167,8 @@ int main(int argc, char * argv[])
             pShaderProgram->Use();
             // Now we connect vao to draw. it is already current, but it can be different for different obejcts in future
             glBindVertexArray(vao);
+            // Make texture to draw active
+            texture->bind();
             // Draw current VAO
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
