@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
 
 #include <iostream>
 
@@ -7,16 +8,14 @@
 #include "Resources/ResourceManager.h"
 #include "Renderer/TextureGL.h"
 
-int g_sizeX = 640;
-int g_sizeY = 480;
-
+#include "Resources/window/window_base.h"
 
 //Easiest way of Vertex implimentation
 GLfloat points[] =
 {
-    0.5f,   0.f,    0.f,
-    0.0f,   0.5f,   0.f,
-    0.f,    0.f,    0.f
+    -1.f,   -1.f,    0.f,
+     0.f,    1.f,    0.f,
+     1.f,   -1.f,    0.f
 };
 GLfloat colors[] = 
 {
@@ -24,11 +23,11 @@ GLfloat colors[] =
     0.0f,   1.f,    0.f,
     0.f,    0.f,    1.f
 };
-GLfloat textures[] =
+GLfloat texture_cords[] =
 {
-    1.f,    0.f,
-    0.0f,   1.f,
-    0.f,    0.f
+    0.f,    0.f,
+    0.5f,   1.f,
+    1.f,    0.f
 };
 
 // VS
@@ -37,54 +36,9 @@ char const* vertex_shader_PATH = "res/shaders/vertex.glsl";
 char const* fragment_shader_PATH = "res/shaders/fragment.glsl";
 
 
-/// Functions what overrides behavior
-// Override size changes
-void glfwWindowSizeCallback(GLFWwindow* window, int width, int height)
-{
-    g_sizeX = width;
-    g_sizeY = height;
-    glViewport(0, 0, g_sizeX, g_sizeY);
-}
-// Override keyboard events
-void glfwKeyCallback(GLFWwindow* window, int key, int scanmode, int action, int mode)
-{
-    // Close window due to escape
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        // Set up window property what is has to be closed
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-}
-
 int main(int argc, char * argv[])
-{
-    /* Initialize the library */
-    if (!glfwInit())
-    {
-        std::cerr << "glfl initialization failed!" << std::endl;
-        return -1;
-    }
-        
-    /* Setup version of OpenGL. If not compared then terminated */
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow* window = glfwCreateWindow(640, 480, "gEngine", nullptr, nullptr);
-    if (!window)
-    {
-        std::cerr << "glfl window creating failed!" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-
-    /* Set up my own function */
-    glfwSetWindowSizeCallback(window, glfwWindowSizeCallback);
-    glfwSetKeyCallback(window, glfwKeyCallback);
+{        
+    Resources::glWindows win{};
 
     /* Initialize glad */
     if (!gladLoadGL())
@@ -109,7 +63,8 @@ int main(int argc, char * argv[])
             glfwTerminate();
             return -1;
         }
-        auto texture = resMng.loadTexture("DefaultTexture", "res/textures/justForTest.jpg");
+
+        auto texture = resMng.loadTexture("DefaultTexture", "res/textures/earth1.png");
 
         // VBO = Vertex buffer object
         // We have to pass data to the GPU
@@ -129,7 +84,7 @@ int main(int argc, char * argv[])
         GLuint texture_vbo = 0;
         glGenBuffers(1, &texture_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, texture_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(textures), textures, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(texture_cords), texture_cords, GL_STATIC_DRAW);
 
         // To bind our variables and variables on GPU we should create VAO = vertex array object
         GLuint vao = 0;
@@ -151,14 +106,12 @@ int main(int argc, char * argv[])
         glBindBuffer(GL_ARRAY_BUFFER, texture_vbo);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-        // make shaderProgramm active to bind texture at shader and texture at RAM
-        pShaderProgram->Use();
         pShaderProgram->SetID("tex", 0);
 
 
         // Now we are ready for drawing
         /* Loop until the user closes the window */
-        while (!glfwWindowShouldClose(window))
+        while (!win)
         {
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
@@ -172,14 +125,9 @@ int main(int argc, char * argv[])
             // Draw current VAO
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
-            /* Swap front and back buffers */
-            glfwSwapBuffers(window);
-
-            /* Poll for and process events */
-            glfwPollEvents();
+            win.Draw();
         }
     } // ResourceManager is terminated
 
-    glfwTerminate();
     return 0;
 }

@@ -11,9 +11,11 @@ add_executable(${PROGECT_NAME}
 	src/Renderer/TextureGL.h
 	src/Resources/ResourceManager.cc
 	src/Resources/ResourceManager.h
-	src/Resources/Texture_base.cc
-	src/Resources/Texture_base.h
-	src/Resources/stb_image.h
+	src/Resources/texture/Texture_base.cc
+	src/Resources/texture/Texture_base.h
+	src/Resources/texture/stb_image.h
+	src/Resources/window/window_base.cc
+	src/Resources/window/window_base.h
 )
 
 target_compile_features(${PROGECT_NAME} PUBLIC cxx_std_17)
@@ -31,6 +33,8 @@ target_link_libraries(${PROGECT_NAME} glfw)
 
 add_subdirectory(external/glad)
 target_link_libraries(${PROGECT_NAME} glad)
+
+include_directories(external/glm)
 
 # to put executable file at specific folder
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)

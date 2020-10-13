@@ -11,8 +11,10 @@ Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLe
 	case 3:
 		tex_mode = GL_RGB;
 		break;
+	default:
+		tex_mode = GL_RGB;
+		break;
 	}
-
 
 	glGenTextures(1, &ID);
 	// set ap an active texture at the first slot (0 actually) 
@@ -20,10 +22,11 @@ Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLe
 	glBindTexture(GL_TEXTURE_2D, ID);
 	glTexImage2D(GL_TEXTURE_2D, 0, tex_mode, width, height, 0, tex_mode, GL_UNSIGNED_BYTE, data);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// Good manners to disable active texture
 	glBindTexture(GL_TEXTURE_2D, 0);
