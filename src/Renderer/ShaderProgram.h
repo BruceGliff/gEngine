@@ -1,6 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <string>
+#include <glm/mat4x4.hpp>
 
 namespace Renderer
 {
@@ -32,6 +33,9 @@ namespace Renderer
 		// set an id fo texture for uniform variable in fragment shader "tex". Also text is a name\
 			value is a slot value at shader program. if there 1 texture, then value 0, if there if second - then 1 ... 
 		void SetID(std::string const& name, GLint const value);
+
+		// load transform matrix
+		void loadMatrix(std::string const& name, glm::mat4 const& mat) const noexcept;
 	};
 
 };

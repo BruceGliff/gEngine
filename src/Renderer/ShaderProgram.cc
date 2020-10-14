@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <utility>
+#include <glm/gtc/type_ptr.hpp>
 
 bool Renderer::ShaderProgram::CreateShader(std::string const& source, GLenum const& shader_type, GLuint& out_shaderID) const noexcept
 {
@@ -64,13 +65,14 @@ void Renderer::ShaderProgram::Use() const noexcept
 
 void Renderer::ShaderProgram::SetID(std::string const& name, GLint const value)
 {
-    // bind
-    Use();
     // By id and name get location of uniform variable
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);
-    
-    // unbind
-    glUseProgram(0);
+}
+
+void Renderer::ShaderProgram::loadMatrix(std::string const& name, glm::mat4 const& mat) const noexcept
+{
+    // By id and name get location of uniform variable
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 Renderer::ShaderProgram::ShaderProgram(std::string const& vertex_shader, std::string const& fragment_shader) noexcept

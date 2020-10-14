@@ -12,7 +12,7 @@ namespace global
 }
 
 
-Resources::glWindows::glWindows() : glWindows(1000, 800, "gEngine")
+Resources::glWindows::glWindows() : glWindows(640, 480, "gEngine")
 {
 }
 

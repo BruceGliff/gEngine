@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
 
@@ -8,14 +9,16 @@
 #include "Resources/ResourceManager.h"
 #include "Renderer/TextureGL.h"
 
+// This is should be at resource manager
 #include "Resources/window/window_base.h"
 
 //Easiest way of Vertex implimentation
+// Vertex now has global coordinates
 GLfloat points[] =
 {
-    -1.f,   -1.f,    0.f,
-     0.f,    1.f,    0.f,
-     1.f,   -1.f,    0.f
+    -200.f, -200.f, 0.0f,
+     0.0f,  200.f, 0.0f,
+     200.f, -200.f, 0.0f
 };
 GLfloat colors[] = 
 {
@@ -106,8 +109,21 @@ int main(int argc, char * argv[])
         glBindBuffer(GL_ARRAY_BUFFER, texture_vbo);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+        // To activate shader program
+        pShaderProgram->Use();
         pShaderProgram->SetID("tex", 0);
 
+        //Transformation
+        glm::mat4 modelMatrix = glm::mat4(1.f);
+        modelMatrix = glm::translate(modelMatrix, glm::vec3{ 320.f, 240.f, 0.f }); // to change from local to world position
+        // view matrix is single matrix as we dont have camera
+        // from view space to clip space should be ortographic matrix(or pesrpective for 3D)
+        // 1000 and 800 is the screen size, but there is just temporary variables
+        glm::mat4 projectionMatrix{ glm::ortho(0.f, 640.f, 0.f, 480.f, -100.f, 100.f) };
+        // Now we should pass these matrix to uniform shader variable
+
+        // We assume that camera don't move during the game, so we pass it once
+        pShaderProgram->loadMatrix("projectionMatrix", projectionMatrix);
 
         // Now we are ready for drawing
         /* Loop until the user closes the window */
@@ -123,6 +139,9 @@ int main(int argc, char * argv[])
             // Make texture to draw active
             texture->bind();
             // Draw current VAO
+
+            // Tranformation of the object occures every frame
+            pShaderProgram->loadMatrix("modelMatrix", modelMatrix);
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
             win.Draw();
