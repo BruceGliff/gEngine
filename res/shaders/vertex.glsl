@@ -6,12 +6,13 @@ layout(location = 2) in vec2 texture_coord_noIntrop;
 out vec3 color;
 out vec2 tex_coord;
 
-uniform mat4 modelMatrix;
-uniform mat4 projectionMatrix;
+//uniform mat4 modelMatrix;
+//uniform mat4 projectionMatrix;
 
 void main()
 {
    color = vertex_color;
    tex_coord = texture_coord_noIntrop;
-   gl_Position =  projectionMatrix * modelMatrix * vec4(vertex_position, 1.0);
+   //gl_Position =  projectionMatrix * modelMatrix * vec4(vertex_position, 1.0);
+   gl_Position = vec4(vertex_position, 1.0);
 }

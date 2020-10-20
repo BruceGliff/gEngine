@@ -33,6 +33,20 @@ GLfloat texture_cords[] =
     1.f,    0.f
 };
 
+GLfloat verteces[] =
+{
+    // position          // color          // texture
+    -1.f, -1.f,  0.f,    0.f, 1.f, 0.f,    0.f, 0.f,
+    -1.f,  1.f,  0.f,    1.f, 0.f, 0.f,    0.f, 1.f,
+     1.f,  1.f,  0.f,    0.f, 1.f, 0.f,    1.f, 1.f,
+     1.f, -1.f,  0.f,    0.f, 0.f, 1.f,    1.f, 0.f
+};
+unsigned int indices[] =
+{
+    0, 2, 3,
+    0, 1, 2
+};
+
 // VS
 char const* vertex_shader_PATH = "res/shaders/vertex.glsl";
 // FS
@@ -67,63 +81,37 @@ int main(int argc, char * argv[])
             return -1;
         }
 
-        auto texture = resMng.loadTexture("DefaultTexture", "res/textures/earth1.png");
+        auto texture = resMng.loadTexture("DefaultTexture", "res/textures/weed_pepe.jpg");
 
-        // VBO = Vertex buffer object
-        // We have to pass data to the GPU
-        GLuint point_vbo = 0;
-        // Generate 1 vbo
-        glGenBuffers(1, &point_vbo);
-        // Now we have to bind to make it current buffer
-        glBindBuffer(GL_ARRAY_BUFFER, point_vbo);
-        // Finnaly load data to GPU. This command executes for current buffer (prev step)
-        glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+        // Vertex array object .. all together: vertices and indices
+        unsigned int VAO = 0;
+        glGenVertexArrays(1, &VAO);
+        // Vertex buffer object .. vertices
+        unsigned int VBO = 0;
+        glGenBuffers(1, &VBO);
+        // Element buffer object .. indices
+        unsigned int EBO = 0;
+        glGenBuffers(1, &EBO);
+        
+        glBindVertexArray(VAO);
+        // copy our vertices array in a vertex buffer for OpenGL to use
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(verteces), verteces, GL_STATIC_DRAW);
+        // copy our index array in a element buffer for OpenGL to use
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        // then set the vertex attributes pointers
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+        glEnableVertexAttribArray(2);
 
-        GLuint color_vbo = 0;
-        glGenBuffers(1, &color_vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, color_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
-        GLuint texture_vbo = 0;
-        glGenBuffers(1, &texture_vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, texture_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(texture_cords), texture_cords, GL_STATIC_DRAW);
-
-        // To bind our variables and variables on GPU we should create VAO = vertex array object
-        GLuint vao = 0;
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-
-        // By default layaout disabled, so we have to enable it
-        glEnableVertexAttribArray(0); // location = 0 <-> position
-        // Should make point_vbo current buffer as we change it to color_vbo. CURRENT IS ONLY ONE
-        glBindBuffer(GL_ARRAY_BUFFER, point_vbo);
-        // Bind data. location, vec3 for 3 vertexies(3 = vertexies), 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-        glEnableVertexAttribArray(1); // location = 1 <-> color
-        glBindBuffer(GL_ARRAY_BUFFER, color_vbo);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-        glEnableVertexAttribArray(2); // location = 2 <-> texture
-        glBindBuffer(GL_ARRAY_BUFFER, texture_vbo);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
         // To activate shader program
         pShaderProgram->Use();
         pShaderProgram->SetID("tex", 0);
-
-        //Transformation
-        glm::mat4 modelMatrix = glm::mat4(1.f);
-        modelMatrix = glm::translate(modelMatrix, glm::vec3{ 320.f, 240.f, 0.f }); // to change from local to world position
-        // view matrix is single matrix as we dont have camera
-        // from view space to clip space should be ortographic matrix(or pesrpective for 3D)
-        // 1000 and 800 is the screen size, but there is just temporary variables
-        glm::mat4 projectionMatrix{ glm::ortho(0.f, 640.f, 0.f, 480.f, -100.f, 100.f) };
-        // Now we should pass these matrix to uniform shader variable
-
-        // We assume that camera don't move during the game, so we pass it once
-        pShaderProgram->loadMatrix("projectionMatrix", projectionMatrix);
 
         // Now we are ready for drawing
         /* Loop until the user closes the window */
@@ -135,14 +123,14 @@ int main(int argc, char * argv[])
             // Drawing
             pShaderProgram->Use();
             // Now we connect vao to draw. it is already current, but it can be different for different obejcts in future
-            glBindVertexArray(vao);
+            glBindVertexArray(VAO);
             // Make texture to draw active
             texture->bind();
             // Draw current VAO
 
             // Tranformation of the object occures every frame
-            pShaderProgram->loadMatrix("modelMatrix", modelMatrix);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+//            pShaderProgram->loadMatrix("modelMatrix", modelMatrix);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
             win.Draw();
         }
