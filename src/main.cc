@@ -71,6 +71,29 @@ char const* vertex_shader_PATH = "res/shaders/vertex.glsl";
 char const* fragment_shader_PATH = "res/shaders/fragment.glsl";
 
 
+// BAD THING
+glm::vec3 cameraPos{ 0.0f, 0.0f, 3.0f };
+glm::vec3 cameraFront{ 0.0f, 0.0f, -1.0f };
+glm::vec3 cameraUp{ 0.0f, 1.0f, 0.0f };
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+void processInput(GLFWwindow* window)
+{
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    const float cameraSpeed = 2.5f * deltaTime;
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
 int main(int argc, char * argv[])
 {        
     Resources::glWindows win{};
@@ -136,13 +159,6 @@ int main(int argc, char * argv[])
         // model matrix has all transformations (traslations, scaling, rotation) at the world space
         glm::mat4 model = glm::rotate(glm::mat4{ 1.f }, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
 
-        // it is camera
-        // note that we're translating the scene in the reverse direction of where we want to move
-        glm::vec3 cameraPosition{ 0.f, 0.f, 3.f };
-        glm::vec3 cameraTarget{ 0.f, 0.f, 0.f };
-        // glm::vec3 cameraDir{ cameraTarget - cameraPosition }; This will be calculated in LookAt
-        
-
         // to the viewport
         glm::mat4 projection{ glm::perspective(glm::radians(45.0f), 400.0f / 400.0f, 0.1f, 100.0f) };
 
@@ -162,7 +178,8 @@ int main(int argc, char * argv[])
         /* Loop until the user closes the window */
         glEnable(GL_DEPTH_TEST);
 
-        glm::vec3 cubePositions[] = {
+        glm::vec3 cubePositions[] = 
+        {
             glm::vec3(0.0f,  0.0f,  0.0f),
             glm::vec3(2.0f,  5.0f, -15.0f),
             glm::vec3(-1.5f, -2.2f, -2.5f),
@@ -176,6 +193,8 @@ int main(int argc, char * argv[])
         };
         while (!win)
         {
+            // TODO THIS IS BAD!!!!
+            processInput(win.ProcessInput());
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -187,21 +206,11 @@ int main(int argc, char * argv[])
             texture->bind();
 
             //Change camera position
-            float const radius = 10.f;
-            float const xCam = std::sin(glfwGetTime()) * radius;
-            float const zCam = std::cos(glfwGetTime()) * radius;
-            glm::mat4 const view{ glm::lookAt(glm::vec3{xCam, 0.f, zCam}, cameraTarget, glm::vec3{0.f, 1.f, 0.f}) };
+            glm::mat4 const view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
             pShaderProgram->loadMatrix("view", view);
 
             // Draw current VAO
-            {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, cubePositions[0]);
-                model = glm::rotate(model, (float)glfwGetTime(), glm::vec3{ 0.f, 1.f, 0.f });
-                pShaderProgram->loadMatrix("model", model);
-            }
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-            for (unsigned int i = 1; i < 10; ++i)
+            for (unsigned int i = 0; i < 10; ++i)
             {
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, cubePositions[i]);

@@ -49,6 +49,10 @@ namespace Resources
 		// draw
 		void Draw() const noexcept;
 
+		// TODO THIS IS WRONG WAY TO DO IT!!!!
+		// Return key which has been activated
+		GLFWwindow* ProcessInput() const noexcept;
+
 
 
 	private:

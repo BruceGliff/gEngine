@@ -52,6 +52,11 @@ void Resources::glWindows::Draw() const noexcept
     glfwPollEvents();
 }
 
+GLFWwindow * Resources::glWindows::ProcessInput() const noexcept
+{
+    return pWindow;
+}
+
 void Resources::glWindows::glfwWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
     global::g_x = width;
