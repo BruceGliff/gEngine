@@ -12,7 +12,7 @@ namespace global
 }
 
 
-Resources::glWindows::glWindows() : glWindows(400, 400, "weed_pepe")
+Resources::glWindows::glWindows() : glWindows(1600, 900, "weed_pepe")
 {
 }
 

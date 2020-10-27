@@ -72,9 +72,19 @@ char const* fragment_shader_PATH = "res/shaders/fragment.glsl";
 
 
 // BAD THING
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 glm::vec3 cameraPos{ 0.0f, 0.0f, 3.0f };
 glm::vec3 cameraFront{ 0.0f, 0.0f, -1.0f };
 glm::vec3 cameraUp{ 0.0f, 1.0f, 0.0f };
+// mouse
+bool firstMouse = true;
+float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+float pitch = 0.0f;
+float lastX = 800.0f / 2.0;
+float lastY = 600.0 / 2.0;
+float fov = 45.0f;
+// timing
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 void processInput(GLFWwindow* window)
@@ -97,6 +107,8 @@ void processInput(GLFWwindow* window)
 int main(int argc, char * argv[])
 {        
     Resources::glWindows win{};
+    glfwSetCursorPosCallback(win.ProcessInput(), mouse_callback);
+    glfwSetScrollCallback(win.ProcessInput(), scroll_callback);
 
     /* Initialize glad */
     if (!gladLoadGL())
@@ -159,9 +171,6 @@ int main(int argc, char * argv[])
         // model matrix has all transformations (traslations, scaling, rotation) at the world space
         glm::mat4 model = glm::rotate(glm::mat4{ 1.f }, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
 
-        // to the viewport
-        glm::mat4 projection{ glm::perspective(glm::radians(45.0f), 400.0f / 400.0f, 0.1f, 100.0f) };
-
        
 // ***********************************************************************************
 
@@ -169,10 +178,6 @@ int main(int argc, char * argv[])
         // To activate shader program
         pShaderProgram->Use();
         pShaderProgram->SetID("tex", 0);
-
-        // belive what projection and view does not change
-        pShaderProgram->loadMatrix("projection", projection);
-
 
         // Now we are ready for drawing
         /* Loop until the user closes the window */
@@ -209,6 +214,10 @@ int main(int argc, char * argv[])
             glm::mat4 const view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
             pShaderProgram->loadMatrix("view", view);
 
+            // projection
+            glm::mat4 projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
+            pShaderProgram->loadMatrix("projection", projection);
+
             // Draw current VAO
             for (unsigned int i = 0; i < 10; ++i)
             {
@@ -226,4 +235,52 @@ int main(int argc, char * argv[])
     } // ResourceManager is terminated
 
     return 0;
+}
+
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.4f; // change this value to your liking
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(front);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    fov -= (float)yoffset;
+    if (fov < 1.0f)
+        fov = 1.0f;
+    if (fov > 45.0f)
+        fov = 45.0f;
 }
