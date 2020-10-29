@@ -1,4 +1,5 @@
 #include "player_wrap.h"
+#include "components/camera.h"
 #include <iostream>
 #include <exception>
 
@@ -9,13 +10,16 @@ void Actor::player_wrap::construct()
 {
 	static int counter = 0;
 	if (!counter)
-		curr_actor = new actor_base{};
+	{
+		curr_actor = new actor{};
+		curr_actor->attach_component("camera", new Component::camera{});
+		++counter;
+	}
 	else
-		std::cout << "WARN:: creating new actor" << std::endl;
-	++counter;
+		std::cout << "WARN:: attempt to create new actor" << std::endl;
 }
 
-Actor::actor_base& Actor::player_wrap::GetPlayer()
+Actor::actor& Actor::player_wrap::GetPlayer()
 {
 	if (!curr_actor)
 	{
@@ -25,7 +29,7 @@ Actor::actor_base& Actor::player_wrap::GetPlayer()
 	return *curr_actor;
 }
 
-Actor::actor_base const& Actor::player_wrap::GetPlayer() const
+Actor::actor const& Actor::player_wrap::GetPlayer() const
 {
 	if (!curr_actor)
 	{

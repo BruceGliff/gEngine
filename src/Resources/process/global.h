@@ -5,5 +5,5 @@ namespace GLOBAL
 {
 	void BeginPlay();
 
-	Actor::actor_base& GetPlayer();
+	Actor::actor& GetPlayer();
 }

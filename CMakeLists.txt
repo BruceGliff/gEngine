@@ -26,6 +26,10 @@ add_executable(${PROGECT_NAME}
 	src/Resources/actor/actor.h
 	src/Resources/process/global.cc
 	src/Resources/process/global.h
+	src/Resources/actor/components/component_base.cc
+	src/Resources/actor/components/component_base.h
+	src/Resources/actor/components/camera.cc
+	src/Resources/actor/components/camera.h
 
 )
 

@@ -1,6 +1,7 @@
 #include "window_base.h"
 
 #include "../process/global.h"
+#include "../actor/components/camera.h"
 
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -64,19 +65,20 @@ bool Resources::glWindows::ProcessInput() const noexcept
     lastFrame = currentFrame;
     const float cameraSpeed = 2.5f * deltaTime;
 
-    Actor::actor_base& player = GLOBAL::GetPlayer();
-    auto& cameraPos = player.cameraPos;
-    auto& cameraFront = player.cameraFront;
-    auto& cameraUp = player.cameraUp;
+    Actor::actor& player = GLOBAL::GetPlayer();
+    auto& player_pos = player.GetPosition();
+    Component::camera & cam = *static_cast<Component::camera *>(player.GetComponent("camera"));
+    auto& cameraFront = cam.GetFront();
+    auto& cameraUp = cam.GetUp();
 
     if (glfwGetKey(pWindow, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraFront;
+        player_pos += cameraSpeed * cameraFront;
     if (glfwGetKey(pWindow, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
+        player_pos -= cameraSpeed * cameraFront;
     if (glfwGetKey(pWindow, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        player_pos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (glfwGetKey(pWindow, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        player_pos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
     // close windows if it should be
     return glfwWindowShouldClose(pWindow);
@@ -143,7 +145,7 @@ void Resources::glWindows::mouse_callback(GLFWwindow* window, double xpos, doubl
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    auto& cameraFront = GLOBAL::GetPlayer().cameraFront;
+    auto& cameraFront = static_cast<Component::camera *>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFront();
     cameraFront = glm::normalize(front);
 }
 
@@ -151,7 +153,7 @@ void Resources::glWindows::mouse_callback(GLFWwindow* window, double xpos, doubl
 // ----------------------------------------------------------------------
 void Resources::glWindows::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    auto& fov = GLOBAL::GetPlayer().fov;
+    auto& fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
     fov -= (float)yoffset;
     if (fov < 1.0f)
         fov = 1.0f;

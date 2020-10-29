@@ -11,6 +11,7 @@
 #include "Renderer/TextureGL.h"
 
 #include "Resources/process/global.h"
+#include "Resources/actor/components/camera.h"
 
 // This is should be at resource manager
 #include "Resources/window/window_base.h"
@@ -164,8 +165,17 @@ int main(int argc, char * argv[])
             glm::vec3(1.5f,  0.2f, -1.5f),
             glm::vec3(-1.3f,  1.0f, -1.5f)
         };
+
+        // Easiest benchmark
+        int delta_frame = 0;
+        auto const prev_time = glfwGetTime();
+
         while (!win.ProcessInput())
         {
+            ++delta_frame;
+
+
+
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -178,15 +188,16 @@ int main(int argc, char * argv[])
 
             //Change camera position
             // TODO think about view
-            Actor::actor_base& player = GLOBAL::GetPlayer();
-            auto& cameraPos = player.cameraPos;
-            auto& cameraFront = player.cameraFront;
-            auto& cameraUp = player.cameraUp;
-            auto& fov = player.fov;
+            Actor::actor& player = GLOBAL::GetPlayer();
+            auto& cameraPos = player.GetPosition();
+            auto& cameraFront = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFront();
+            auto& cameraUp = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetUp();
+            auto& fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
             glm::mat4 const view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
             pShaderProgram->loadMatrix("view", view);
 
             // projection
+            // TODO change to camera
             glm::mat4 projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
             pShaderProgram->loadMatrix("projection", projection);
             // Draw current VAO
@@ -203,6 +214,10 @@ int main(int argc, char * argv[])
 
             win.Draw();
         }
+
+        auto delta_time = glfwGetTime() - prev_time;
+        std::cout << "TIMING: " << delta_frame / delta_time << std::endl;
+
     } // ResourceManager is terminated
 
     return 0;

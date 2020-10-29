@@ -6,7 +6,7 @@ namespace Actor
 	// singletop that represent current used playable class
 	class player_wrap final
 	{
-		actor_base* curr_actor = nullptr;
+		actor* curr_actor = nullptr;
 
 	public:
 		player_wrap() noexcept;
@@ -16,8 +16,8 @@ namespace Actor
 		player_wrap operator=(player_wrap const&) = delete;
 		player_wrap operator=(player_wrap&&) = delete;
 
-		actor_base& GetPlayer();
-		actor_base const& GetPlayer() const;
+		actor& GetPlayer();
+		actor const& GetPlayer() const;
 
 		~player_wrap();
 	};

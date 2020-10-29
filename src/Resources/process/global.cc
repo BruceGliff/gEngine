@@ -9,7 +9,7 @@ void GLOBAL::BeginPlay()
 	PLAYER.construct();
 }
 
-Actor::actor_base& GLOBAL::GetPlayer()
+Actor::actor& GLOBAL::GetPlayer()
 {
 	return PLAYER.GetPlayer();
 }
