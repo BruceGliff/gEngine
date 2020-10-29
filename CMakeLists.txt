@@ -20,6 +20,13 @@ add_executable(${PROGECT_NAME}
 	src/Resources/geometry/geometry_base.h
 	src/Resources/model/mesh_base.cc
 	src/Resources/model/mesh_base.h
+	src/Resources/actor/player_wrap.cc
+	src/Resources/actor/player_wrap.h
+	src/Resources/actor/actor.cc
+	src/Resources/actor/actor.h
+	src/Resources/process/global.cc
+	src/Resources/process/global.h
+
 )
 
 target_compile_features(${PROGECT_NAME} PUBLIC cxx_std_17)

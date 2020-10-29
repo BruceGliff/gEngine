@@ -51,7 +51,7 @@ namespace Resources
 
 		// TODO THIS IS WRONG WAY TO DO IT!!!!
 		// Return key which has been activated
-		GLFWwindow* ProcessInput() const noexcept;
+		bool ProcessInput() const noexcept;
 
 
 
@@ -61,5 +61,9 @@ namespace Resources
 		static void glfwWindowSizeCallback(GLFWwindow* window, int width, int height);
 		// Override keyboard events
 		static void glfwKeyCallback(GLFWwindow* window, int key, int scanmode, int action, int mode);
+		// Override mouse movement
+		static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+		// Override scrolls
+		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	};
 }
