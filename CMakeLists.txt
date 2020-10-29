@@ -16,6 +16,10 @@ add_executable(${PROGECT_NAME}
 	src/Resources/texture/stb_image.h
 	src/Resources/window/window_base.cc
 	src/Resources/window/window_base.h
+	src/Resources/geometry/geometry_base.cc
+	src/Resources/geometry/geometry_base.h
+	src/Resources/model/mesh_base.cc
+	src/Resources/model/mesh_base.h
 )
 
 target_compile_features(${PROGECT_NAME} PUBLIC cxx_std_17)
