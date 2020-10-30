@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <string>
 
 #include <glm/vec3.hpp>
@@ -61,7 +61,7 @@ namespace Actor
 
 	class component_attachable
 	{
-		std::map<std::string, Component::component_base *> components_map;
+		std::unordered_map<std::string, Component::component_base *> components_map;
 
 	public:
 		component_attachable() {};

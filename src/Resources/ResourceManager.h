@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <string>
 // TODO it SINGLTONE!
 
@@ -16,11 +16,11 @@ namespace Resources
 	class ResourcesManager final
 	{
 		// Map of the saders programs
-		typedef std::map<std::string const, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
+		typedef std::unordered_map<std::string, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
 		ShaderProgramsMap shaderPrograms;
 
 		// Map of the textures
-		typedef std::map<std::string const, std::shared_ptr<Renderer::TextureGL>> TexturesMap;
+		typedef std::unordered_map<std::string, std::shared_ptr<Renderer::TextureGL>> TexturesMap;
 		TexturesMap textures;
 
 		// Path to executable file
