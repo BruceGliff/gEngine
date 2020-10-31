@@ -3,7 +3,6 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-// TODO it SINGLTONE!
 
 namespace Renderer
 {
@@ -13,6 +12,7 @@ namespace Renderer
 
 namespace Resources
 {
+	// constains shaders, textures
 	class ResourcesManager final
 	{
 		// Map of the saders programs

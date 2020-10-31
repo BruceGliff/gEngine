@@ -1,9 +1,11 @@
 #pragma once
-#include "actor.h"
 
 namespace Actor
 {
-	// singletop that represent current used playable class
+	// forward declaration
+	class actor;
+
+	// singleton that represent current used playable class
 	class player_wrap final
 	{
 		actor* curr_actor = nullptr;
@@ -21,8 +23,4 @@ namespace Actor
 
 		~player_wrap();
 	};
-	
-
-	
 }
-extern Actor::player_wrap PLAYER;

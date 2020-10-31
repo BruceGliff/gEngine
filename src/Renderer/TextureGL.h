@@ -1,11 +1,11 @@
 #pragma once
 
 #include "glad/glad.h"
-#include "../Resources/texture/Texture_base.h"
+#include "../texture/Texture_base.h"
 
 namespace Renderer
 {
-	// Loader twxture in GPU
+	// Loader texture in GPU
 	class TextureGL final : public Resources::Texture_base
 	{
 		GLuint ID = 0;

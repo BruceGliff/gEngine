@@ -1,6 +1,7 @@
 #pragma once
 
 #include "component_base.h"
+
 #include <glm/vec3.hpp>
 
 namespace Component

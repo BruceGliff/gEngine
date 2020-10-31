@@ -6,15 +6,14 @@
 #include <iostream>
 #include <cmath>
 
-#include "Renderer/ShaderProgram.h"
-#include "Resources/ResourceManager.h"
-#include "Renderer/TextureGL.h"
+#include "process/global.h"
+#include "manager/ResourceManager.h"
+#include "renderer/ShaderProgram.h"
+#include "renderer/TextureGL.h"
+#include "window/window_base.h"
+#include "actor/actor.h"
+#include "actor/components/camera.h"
 
-#include "Resources/process/global.h"
-#include "Resources/actor/components/camera.h"
-
-// This is should be at resource manager
-#include "Resources/window/window_base.h"
 
 
 GLfloat verteces[] =
@@ -75,9 +74,7 @@ char const* fragment_shader_PATH = "res/shaders/fragment.glsl";
 
 int main(int argc, char * argv[])
 {        
-    Resources::glWindows win{};
-
-    GLOBAL::BeginPlay();
+    GLOBAL::Initialize(argv[0], 1600, 900, "OOP Changes!");
 
     /* Initialize glad */
     if (!gladLoadGL())
@@ -94,7 +91,7 @@ int main(int argc, char * argv[])
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
     {// ResourceManager has shaders constext inside. so it has to be terminated before glfw
-        Resources::ResourcesManager resMng{ argv[0] };
+        Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
         auto pShaderProgram = resMng.loadShaders("DefaultSahder", vertex_shader_PATH, fragment_shader_PATH);
         if (!pShaderProgram->IsCompiled())
         {
@@ -170,6 +167,8 @@ int main(int argc, char * argv[])
         int delta_frame = 0;
         auto const prev_time = glfwGetTime();
 
+        Resources::glWindows& win = GLOBAL::GetWindow();
+
         while (!win.ProcessInput())
         {
             ++delta_frame;
@@ -218,7 +217,7 @@ int main(int argc, char * argv[])
         auto delta_time = glfwGetTime() - prev_time;
         std::cout << "TIMING: " << delta_frame / delta_time << std::endl;
 
-    } // ResourceManager is terminated
+    }
 
     return 0;
 }

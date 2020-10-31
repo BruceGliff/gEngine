@@ -1,6 +1,7 @@
 #include "window_base.h"
 
 #include "../process/global.h"
+#include "../actor/actor.h"
 #include "../actor/components/camera.h"
 
 #include <glm/vec4.hpp>
@@ -8,23 +9,33 @@
 
 #include <iostream>
 #include <exception>
+#include <initializer_list>
 
-// This is CRUTCH
-// TODO make it more common with OOP
-namespace global
+
+// class will be global variable for GLFW to access
+Resources::WindowSizeProperty WindowProperty;
+
+
+Resources::WindowSizeProperty& Resources::WindowSizeProperty::operator=(std::initializer_list<int>& list)
 {
-    int g_x = 0;
-    int g_y = 0;
+    if (list.size() != 2)
+    {
+        width = 1600;
+        height = 900;
+        std::cerr << "Wrong initializer lise size!\n" << "window will be with size: " << width << ' ' << height << std::endl;
+        return *this;
+    }
+
+    width = *list.begin();
+    height = *(list.begin() + 1);
+
+    return *this;
 }
 
-
-Resources::glWindows::glWindows() : glWindows(1600, 900, "weed_pepe")
+Resources::glWindows::glWindows(int width, int height, std::string const & win_name) : name{win_name}
 {
-}
-
-Resources::glWindows::glWindows(int width, int height, std::string const & win_name) : x(width), y(height), name{win_name}
-{
-    pWindow = glfwCreateWindow(x, y, name.c_str(), nullptr, nullptr);
+    WindowProperty = { width, height };
+    pWindow = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
     if (!pWindow)
     {
         std::cerr << "ERROR:: window creating failed!" << std::endl;
@@ -44,6 +55,16 @@ Resources::glWindows::glWindows(int width, int height, std::string const & win_n
 Resources::glWindows::operator bool() const noexcept
 {
     return glfwWindowShouldClose(pWindow);
+}
+
+Resources::WindowSizeProperty const & Resources::glWindows::GetWindowSize() const noexcept
+{
+    return WindowProperty;
+}
+
+Resources::WindowSizeProperty& Resources::glWindows::GetWindowSize() noexcept
+{
+    return WindowProperty;
 }
 
 void Resources::glWindows::Draw() const noexcept
@@ -86,9 +107,9 @@ bool Resources::glWindows::ProcessInput() const noexcept
 
 void Resources::glWindows::glfwWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
-    global::g_x = width;
-    global::g_y = height;
-    glViewport(0, 0, global::g_x, global::g_y);
+    WindowProperty.width = width;
+    WindowProperty.height = height;
+    glViewport(0, 0, WindowProperty.width, WindowProperty.height);
 }
  
 
@@ -161,7 +182,7 @@ void Resources::glWindows::scroll_callback(GLFWwindow* window, double xoffset, d
         fov = 45.0f;
 }
 
-Resources::GFLW_Wrap::GFLW_Wrap()
+Resources::GFLW_wrap::GFLW_wrap()
 {
     static int number_of_copies = 0;
     if (number_of_copies != 0)
@@ -184,7 +205,7 @@ Resources::GFLW_Wrap::GFLW_Wrap()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
-Resources::GFLW_Wrap::~GFLW_Wrap()
+Resources::GFLW_wrap::~GFLW_wrap()
 {
     glfwTerminate();
 }

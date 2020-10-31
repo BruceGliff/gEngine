@@ -1,5 +1,8 @@
 #include "player_wrap.h"
+#include "actor.h"
+
 #include "components/camera.h"
+
 #include <iostream>
 #include <exception>
 

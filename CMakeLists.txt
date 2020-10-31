@@ -5,31 +5,35 @@ project(${PROGECT_NAME})
 
 add_executable(${PROGECT_NAME} 
 	src/main.cc
-	src/Renderer/ShaderProgram.cc
-	src/Renderer/ShaderProgram.h
-	src/Renderer/TextureGL.cc
-	src/Renderer/TextureGL.h
-	src/Resources/ResourceManager.cc
-	src/Resources/ResourceManager.h
-	src/Resources/texture/Texture_base.cc
-	src/Resources/texture/Texture_base.h
-	src/Resources/texture/stb_image.h
-	src/Resources/window/window_base.cc
-	src/Resources/window/window_base.h
-	src/Resources/geometry/geometry_base.cc
-	src/Resources/geometry/geometry_base.h
-	src/Resources/model/mesh_base.cc
-	src/Resources/model/mesh_base.h
-	src/Resources/actor/player_wrap.cc
-	src/Resources/actor/player_wrap.h
-	src/Resources/actor/actor.cc
-	src/Resources/actor/actor.h
-	src/Resources/process/global.cc
-	src/Resources/process/global.h
-	src/Resources/actor/components/component_base.cc
-	src/Resources/actor/components/component_base.h
-	src/Resources/actor/components/camera.cc
-	src/Resources/actor/components/camera.h
+	src/renderer/ShaderProgram.cc
+	src/renderer/ShaderProgram.h
+	src/renderer/TextureGL.cc
+	src/renderer/TextureGL.h
+	src/manager/ResourceManager.cc
+	src/manager/ResourceManager.h
+	src/manager/ResourceManager_wrap.cc
+	src/manager/ResourceManager_wrap.h
+	src/texture/Texture_base.cc
+	src/texture/Texture_base.h
+	src/texture/stb_image.h
+	src/window/window_base.cc
+	src/window/window_base.h
+	src/window/window_wrap.cc
+	src/window/window_wrap.h
+	src/geometry/geometry_base.cc
+	src/geometry/geometry_base.h
+	src/model/mesh_base.cc
+	src/model/mesh_base.h
+	src/actor/player_wrap.cc
+	src/actor/player_wrap.h
+	src/actor/actor.cc
+	src/actor/actor.h
+	src/process/global.cc
+	src/process/global.h
+	src/actor/components/component_base.cc
+	src/actor/components/component_base.h
+	src/actor/components/camera.cc
+	src/actor/components/camera.h
 
 )
 

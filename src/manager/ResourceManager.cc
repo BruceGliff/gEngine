@@ -75,5 +75,3 @@ std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std
     std::cerr << "ERROR:: run-time:\n" << "No shader program with name: " << textureName << std::endl;
     return nullptr;
 }
-
-

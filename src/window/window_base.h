@@ -7,50 +7,63 @@
 namespace Resources
 {
 	// There is a singlton
-	class GFLW_Wrap final
+	// Class that wraps bahavior of GLFW
+	class GFLW_wrap final
 	{
 	public:
 		// Set up GLFW properties
-		GFLW_Wrap();
-		GFLW_Wrap(GFLW_Wrap const&) = delete;
-		GFLW_Wrap(GFLW_Wrap&&) = delete;
-		GFLW_Wrap& operator= (GFLW_Wrap const&) = delete;
-		GFLW_Wrap& operator= (GFLW_Wrap&&) = delete;
+		GFLW_wrap();
+		GFLW_wrap(GFLW_wrap const&)					= delete;
+		GFLW_wrap(GFLW_wrap&&)						= delete;
+		GFLW_wrap& operator= (GFLW_wrap const&)		= delete;
+		GFLW_wrap& operator= (GFLW_wrap&&)			= delete;
 
-		~GFLW_Wrap();
+		~GFLW_wrap();
 	};
 
+	// Class that contaisn properies of the window for global access of GLFW, but nobody else
+	struct WindowSizeProperty final
+	{
+		int width = 0;
+		int height = 0;
+
+		WindowSizeProperty& operator=(std::initializer_list<int>& list);
+	};
+
+	// Class implemented behavior of the window
 	class glWindows final
 	{
-		// init window size
-		int const x;
-		int const y;
+		// global __WindowProperty is a property of glWindow!
 		// default window name
 		std::string const name;
 		// The first initialization of the gflw
-		GFLW_Wrap const gflwProperties;
+		GFLW_wrap const gflwProperties;
 		// window pointer
 		GLFWwindow* pWindow = nullptr;
 
 
 	public:
-		glWindows();
+		glWindows()								= delete;
 		glWindows(glWindows const &)			= delete;
 		glWindows(glWindows &&)					= delete;
 		glWindows& operator= (glWindows const&) = delete;
 		glWindows& operator= (glWindows &&)		= delete;
 
-		// Create window with size x, y and name(or gEngine as Default)
-		glWindows(int x, int y, std::string const &);
+		// Create window with size width, height and name(or gEngine as Default)
+		glWindows(int width, int height, std::string const &);
 
 		// Check if window is still active
 		operator bool() const noexcept;
+
+		// Return global window properties
+		WindowSizeProperty const &  GetWindowSize() const noexcept;
+		WindowSizeProperty& GetWindowSize() noexcept;
 
 		// draw
 		void Draw() const noexcept;
 
 		// TODO THIS IS WRONG WAY TO DO IT!!!!
-		// Return key which has been activated
+		// Return true if window is still active
 		bool ProcessInput() const noexcept;
 
 
