@@ -213,6 +213,8 @@ int main(int argc, char * argv[])
             glm::mat4       const   view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
             pObjShaderProgram->setMat4("view", view);
 
+            pObjShaderProgram->setVec3("viewPosition", cameraPos);
+
             // projection
             // TODO change to camera
             glm::mat4 const projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
