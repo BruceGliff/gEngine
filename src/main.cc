@@ -67,10 +67,8 @@ unsigned int indices[] =
     0, 1, 2
 };
 
-// VS
-char const* vertex_shader_PATH = "res/shaders/vertex.glsl";
-// FS
-char const* fragment_shader_PATH = "res/shaders/fragment.glsl";
+
+std::string const SHADER_PATH{ "res/shaders/" };
 
 int main(int argc, char * argv[])
 {        
@@ -92,17 +90,22 @@ int main(int argc, char * argv[])
 
     {// ResourceManager has shaders constext inside. so it has to be terminated before glfw
         Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
-        auto pShaderProgram = resMng.loadShaders("DefaultSahder", vertex_shader_PATH, fragment_shader_PATH);
-        if (!pShaderProgram->IsCompiled())
+        auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "Cube.vs", SHADER_PATH + "Cube.fs");
+        if (!pObjShaderProgram->IsCompiled())
         {
-            std::cerr << "ERROR:: Creating Shader program in main\n" << std::endl;
+            std::cerr << "ERROR:: Creating objShader program in main\n" << std::endl;
+            glfwTerminate();
+            return -1;
+        }
+        auto pLightShaderProgram = resMng.loadShaders("lightShader", SHADER_PATH + "lightCube.vs", SHADER_PATH + "lightCube.fs");
+        if (!pLightShaderProgram->IsCompiled())
+        {
+            std::cerr << "ERROR:: Creating lightShader program in main\n" << std::endl;
             glfwTerminate();
             return -1;
         }
 
-        auto texture = resMng.loadTexture("DefaultTexture", "res/textures/weed_pepe.jpg");
-
-// BUFFER IMP
+// BUFFER IMP MODEL
 // ***********************************************************************************
         // Vertex array object .. all together: vertices and indices
         unsigned int VAO = 0;
@@ -124,11 +127,24 @@ int main(int argc, char * argv[])
         // then set the vertex attributes pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-        glEnableVertexAttribArray(2);
+
+        /// This part is disable as wee dont use it due to easiest lighting implementation
+        //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+        //glEnableVertexAttribArray(1);
+        //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+        //glEnableVertexAttribArray(2);
 // ***********************************************************************************
+
+// BUFFER IMP LIGHT
+// ***********************************************************************************
+        unsigned int lightVAO = 0;
+        glGenVertexArrays(1, &lightVAO);
+
+        glBindVertexArray(lightVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
 
 
 // MATRIX MATHEMATIC
@@ -142,8 +158,9 @@ int main(int argc, char * argv[])
 
 
         // To activate shader program
-        pShaderProgram->Use();
-        pShaderProgram->SetID("tex", 0);
+        //?! No texture
+        //pObjShaderProgram->Use();
+        //pObjShaderProgram->SetID("tex", 0);
 
         // Now we are ready for drawing
         /* Loop until the user closes the window */
@@ -153,14 +170,14 @@ int main(int argc, char * argv[])
         {
             glm::vec3(0.0f,  0.0f,  0.0f),
             glm::vec3(2.0f,  5.0f, -15.0f),
-            glm::vec3(-1.5f, -2.2f, -2.5f),
-            glm::vec3(-3.8f, -2.0f, -12.3f),
-            glm::vec3(2.4f, -0.4f, -3.5f),
-            glm::vec3(-1.7f,  3.0f, -7.5f),
-            glm::vec3(1.3f, -2.0f, -2.5f),
-            glm::vec3(1.5f,  2.0f, -2.5f),
-            glm::vec3(1.5f,  0.2f, -1.5f),
-            glm::vec3(-1.3f,  1.0f, -1.5f)
+            //glm::vec3(-1.5f, -2.2f, -2.5f),
+            //glm::vec3(-3.8f, -2.0f, -12.3f),
+            //glm::vec3(2.4f, -0.4f, -3.5f),
+            //glm::vec3(-1.7f,  3.0f, -7.5f),
+            //glm::vec3(1.3f, -2.0f, -2.5f),
+            //glm::vec3(1.5f,  2.0f, -2.5f),
+            //glm::vec3(1.5f,  0.2f, -1.5f),
+            //glm::vec3(-1.3f,  1.0f, -1.5f)
         };
 
         // Easiest benchmark
@@ -173,43 +190,56 @@ int main(int argc, char * argv[])
         {
             ++delta_frame;
 
-
-
             /* Render here */
+            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Drawing
-            pShaderProgram->Use();
-            // Now we connect vao to draw. it is already current, but it can be different for different obejcts in future
-            glBindVertexArray(VAO);
-            // Make texture to draw active
-            texture->bind();
+            /// Drawing cube!!
+            // *********************************************
+            pObjShaderProgram->Use();   
+
+            // Loading colors
+            pObjShaderProgram->setVec3("objectColor", glm::vec3{ 1.0f, 0.5f, 0.31f });
+            pObjShaderProgram->setVec3("lightColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
 
             //Change camera position
             // TODO think about view
-            Actor::actor& player = GLOBAL::GetPlayer();
-            auto& cameraPos = player.GetPosition();
-            auto& cameraFront = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFront();
-            auto& cameraUp = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetUp();
-            auto& fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
-            glm::mat4 const view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
-            pShaderProgram->loadMatrix("view", view);
+            Actor::actor    const & player = GLOBAL::GetPlayer();
+            auto            const & cameraPos = player.GetPosition();
+            auto            const & cameraFront = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFront();
+            auto            const & cameraUp = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetUp();
+            auto            const & fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
+            glm::mat4       const   view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
+            pObjShaderProgram->setMat4("view", view);
 
             // projection
             // TODO change to camera
-            glm::mat4 projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
-            pShaderProgram->loadMatrix("projection", projection);
+            glm::mat4 const projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
+            pObjShaderProgram->setMat4("projection", projection);
             // Draw current VAO
-            for (unsigned int i = 0; i < 10; ++i)
-            {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, cubePositions[i]);
-                float angle = 20.0f * i;
-                model = glm::rotate(model, glm::radians(angle) * (float)glfwGetTime(), glm::vec3(1.0f * i, 0.3f * (10-i), 5.f));
-                pShaderProgram->loadMatrix("model", model);
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[0]);
+            model = glm::rotate(model, glm::radians(0.f) * (float)glfwGetTime(), glm::vec3(0.f, 0.3f * 10.f, 5.f));
+            pObjShaderProgram->setMat4("model", model);
 
-                glDrawArrays(GL_TRIANGLES, 0, 36);
-            }
+            glBindVertexArray(VAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            // *********************************************
+            /// Drawing light!!
+            // *********************************************
+            pLightShaderProgram->Use();
+            pLightShaderProgram->setMat4("view", view);
+            pLightShaderProgram->setMat4("projection", projection);
+
+            glm::mat4 light = glm::mat4(1.0f);
+            light = glm::translate(light, cubePositions[1]);
+            light = glm::scale(light, glm::vec3{ 0.2f });
+            light = glm::rotate(light, glm::radians(0.f) * (float)glfwGetTime(), glm::vec3(0.f, 0.3f * 10.f, 5.f));
+            pLightShaderProgram->setMat4("model", light);
+
+            glBindVertexArray(lightVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            // *********************************************
 
             win.Draw();
         }
