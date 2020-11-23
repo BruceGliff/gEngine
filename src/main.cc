@@ -18,48 +18,48 @@
 
 GLfloat verteces[] =
 {
-    // position           // color          // texture
-    -0.5f, -0.5f, -0.5f,  0.f, 1.f, 0.f,    0.f, 0.f, // G
-     0.5f, -0.5f, -0.5f,  1.f, 0.f, 0.f,    1.f, 0.f, // R
-     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f, // G
-     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f, // G
-    -0.5f,  0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f, // B
-    -0.5f, -0.5f, -0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,
+    // position           // color          // texture   // Normals
+    -0.5f, -0.5f, -0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    0.0f,  0.0f, -1.0f,
 
-    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,
-     0.5f, -0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
-     0.5f,  0.5f,  0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,
-     0.5f,  0.5f,  0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,
-    -0.5f,  0.5f,  0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
-    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,
+    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    0.0f,  0.0f, 1.0f,
 
-    -0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
-    -0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,
-    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
-    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
-    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,
-    -0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
+    -0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    -1.0f,  0.0f,  0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
-     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,
-     0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
-     0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
-     0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,
-     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
+     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    1.0f,  0.0f,  0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
-     0.5f, -0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,
-     0.5f, -0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
-     0.5f, -0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
-    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,
-    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
+    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    0.0f, -1.0f,  0.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,
-     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,
-     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
-     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,
-    -0.5f,  0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,
-    -0.5f,  0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f
+    -0.5f,  0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.f, 1.f, 0.f,    1.f, 1.f,    0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.f, 0.f, 0.f,    1.f, 0.f,    0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.f, 1.f, 0.f,    0.f, 0.f,    0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.f, 0.f, 1.f,    0.f, 1.f,    0.0f,  1.0f,  0.0f
 };
 unsigned int indices[] =
 {
@@ -125,14 +125,13 @@ int main(int argc, char * argv[])
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
         // then set the vertex attributes pointers
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        /// This part is disable as wee dont use it due to easiest lighting implementation
-        //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-        //glEnableVertexAttribArray(1);
-        //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-        //glEnableVertexAttribArray(2);
+        // Set normals
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+
 // ***********************************************************************************
 
 // BUFFER IMP LIGHT
@@ -143,7 +142,7 @@ int main(int argc, char * argv[])
         glBindVertexArray(lightVAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
 
@@ -201,6 +200,8 @@ int main(int argc, char * argv[])
             // Loading colors
             pObjShaderProgram->setVec3("objectColor", glm::vec3{ 1.0f, 0.5f, 0.31f });
             pObjShaderProgram->setVec3("lightColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            // Light source is second cube!
+            pObjShaderProgram->setVec3("lightPosition", cubePositions[1]);
 
             //Change camera position
             // TODO think about view
