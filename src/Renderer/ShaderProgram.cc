@@ -74,6 +74,11 @@ void Renderer::ShaderProgram::setVec3(std::string const name, glm::vec3 const& v
     glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, glm::value_ptr(vec));
 }
 
+void Renderer::ShaderProgram::setFloat(std::string const name, float const& fl) const noexcept
+{
+    glUniform1fv(glGetUniformLocation(id, name.c_str()), 1, &fl);
+}
+
 void Renderer::ShaderProgram::setMat4(std::string const& name, glm::mat4 const& mat) const noexcept
 {
     // By id and name get location of uniform variable

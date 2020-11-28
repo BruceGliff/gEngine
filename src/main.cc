@@ -198,10 +198,16 @@ int main(int argc, char * argv[])
             pObjShaderProgram->Use();   
 
             // Loading colors
-            pObjShaderProgram->setVec3("objectColor", glm::vec3{ 1.0f, 0.5f, 0.31f });
             pObjShaderProgram->setVec3("lightColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setVec3("material.ambient", glm::vec3{ 1.0f, 0.5f, 0.31f });
+            pObjShaderProgram->setVec3("material.diffuse", glm::vec3{ 1.0f, 0.5f, 0.31f });
+            pObjShaderProgram->setVec3("material.specular", glm::vec3{ 0.5f, 0.5f, 0.5f });
+            pObjShaderProgram->setFloat("material.shininess", 32.0f);
             // Light source is second cube!
-            pObjShaderProgram->setVec3("lightPosition", cubePositions[1]);
+            pObjShaderProgram->setVec3("light.position", cubePositions[1]);
+            pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.2f, 0.2f, 0.2f });
+            pObjShaderProgram->setVec3("light.diffuse", glm::vec3{ 0.5f, 0.5f, 0.5f });
+            pObjShaderProgram->setVec3("light.specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
 
             //Change camera position
             // TODO think about view

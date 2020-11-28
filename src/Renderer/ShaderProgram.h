@@ -37,8 +37,11 @@ namespace Renderer
 		// load mat4 by name
 		void setMat4(std::string const& name, glm::mat4 const& mat) const noexcept;
 
-		// liad vec3 by name
+		// load vec3 by name
 		void setVec3(std::string const name, glm::vec3 const& vec) const noexcept;
+
+		// load float by name
+		void setFloat(std::string const name, float const& fl) const noexcept;
 	};
 
 };
