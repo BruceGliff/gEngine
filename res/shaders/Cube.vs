@@ -15,7 +15,8 @@ out vec2 tex_coord;
 void main()
 {
 	gl_Position = projection * view * model * vec4(vertex_position, 1.0);
-	normal_vector = surface_normal;
+	// here can be a problem with not normal matrix as normals can be not normals due to ununiform scale
+	normal_vector = vec3(model *  vec4(surface_normal, 0.0));
 	fragPosition = vec3(model *  vec4(vertex_position, 1.0));
 	tex_coord = texture_position;
 }

@@ -153,20 +153,6 @@ int main(int argc, char * argv[])
         glEnableVertexAttribArray(0);
 
 
-// MATRIX MATHEMATIC
-// ***********************************************************************************
-        // Transformation
-        // model matrix has all transformations (traslations, scaling, rotation) at the world space
-        glm::mat4 model = glm::rotate(glm::mat4{ 1.f }, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
-
-       
-// ***********************************************************************************
-
-
-        // To activate shader program
-        //?! No texture
-        //pObjShaderProgram->Use();
-        //pObjShaderProgram->SetID("tex", 0);
 
         // Now we are ready for drawing
         /* Loop until the user closes the window */
@@ -176,15 +162,16 @@ int main(int argc, char * argv[])
         {
             glm::vec3(0.0f,  0.0f,  0.0f),
             glm::vec3(2.0f,  5.0f, -15.0f),
-            //glm::vec3(-1.5f, -2.2f, -2.5f),
-            //glm::vec3(-3.8f, -2.0f, -12.3f),
-            //glm::vec3(2.4f, -0.4f, -3.5f),
-            //glm::vec3(-1.7f,  3.0f, -7.5f),
-            //glm::vec3(1.3f, -2.0f, -2.5f),
-            //glm::vec3(1.5f,  2.0f, -2.5f),
-            //glm::vec3(1.5f,  0.2f, -1.5f),
-            //glm::vec3(-1.3f,  1.0f, -1.5f)
+            glm::vec3(-1.5f, -2.2f, -2.5f),
+            glm::vec3(-3.8f, -2.0f, -12.3f),
+            glm::vec3(2.4f, -0.4f, -3.5f),
+            glm::vec3(-1.7f,  3.0f, -7.5f),
+            glm::vec3(1.3f, -2.0f, -2.5f),
+            glm::vec3(1.5f,  2.0f, -2.5f),
+            glm::vec3(1.5f,  0.2f, -1.5f),
+            glm::vec3(-1.3f,  1.0f, -1.5f)
         };
+        glm::vec3 lightPos{ 8.72f, 3.46f, 3.49f };
 
         // Easiest benchmark
         int delta_frame = 0;
@@ -215,7 +202,7 @@ int main(int argc, char * argv[])
             pObjShaderProgram->setVec3("lightColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
             pObjShaderProgram->setFloat("material.shininess", 32.0f);
             // Light source is second cube!
-            pObjShaderProgram->setVec3("light.position", cubePositions[1]);
+            pObjShaderProgram->setVec3("light.position", lightPos);
             pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.1f, 0.1f, 0.1f });
             pObjShaderProgram->setVec3("light.diffuse", glm::vec3{ 0.8f, 0.8f, 0.8f });
             pObjShaderProgram->setVec3("light.specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
@@ -237,13 +224,16 @@ int main(int argc, char * argv[])
             glm::mat4 const projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
             pObjShaderProgram->setMat4("projection", projection);
             // Draw current VAO
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[0]);
-            model = glm::rotate(model, glm::radians(0.f) * (float)glfwGetTime(), glm::vec3(0.f, 0.3f * 10.f, 5.f));
-            pObjShaderProgram->setMat4("model", model);
+            for (int i = 0; i != 10; ++i)
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, cubePositions[i]);
+                model = glm::rotate(model, glm::radians(5.f * i) * (float)glfwGetTime(), glm::vec3(0.7f * i, 0.3f * i, 5.f * i));
+                pObjShaderProgram->setMat4("model", model);
 
-            glBindVertexArray(VAO);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+                glBindVertexArray(VAO);
+                glDrawArrays(GL_TRIANGLES, 0, 36);
+            }
             // *********************************************
             /// Drawing light!!
             // *********************************************
@@ -252,9 +242,9 @@ int main(int argc, char * argv[])
             pLightShaderProgram->setMat4("projection", projection);
 
             glm::mat4 light = glm::mat4(1.0f);
-            light = glm::translate(light, cubePositions[1]);
+            light = glm::translate(light, lightPos);
             light = glm::scale(light, glm::vec3{ 0.2f });
-            light = glm::rotate(light, glm::radians(0.f) * (float)glfwGetTime(), glm::vec3(0.f, 0.3f * 10.f, 5.f));
+            light = glm::rotate(light, glm::radians(0.f) * (float)glfwGetTime(), glm::vec3{ 0.f, 0.3f * 10.f, 5.f });
             pLightShaderProgram->setMat4("model", light);
 
             glBindVertexArray(lightVAO);
