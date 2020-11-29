@@ -9,7 +9,8 @@ namespace Renderer
 	class TextureGL final : public Resources::Texture_base
 	{
 		GLuint ID = 0;
-
+		int const GLindicies_begin = GL_TEXTURE0;
+		int slotID = 0;
 
 	public:
 		TextureGL()									= delete;

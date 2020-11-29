@@ -105,6 +105,9 @@ int main(int argc, char * argv[])
             return -1;
         }
 
+        auto textureDiffuse = resMng.loadTexture("BoxDiff", "res/textures/container.png");
+        auto textureSpecular = resMng.loadTexture("BoxSpec", "res/textures/container_specular.png");
+
 // BUFFER IMP MODEL
 // ***********************************************************************************
         // Vertex array object .. all together: vertices and indices
@@ -131,6 +134,10 @@ int main(int argc, char * argv[])
         // Set normals
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(8 * sizeof(float)));
         glEnableVertexAttribArray(1);
+
+        // Set texture pos
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+        glEnableVertexAttribArray(2);
 
 // ***********************************************************************************
 
@@ -185,6 +192,13 @@ int main(int argc, char * argv[])
 
         Resources::glWindows& win = GLOBAL::GetWindow();
 
+        pObjShaderProgram->Use();
+        // Load texture
+        pObjShaderProgram->SetInt("material.diffuse", 0);
+        textureDiffuse->bind();
+        pObjShaderProgram->SetInt("material.specular", 1);
+        textureSpecular->bind();
+
         while (!win.ProcessInput())
         {
             ++delta_frame;
@@ -195,18 +209,15 @@ int main(int argc, char * argv[])
 
             /// Drawing cube!!
             // *********************************************
-            pObjShaderProgram->Use();   
+            pObjShaderProgram->Use(); 
 
             // Loading colors
             pObjShaderProgram->setVec3("lightColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
-            pObjShaderProgram->setVec3("material.ambient", glm::vec3{ 1.0f, 0.5f, 0.31f });
-            pObjShaderProgram->setVec3("material.diffuse", glm::vec3{ 1.0f, 0.5f, 0.31f });
-            pObjShaderProgram->setVec3("material.specular", glm::vec3{ 0.5f, 0.5f, 0.5f });
             pObjShaderProgram->setFloat("material.shininess", 32.0f);
             // Light source is second cube!
             pObjShaderProgram->setVec3("light.position", cubePositions[1]);
-            pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.2f, 0.2f, 0.2f });
-            pObjShaderProgram->setVec3("light.diffuse", glm::vec3{ 0.5f, 0.5f, 0.5f });
+            pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.1f, 0.1f, 0.1f });
+            pObjShaderProgram->setVec3("light.diffuse", glm::vec3{ 0.8f, 0.8f, 0.8f });
             pObjShaderProgram->setVec3("light.specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
 
             //Change camera position

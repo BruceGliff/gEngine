@@ -63,7 +63,7 @@ void Renderer::ShaderProgram::Use() const noexcept
     glUseProgram(id);
 }
 
-void Renderer::ShaderProgram::SetID(std::string const& name, GLint const value)
+void Renderer::ShaderProgram::SetInt(std::string const& name, GLint const value)
 {
     // By id and name get location of uniform variable
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);

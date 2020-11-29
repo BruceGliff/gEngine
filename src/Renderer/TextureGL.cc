@@ -2,6 +2,11 @@
 
 Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLenum const wrapMode) noexcept : Resources::Texture_base{path}
 {
+	// TODO rethink!
+	// each texture id should be uniq for at-once-drawable object!
+	static GLuint ID_uniq = 0;
+	slotID = ID_uniq++;
+
 	GLint tex_mode = 0;
 	switch (channels)
 	{
@@ -18,7 +23,9 @@ Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLe
 
 	glGenTextures(1, &ID);
 	// set ap an active texture at the first slot (0 actually) 
-	glActiveTexture(GL_TEXTURE0);
+	// TODO rethink this part. For each texture should be uniq slot. 
+	glActiveTexture(GLindicies_begin + slotID);
+	
 	glBindTexture(GL_TEXTURE_2D, ID);
 	glTexImage2D(GL_TEXTURE_2D, 0, tex_mode, width, height, 0, tex_mode, GL_UNSIGNED_BYTE, data);
 
@@ -39,6 +46,7 @@ Renderer::TextureGL::~TextureGL()
 
 void Renderer::TextureGL::bind() const noexcept
 {
+	glActiveTexture(GLindicies_begin + slotID);
 	glBindTexture(GL_TEXTURE_2D, ID);
 }
 
