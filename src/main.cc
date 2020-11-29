@@ -199,16 +199,16 @@ int main(int argc, char * argv[])
             pObjShaderProgram->Use(); 
 
             // Loading colors
-            pObjShaderProgram->setVec3("lightColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
             pObjShaderProgram->setFloat("material.shininess", 32.0f);
+            // Light source is second cube!
+            pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.05f, 0.05f, 0.05f });
+            pObjShaderProgram->setVec3("light.diffuse", glm::vec3{ 1.f, 1.f, 1.f });
+            pObjShaderProgram->setVec3("light.specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
             pObjShaderProgram->setFloat("light.constant", 1.0f);
             pObjShaderProgram->setFloat("light.linear", 0.08f);
             pObjShaderProgram->setFloat("light.quadratic", 0.0028f);
-            // Light source is second cube!
-            pObjShaderProgram->setVec3("light.position", lightPos);
-            pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.1f, 0.1f, 0.1f });
-            pObjShaderProgram->setVec3("light.diffuse", glm::vec3{ 0.8f, 0.8f, 0.8f });
-            pObjShaderProgram->setVec3("light.specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+            pObjShaderProgram->setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
 
             //Change camera position
             // TODO think about view
@@ -219,8 +219,11 @@ int main(int argc, char * argv[])
             auto            const & fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
             glm::mat4       const   view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
             pObjShaderProgram->setMat4("view", view);
-
             pObjShaderProgram->setVec3("viewPosition", cameraPos);
+
+            pObjShaderProgram->setVec3("light.position", cameraPos);
+            pObjShaderProgram->setVec3("light.direction", cameraFront);
+
 
             // projection
             // TODO change to camera
