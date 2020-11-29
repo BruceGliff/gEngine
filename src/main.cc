@@ -171,7 +171,13 @@ int main(int argc, char * argv[])
             glm::vec3(1.5f,  0.2f, -1.5f),
             glm::vec3(-1.3f,  1.0f, -1.5f)
         };
-        glm::vec3 lightPos{ 8.72f, 3.46f, 3.49f };
+        glm::vec3 pointLightPositions[] = 
+        {
+            glm::vec3(0.7f,  0.2f,  2.0f),
+            glm::vec3(2.3f, -3.3f, -4.0f),
+            glm::vec3(-4.0f,  2.0f, -12.0f),
+            glm::vec3(0.0f,  0.0f, -3.0f)
+        };
 
         // Easiest benchmark
         int delta_frame = 0;
@@ -201,14 +207,44 @@ int main(int argc, char * argv[])
             // Loading colors
             pObjShaderProgram->setFloat("material.shininess", 32.0f);
             // Light source is second cube!
-            pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.05f, 0.05f, 0.05f });
-            pObjShaderProgram->setVec3("light.diffuse", glm::vec3{ 1.f, 1.f, 1.f });
-            pObjShaderProgram->setVec3("light.specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
-            pObjShaderProgram->setFloat("light.constant", 1.0f);
-            pObjShaderProgram->setFloat("light.linear", 0.08f);
-            pObjShaderProgram->setFloat("light.quadratic", 0.0028f);
-            pObjShaderProgram->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-            pObjShaderProgram->setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+            // directional light
+            pObjShaderProgram->setVec3("dirLight.direction", glm::vec3{ -0.2f, -1.0f, -0.3f });
+            pObjShaderProgram->setVec3("dirLight.ambient", glm::vec3{ 0.05f, 0.05f, 0.05f });
+            pObjShaderProgram->setVec3("dirLight.diffuse", glm::vec3{ 0.4f, 0.4f, 0.4f });
+            pObjShaderProgram->setVec3("dirLight.specular", glm::vec3{ 0.5f, 0.5f, 0.5f });
+            // point light 1
+            pObjShaderProgram->setVec3("pointLights[0].position", pointLightPositions[0]);
+            pObjShaderProgram->setVec3("pointLights[0].ambient", glm::vec3{ 0.05f, 0.05f, 0.05f });
+            pObjShaderProgram->setVec3("pointLights[0].diffuse", glm::vec3{ 0.f, 0.8f, 0.8f });
+            pObjShaderProgram->setVec3("pointLights[0].specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setFloat("pointLights[0].constant", 1.0f);
+            pObjShaderProgram->setFloat("pointLights[0].linear", 0.09);
+            pObjShaderProgram->setFloat("pointLights[0].quadratic", 0.032);
+            // point light 2
+            pObjShaderProgram->setVec3("pointLights[1].position", pointLightPositions[1]);
+            pObjShaderProgram->setVec3("pointLights[1].ambient", glm::vec3{ 0.05f, 0.05f, 0.05f });
+            pObjShaderProgram->setVec3("pointLights[1].diffuse", glm::vec3{ 0.8f, 0.f, 0.8f });
+            pObjShaderProgram->setVec3("pointLights[1].specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setFloat("pointLights[1].constant", 1.0f);
+            pObjShaderProgram->setFloat("pointLights[1].linear", 0.09);
+            pObjShaderProgram->setFloat("pointLights[1].quadratic", 0.032);
+            // point light 3
+            pObjShaderProgram->setVec3("pointLights[2].position", pointLightPositions[2]);
+            pObjShaderProgram->setVec3("pointLights[2].ambient", glm::vec3{ 0.05f, 0.05f, 0.05f });
+            pObjShaderProgram->setVec3("pointLights[2].diffuse", glm::vec3{ 0.8f, 0.8f, 0.f });
+            pObjShaderProgram->setVec3("pointLights[2].specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setFloat("pointLights[2].constant", 1.0f);
+            pObjShaderProgram->setFloat("pointLights[2].linear", 0.09);
+            pObjShaderProgram->setFloat("pointLights[2].quadratic", 0.032);
+            // point light 4
+            pObjShaderProgram->setVec3("pointLights[3].position", pointLightPositions[3]);
+            pObjShaderProgram->setVec3("pointLights[3].ambient", glm::vec3{ 0.05f, 0.05f, 0.05f });
+            pObjShaderProgram->setVec3("pointLights[3].diffuse", glm::vec3{ 0.8f, 0.f, 0.f });
+            pObjShaderProgram->setVec3("pointLights[3].specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setFloat("pointLights[3].constant", 1.0f);
+            pObjShaderProgram->setFloat("pointLights[3].linear", 0.09);
+            pObjShaderProgram->setFloat("pointLights[3].quadratic", 0.032);
+
 
             //Change camera position
             // TODO think about view
@@ -221,15 +257,24 @@ int main(int argc, char * argv[])
             pObjShaderProgram->setMat4("view", view);
             pObjShaderProgram->setVec3("viewPosition", cameraPos);
 
-            pObjShaderProgram->setVec3("light.position", cameraPos);
-            pObjShaderProgram->setVec3("light.direction", cameraFront);
-
+            // spotLight
+            pObjShaderProgram->setVec3("spotLight.position", cameraPos);
+            pObjShaderProgram->setVec3("spotLight.direction", cameraFront);
+            pObjShaderProgram->setVec3("spotLight.ambient", glm::vec3{ 0.0f, 0.0f, 0.0f });
+            pObjShaderProgram->setVec3("spotLight.diffuse", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setVec3("spotLight.specular", glm::vec3{ 1.0f, 1.0f, 1.0f });
+            pObjShaderProgram->setFloat("spotLight.constant", 1.0f);
+            pObjShaderProgram->setFloat("spotLight.linear", 0.09);
+            pObjShaderProgram->setFloat("spotLight.quadratic", 0.032);
+            pObjShaderProgram->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+            pObjShaderProgram->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
             // projection
             // TODO change to camera
             glm::mat4 const projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
             pObjShaderProgram->setMat4("projection", projection);
             // Draw current VAO
+            glBindVertexArray(VAO);
             for (int i = 0; i != 10; ++i)
             {
                 glm::mat4 model = glm::mat4(1.0f);
@@ -237,7 +282,6 @@ int main(int argc, char * argv[])
                 model = glm::rotate(model, glm::radians(5.f * i) * (float)glfwGetTime(), glm::vec3(0.7f * i, 0.3f * i, 5.f * i));
                 pObjShaderProgram->setMat4("model", model);
 
-                glBindVertexArray(VAO);
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             }
             // *********************************************
@@ -247,14 +291,15 @@ int main(int argc, char * argv[])
             pLightShaderProgram->setMat4("view", view);
             pLightShaderProgram->setMat4("projection", projection);
 
-            glm::mat4 light = glm::mat4(1.0f);
-            light = glm::translate(light, lightPos);
-            light = glm::scale(light, glm::vec3{ 0.2f });
-            light = glm::rotate(light, glm::radians(0.f) * (float)glfwGetTime(), glm::vec3{ 0.f, 0.3f * 10.f, 5.f });
-            pLightShaderProgram->setMat4("model", light);
-
             glBindVertexArray(lightVAO);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            for (unsigned int i = 0; i < 4; i++)
+            {
+                glm::mat4 light = glm::mat4(1.0f);
+                light = glm::translate(light, pointLightPositions[i]);
+                light = glm::scale(light, glm::vec3(0.2f)); // Make it a smaller cube
+                pLightShaderProgram->setMat4("model", light);
+                glDrawArrays(GL_TRIANGLES, 0, 36);
+            }
             // *********************************************
 
             win.Draw();
