@@ -14,6 +14,11 @@ struct LightProperties
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    // attenuation
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 in vec3 normal_vector;
@@ -33,6 +38,10 @@ void main()
     vec3 diffuseFromTex = vec3(texture(material.diffuse, tex_coord));
     vec3 specularFromTex = vec3(texture(material.specular, tex_coord));
 
+    // attenuation
+    float distant = length(light.position - fragPosition);
+    float attenuation = 1.0 / (light.constant + light.linear * distant + light.quadratic * (distant * distant));
+    
     // ambient
     vec3 ambient = light.ambient * diffuseFromTex;
 
@@ -47,7 +56,8 @@ void main()
     vec3 reflectedLight = reflect(-lightDir, norm);
     float spec = pow(max(dot(reflectedLight, viewDir), 0.0), material.shininess);
     vec3 specular = light.specular * (spec * specularFromTex);
-    
+
     vec3 result = ambient + specular + diffuse;
+    result *= attenuation;
     fragColor = vec4(result, 0.0);
 }

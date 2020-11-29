@@ -201,6 +201,9 @@ int main(int argc, char * argv[])
             // Loading colors
             pObjShaderProgram->setVec3("lightColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
             pObjShaderProgram->setFloat("material.shininess", 32.0f);
+            pObjShaderProgram->setFloat("light.constant", 1.0f);
+            pObjShaderProgram->setFloat("light.linear", 0.08f);
+            pObjShaderProgram->setFloat("light.quadratic", 0.0028f);
             // Light source is second cube!
             pObjShaderProgram->setVec3("light.position", lightPos);
             pObjShaderProgram->setVec3("light.ambient", glm::vec3{ 0.1f, 0.1f, 0.1f });
