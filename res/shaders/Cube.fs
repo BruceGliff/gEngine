@@ -52,7 +52,8 @@ void main()
         if (thetta < light.cutOff)
         {
             float epsilon   = light.cutOff - light.outerCutOff;
-            intensity = clamp((thetta - light.outerCutOff) / epsilon, 0.0, 1.0); 
+            // intensity = clamp((thetta - light.outerCutOff) / epsilon, 0.0, 1.0); 
+            intensity = smoothstep(0.0, 1.0, (thetta - light.outerCutOff) / epsilon);
         }
 
         vec3 specularFromTex = vec3(texture(material.specular, tex_coord));
