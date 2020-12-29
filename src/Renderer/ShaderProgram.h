@@ -1,7 +1,8 @@
 #pragma once
-#include <glad/glad.h>
-#include <string>
+
 #include <glm/mat4x4.hpp>
+
+#include <string>
 
 namespace Renderer
 {
@@ -10,10 +11,10 @@ namespace Renderer
 		// Flag if Shaders is compiled
 		bool isCompiled = false;
 		// Id of the shader program
-		GLuint id = 0;
+		unsigned int id = 0;
 
 		//Create Shader from source code. if success return 1. return ShaderID via out_shaderID
-		bool CreateShader(std::string const& source, GLenum const& shader_type, GLuint & out_shaderID) const noexcept;
+		bool CreateShader(std::string const& source, unsigned int const& shader_type, unsigned int& out_shaderID) const noexcept;
 
 
 	public:
@@ -32,7 +33,7 @@ namespace Renderer
 		void Use() const noexcept;
 		// set an id fo texture for uniform variable in fragment shader "tex". Also text is a name
 		// value is a slot value at shader program. if there 1 texture, then value 0, if there if second - then 1 ... 
-		void SetInt(std::string const& name, GLint const value);
+		void SetInt(std::string const& name, int const value);
 
 		// load mat4 by name
 		void setMat4(std::string const& name, glm::mat4 const& mat) const noexcept;

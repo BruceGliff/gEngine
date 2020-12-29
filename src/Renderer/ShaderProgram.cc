@@ -2,9 +2,11 @@
 
 #include <iostream>
 #include <utility>
-#include <glm/gtc/type_ptr.hpp>
 
-bool Renderer::ShaderProgram::CreateShader(std::string const& source, GLenum const& shader_type, GLuint& out_shaderID) const noexcept
+#include <glm/gtc/type_ptr.hpp>
+#include <glad/glad.h>
+
+bool Renderer::ShaderProgram::CreateShader(std::string const& source, unsigned int const& shader_type, unsigned int & out_shaderID) const noexcept
 {
     // Create shader discription of shader
     GLuint const shaderID = glCreateShader(shader_type);
@@ -63,7 +65,7 @@ void Renderer::ShaderProgram::Use() const noexcept
     glUseProgram(id);
 }
 
-void Renderer::ShaderProgram::SetInt(std::string const& name, GLint const value)
+void Renderer::ShaderProgram::SetInt(std::string const& name, int const value)
 {
     // By id and name get location of uniform variable
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);
