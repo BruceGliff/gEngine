@@ -24,10 +24,8 @@ namespace Resources
 		TexturesMap textures;
 
 		// Path to executable file
-		std::string const path;
+		std::string const path_to_exec;
 
-		// Calculate path of the res/ directory. Throws run_time exception if errors occured
-		std::string computePath(std::string const & path) const;
 		// Get file from res/ directory fe: getFile(res/shaders/fragment.glsl);
 		std::string getFile(std::string const& relativePath) const;
 
@@ -52,5 +50,11 @@ namespace Resources
 		std::shared_ptr <Renderer::TextureGL> loadTexture(std::string const& textureName, std::string const & relevantPath);
 		// Return texture by name or nullptr if it did ont find
 		std::shared_ptr <Renderer::TextureGL> getTexture(std::string const& textureName) const noexcept;
+
+		// Calculate path of the res/ directory. Throws run_time exception if errors occured
+		static std::string computePath(std::string const& path);
+
+		std::string const& getPathToExucutable() const;
+
 	};
 }

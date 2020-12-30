@@ -7,7 +7,7 @@
 #include <fstream>
 #include <exception>
 
-std::string Resources::ResourcesManager::computePath(std::string const & path) const
+std::string Resources::ResourcesManager::computePath(std::string const & path)
 {
     size_t const slash_position = path.find_last_of("/\\");
     if (slash_position == std::string::npos)
@@ -19,9 +19,14 @@ std::string Resources::ResourcesManager::computePath(std::string const & path) c
     return path.substr(0, slash_position);
 }
 
+std::string const& Resources::ResourcesManager::getPathToExucutable() const
+{
+    return path_to_exec;
+}
+
 std::string Resources::ResourcesManager::getFile(std::string const& relativePath) const
 {
-    std::ifstream file{ path + "/" + relativePath.c_str(), std::ios::in | std::ios::binary};
+    std::ifstream file{ path_to_exec + "/" + relativePath.c_str(), std::ios::in | std::ios::binary};
     if (!file.is_open())
     {
         std::cerr << "ERROR:: file reading\n" << "cannot read file < " << relativePath << " >" << std::endl;
@@ -34,7 +39,7 @@ std::string Resources::ResourcesManager::getFile(std::string const& relativePath
     return buffer.str();
 }
 
-Resources::ResourcesManager::ResourcesManager(std::string const& execPath) : path{computePath(execPath)}
+Resources::ResourcesManager::ResourcesManager(std::string const& execPath) : path_to_exec{computePath(execPath)}
 {}
 
 
@@ -61,7 +66,7 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::getShaderP
 
 std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::string const& textureName, std::string const& relevantPath)
 {
-    return textures.emplace(textureName, std::make_shared<Renderer::TextureGL>(path + '/' + relevantPath)).first->second;
+    return textures.emplace(textureName, std::make_shared<Renderer::TextureGL>(path_to_exec + '/' + relevantPath)).first->second;
 }
 
 std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std::string const& textureName) const noexcept

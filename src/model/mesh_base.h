@@ -16,6 +16,11 @@ namespace Renderer
 {
 	class ShaderProgram;
 }
+struct aiNode;
+struct aiScene;
+struct aiMesh;
+struct aiMaterial;
+enum aiTextureType;
 
 namespace Model
 {
@@ -30,6 +35,7 @@ namespace Model
 	{
 		unsigned int id;
 		std::string type; // diffuse, specular ...
+		std::string path; // to future optimize if it has been loaded already
 	};
 
 	class Mesh
@@ -39,12 +45,28 @@ namespace Model
 		void setupMesh();
 
 	public:
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+		Mesh(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, std::vector<Texture> const & textures);
 		void Draw(Renderer::ShaderProgram& shader);
 
 	public:
 		std::vector<Vertex>			m_vertices;
 		std::vector<unsigned int>	m_indices;
 		std::vector<Texture>		m_textures;
+	};
+
+	class Model
+	{
+		std::vector<Mesh> m_meshes;
+		std::string m_directory_path;
+		
+		void loadModel(std::string const& path);
+		void processNode(aiNode* node, aiScene const * scene);
+		Mesh processMesh(aiMesh* mesh, aiScene const* scene);
+		std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string const& typeName);
+
+	public:
+		Model(std::string const& path);
+		void Draw(Renderer::ShaderProgram& shader);
+
 	};
 }

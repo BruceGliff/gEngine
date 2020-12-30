@@ -1,6 +1,7 @@
 #include "TextureGL.h"
 
-Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLenum const wrapMode) noexcept : Resources::Texture_base{path}
+Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLenum const wrapMode) noexcept : 
+	Resources::Texture_base{path}
 {
 	// TODO rethink!
 	// each texture id should be uniq for at-once-drawable object!
