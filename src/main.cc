@@ -48,6 +48,9 @@ int main(int argc, char * argv[])
             return -1;
         }
 
+        // TODO Investigate is it should be there
+        //pObjShaderProgram->Use();
+
         Model::Model ourModel(resMng.getPathToExucutable() + "\\res\\models\\backpack\\backpack.obj");
 
         // Easiest benchmark
@@ -55,15 +58,16 @@ int main(int argc, char * argv[])
         auto const prev_time = glfwGetTime();
 
         Resources::glWindows& win = GLOBAL::GetWindow();
-
+        glEnable(GL_DEPTH_TEST);
         while (!win.ProcessInput())
         {
             ++delta_frame;
 
             /* Render here */
-            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            glClearColor(0.1f, 0.5f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            pObjShaderProgram->Use();
             //Change camera position
             // TODO think about view
             Actor::actor    const & player = GLOBAL::GetPlayer();
@@ -81,7 +85,7 @@ int main(int argc, char * argv[])
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
+            model = glm::scale(model, glm::vec3(1.f, 1.f, 1.f));	// it's a bit too big for our scene, so scale it down
             pObjShaderProgram->setMat4("model", model);
             ourModel.Draw(*pObjShaderProgram);
 
@@ -93,6 +97,6 @@ int main(int argc, char * argv[])
         std::cout << "TIMING: " << delta_frame / delta_time << std::endl;
 
     }
-
+    system("pause");
     return 0;
 }
