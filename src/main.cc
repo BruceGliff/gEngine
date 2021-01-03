@@ -22,21 +22,11 @@ std::string const SHADER_PATH{ "res/shaders/" };
 
 int main(int argc, char * argv[])
 {        
-    GLOBAL::Initialize(argv[0], 1600, 900, "OOP Changes!");
-
-    /* Initialize glad */
-    if (!gladLoadGL())
-    {
-        std::cerr << "Cannot initialize GLAD" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+    GLOBAL::Initialize(argv[0], 1600, 900, "gEngine");
 
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL ver: " << glGetString(GL_VERSION) << std::endl;
 
-    // Fill bachground with color
-    glClearColor(0.f, 0.f, 0.f, 1.f);
 
     {// ResourceManager has shaders constext inside. so it has to be terminated before glfw
         Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
@@ -48,10 +38,7 @@ int main(int argc, char * argv[])
             return -1;
         }
 
-        // TODO Investigate is it should be there
-        //pObjShaderProgram->Use();
-
-        Model::Model ourModel(resMng.getPathToExucutable() + "\\res\\models\\text\\text.obj");
+        Model::Model ourModel(resMng.getPathToExucutable() / "res/models/text/text.obj");
 
         // Easiest benchmark
         int delta_frame = 0;

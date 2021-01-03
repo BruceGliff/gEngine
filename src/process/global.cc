@@ -8,6 +8,8 @@
 #include "../manager/ResourceManager.h"
 #include "../window/window_base.h"
 
+#include <iostream>
+
 // GLOBAL object which unique during the program
 Actor::player_wrap PLAYER{};
 Resources::windows_wrap WINDOW{};
@@ -22,6 +24,14 @@ void GLOBAL::Initialize(char const * path_to_exec, int win_width, int win_height
 	RES_MGR.construct(path_to_exec);
 
 	PLAYER.construct();
+
+	/* Initialize glad */
+	if (!gladLoadGL())
+	{
+		std::cerr << "Cannot initialize GLAD" << std::endl;
+		glfwTerminate();
+		throw std::runtime_error{ "ERR:: Cannot initialize GLAD!" };
+	}
 }
 
 Actor::actor& GLOBAL::GetPlayer()

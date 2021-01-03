@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <filesystem>
 
 // TODO This is just from tutorial for testing
 // Make it on your way
@@ -57,15 +58,15 @@ namespace Model
 	class Model
 	{
 		std::vector<Mesh> m_meshes;
-		std::string m_directory_path;
+		std::filesystem::path m_directory_path;
 		
-		void loadModel(std::string const& path);
+		void loadModel(std::filesystem::path const& path);
 		void processNode(aiNode* node, aiScene const * scene);
 		Mesh processMesh(aiMesh* mesh, aiScene const* scene);
 		std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string const& typeName);
 
 	public:
-		Model(std::string const& path);
+		Model(std::filesystem::path const& path);
 		void Draw(Renderer::ShaderProgram& shader);
 
 	};

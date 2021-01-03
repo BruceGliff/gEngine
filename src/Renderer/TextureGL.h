@@ -19,7 +19,7 @@ namespace Renderer
 		TextureGL& operator=(TextureGL const&)		= delete;
 		TextureGL& operator=(TextureGL&&)			= delete;
 
-		TextureGL(std::string const& path, GLenum const filter = GL_LINEAR, GLenum const wrapMode = GL_CLAMP_TO_EDGE) noexcept;
+		TextureGL(std::filesystem::path const& path, GLenum const filter = GL_LINEAR, GLenum const wrapMode = GL_CLAMP_TO_EDGE) noexcept;
 		~TextureGL();
 		// Make this texture active
 		void bind() const noexcept;

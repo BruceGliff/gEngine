@@ -80,19 +80,20 @@ void Model::Mesh::setupMesh()
         glBindVertexArray(0);
 }
 
-void Model::Model::loadModel(std::string const& path)
+void Model::Model::loadModel(std::filesystem::path const& path)
 {
     Assimp::Importer import;
-    aiScene const * scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    aiScene const * scene = import.ReadFile(path.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
         return;
     }
-    
-    // TODO CHECK FILSYSTEM, cause / and \\ /
-    m_directory_path = path.substr(0, path.find_last_of('\\'));
+
+
+    m_directory_path = path;
+    m_directory_path.remove_filename();
 
     processNode(scene->mRootNode, scene);
 }
@@ -185,7 +186,7 @@ std::vector<Model::Texture> Model::Model::loadMaterialTextures(aiMaterial* mat, 
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), m_directory_path);
+            texture.id = TextureFromFile(str.C_Str(), m_directory_path.string());
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
@@ -195,7 +196,7 @@ std::vector<Model::Texture> Model::Model::loadMaterialTextures(aiMaterial* mat, 
     return textures;
 }
 
-Model::Model::Model(std::string const& path)
+Model::Model::Model(std::filesystem::path const& path)
 {
     loadModel(path);
 }

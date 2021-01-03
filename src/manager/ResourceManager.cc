@@ -7,29 +7,12 @@
 #include <fstream>
 #include <exception>
 
-std::string Resources::ResourcesManager::computePath(std::string const & path)
+std::string Resources::ResourcesManager::readFile(std::filesystem::path const& relativePath) const
 {
-    size_t const slash_position = path.find_last_of("/\\");
-    if (slash_position == std::string::npos)
-    {
-        std::cerr << "ERROR:: path parse\n" << "cannot find '/' or '\\' in < " << path << " >" << std::endl;
-        throw std::runtime_error{ "ERROR:: path parse" };
-    }
-
-    return path.substr(0, slash_position);
-}
-
-std::string const& Resources::ResourcesManager::getPathToExucutable() const
-{
-    return path_to_exec;
-}
-
-std::string Resources::ResourcesManager::getFile(std::string const& relativePath) const
-{
-    std::ifstream file{ path_to_exec + "/" + relativePath.c_str(), std::ios::in | std::ios::binary};
+    std::ifstream file{ path_to_exec / relativePath, std::ios::in | std::ios::binary};
     if (!file.is_open())
     {
-        std::cerr << "ERROR:: file reading\n" << "cannot read file < " << relativePath << " >" << std::endl;
+        std::cerr << "ERROR:: file reading\n" << "cannot read file < " << relativePath.lexically_normal() << " >" << std::endl;
         throw std::runtime_error{ "ERROR:: file reading" };
     }
 
@@ -39,14 +22,17 @@ std::string Resources::ResourcesManager::getFile(std::string const& relativePath
     return buffer.str();
 }
 
-Resources::ResourcesManager::ResourcesManager(std::string const& execPath) : path_to_exec{computePath(execPath)}
+Resources::ResourcesManager::ResourcesManager(std::filesystem::path const& execPath) : 
+    path_to_exec{ std::filesystem::path{execPath}.remove_filename() }
 {}
 
 
-std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::loadShaders(std::string const& shaderName, std::string const& vertexPath, std::string const& fragmentPath)
+std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::loadShaders(  std::string const& shaderName, 
+                                                                                    std::filesystem::path const& vertexPath, 
+                                                                                    std::filesystem::path const& fragmentPath)
 {
-    std::string const vertexCode{ getFile(vertexPath) };
-    std::string const fragmentCode{ getFile(fragmentPath) };
+    std::string const vertexCode{ readFile(vertexPath) };
+    std::string const fragmentCode{ readFile(fragmentPath) };
 
     // shader can be not compiled!
     return shaderPrograms.emplace(shaderName, std::make_shared<Renderer::ShaderProgram>(vertexCode, fragmentCode)).first->second;
@@ -64,9 +50,9 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::getShaderP
     return nullptr;
 }
 
-std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::string const& textureName, std::string const& relevantPath)
+std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::string const& textureName, std::filesystem::path const& relevantPath)
 {
-    return textures.emplace(textureName, std::make_shared<Renderer::TextureGL>(path_to_exec + '/' + relevantPath)).first->second;
+    return textures.emplace(textureName, std::make_shared<Renderer::TextureGL>(path_to_exec / relevantPath)).first->second;
 }
 
 std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std::string const& textureName) const noexcept
@@ -79,4 +65,9 @@ std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std
 
     std::cerr << "ERROR:: run-time:\n" << "No shader program with name: " << textureName << std::endl;
     return nullptr;
+}
+
+std::filesystem::path const& Resources::ResourcesManager::getPathToExucutable() const
+{
+    return path_to_exec;
 }

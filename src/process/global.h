@@ -12,7 +12,7 @@ namespace Resources
 
 namespace GLOBAL
 {
-	// Init all program properties
+	// Init all program properties: window, resourseMgr, player, glad
 	void Initialize(char const* path_to_exec, int win_width, int win_height, char const* win_name);
 
 	// Return current active player

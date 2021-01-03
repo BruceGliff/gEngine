@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
 
 namespace Resources
 {
@@ -21,7 +22,7 @@ namespace Resources
 		Texture_base& operator=(Texture_base const&)	= delete;
 		Texture_base& operator=(Texture_base&&)			= delete;
 
-		Texture_base(std::string const& relevantPath) noexcept;
+		Texture_base(std::filesystem::path const& relevantPath) noexcept;
 		virtual ~Texture_base();
 
 		// Out texture in .ppm format. Without alpha. with name: out.ppm

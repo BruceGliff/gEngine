@@ -1,6 +1,6 @@
 #include "TextureGL.h"
 
-Renderer::TextureGL::TextureGL(std::string const& path, GLenum const filter, GLenum const wrapMode) noexcept : 
+Renderer::TextureGL::TextureGL(std::filesystem::path const& path, GLenum const filter, GLenum const wrapMode) noexcept :
 	Resources::Texture_base{path}
 {
 	// TODO rethink!
