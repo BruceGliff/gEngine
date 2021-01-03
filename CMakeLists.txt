@@ -13,6 +13,8 @@ add_executable(${PROGECT_NAME}
 	src/manager/ResourceManager.h
 	src/manager/ResourceManager_wrap.cc
 	src/manager/ResourceManager_wrap.h
+	src/manager/AccessHandler.cc
+	src/manager/AccessHandler.h
 	src/texture/Texture_base.cc
 	src/texture/Texture_base.h
 	src/texture/stb_image.h
