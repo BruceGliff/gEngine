@@ -6,19 +6,16 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "../texture/stb_image.h"
+
+#include "../Renderer/TextureGL.h"
+#include "../process/global.h"
+#include "../manager/ResourceManager.h"
 
 // TODO remove this
 #include "windows.h"
 #include <fstream>
 
-// TODO this is coppy paste and should be moved to Texture class
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
-
-// TODO it is optimization and it should be optimized
-std::vector<Model::Texture> textures_loaded;
-
-Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<Texture> const& textures) :
+Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<type_pTextures> const& textures) :
 	m_vertices(vertices),
 	m_indices(indices),
 	m_textures(textures)
@@ -26,23 +23,14 @@ Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int>
 	setupMesh();
 }
 
-void Model::Mesh::Draw(Renderer::ShaderProgram& shader)
+void Model::Mesh::Draw(Renderer::ShaderProgram const & shader)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
+
     for (unsigned int i = 0; i < m_textures.size(); i++)
     {
-        glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
-        // retrieve texture number (the N in diffuse_textureN)
-        std::string number;
-        std::string name = m_textures[i].type;
-        if (name == "texture_diffuse")
-            number = std::to_string(diffuseNr++);
-        else if (name == "texture_specular")
-            number = std::to_string(specularNr++);
-
-        shader.SetInt((name + number).c_str(), i);
-        glBindTexture(GL_TEXTURE_2D, m_textures[i].id);
+        m_textures[i]->activateTexture(i, shader);
     }
     glActiveTexture(GL_TEXTURE0);
 
@@ -117,7 +105,7 @@ Model::Mesh Model::Model::processMesh(aiMesh* mesh, aiScene const* scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<type_pTextures> textures;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -157,41 +145,40 @@ Model::Mesh Model::Model::processMesh(aiMesh* mesh, aiScene const* scene)
     if (mesh->mMaterialIndex >= 0)
     {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        // TODO optimize this
+        std::vector<type_pTextures> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<type_pTextures> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR);
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
     return Mesh{ vertices, indices, textures };
 }
 
-std::vector<Model::Texture> Model::Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string const& typeName)
+std::vector<Model::type_pTextures> Model::Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
 {
-    std::vector<Texture> textures;
+    std::vector<type_pTextures> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
         mat->GetTexture(type, i, &str);
-        bool skip = false;
-        for (unsigned int j = 0; j < textures_loaded.size(); j++)
+
+        Renderer::ETextureType texType;
+        switch (type)
         {
-            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
-            {
-                textures.push_back(textures_loaded[j]);
-                skip = true;
-                break;
-            }
+        case aiTextureType_DIFFUSE:
+            texType = Renderer::ETextureType::DIFFUSE;
+            break;
+        case aiTextureType_SPECULAR:
+            texType = Renderer::ETextureType::SPECULAR;
+            break;
+        default:
+            texType = Renderer::ETextureType::DIFFUSE;
+            break;
         }
-        if (!skip)
-        {   // if texture hasn't been loaded already, load it
-            Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), m_directory_path.string());
-            texture.type = typeName;
-            texture.path = str.C_Str();
-            textures.push_back(texture);
-            textures_loaded.push_back(texture); // add to loaded textures
-        }
+
+        textures.push_back(GLOBAL::GetResManager().loadTexture(m_directory_path / std::filesystem::path{ str.C_Str() }, texType));
+
     }
     return textures;
 }
@@ -201,51 +188,8 @@ Model::Model::Model(std::filesystem::path const& path)
     loadModel(path);
 }
 
-void Model::Model::Draw(Renderer::ShaderProgram& shader)
+void Model::Model::Draw(Renderer::ShaderProgram const & shader)
 {
     for (auto&& mesh : m_meshes)
         mesh.Draw(shader);
-}
-
-
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
-{
-    std::string filename{ path };
-    filename = directory + '/' + filename;
-
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-
-    int width, height, nrComponents;
-    // TODO pay attention to flip!!
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-    if (data)
-    {
-        GLenum format = GL_RED;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    }
-    else
-    {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
-        stbi_image_free(data);
-    }
-
-    return textureID;
 }

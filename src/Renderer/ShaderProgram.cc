@@ -65,7 +65,7 @@ void Renderer::ShaderProgram::Use() const noexcept
     glUseProgram(id);
 }
 
-void Renderer::ShaderProgram::SetInt(std::string const& name, int const value)
+void Renderer::ShaderProgram::SetInt(std::string const& name, int const value) const noexcept
 {
     // By id and name get location of uniform variable
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);

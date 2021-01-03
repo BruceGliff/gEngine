@@ -38,7 +38,7 @@ int main(int argc, char * argv[])
             return -1;
         }
 
-        Model::Model ourModel(resMng.getPathToExucutable() / "res/models/text/text.obj");
+        Model::Model ourModel(resMng.getPathToExucutable() / "res/models/backpack/backpack.obj");
 
         // Easiest benchmark
         int delta_frame = 0;

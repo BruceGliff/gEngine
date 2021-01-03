@@ -9,6 +9,20 @@ namespace Renderer
 {
 	class ShaderProgram;
 	class TextureGL;
+	enum class ETextureType;
+}
+
+
+// to use unordered_map<filesystem::path, ...>
+namespace std {
+	template <>
+	struct hash<std::filesystem::path>
+	{
+		std::size_t operator()(std::filesystem::path const& k) const
+		{
+			return std::filesystem::hash_value(k);
+		}
+	};
 }
 
 namespace Resources
@@ -22,7 +36,7 @@ namespace Resources
 		ShaderProgramsMap shaderPrograms;
 
 		// Map of the textures
-		typedef std::unordered_map<std::string, std::shared_ptr<Renderer::TextureGL>> TexturesMap;
+		typedef std::unordered_map<std::filesystem::path, std::shared_ptr<Renderer::TextureGL>> TexturesMap;
 		TexturesMap textures;
 
 		// Path to executable file
@@ -51,7 +65,7 @@ namespace Resources
 
 		// TODO make texture unique by path
 		// Load texture
-		std::shared_ptr <Renderer::TextureGL> loadTexture(std::string const& textureName, std::filesystem::path const& relevantPath);
+		std::shared_ptr <Renderer::TextureGL> loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType );
 		// Return texture by name or nullptr if it did ont find
 		std::shared_ptr <Renderer::TextureGL> getTexture(std::string const& textureName) const noexcept;
 

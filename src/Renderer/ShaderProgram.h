@@ -33,7 +33,7 @@ namespace Renderer
 		void Use() const noexcept;
 		// set an id fo texture for uniform variable in fragment shader "tex". Also text is a name
 		// value is a slot value at shader program. if there 1 texture, then value 0, if there if second - then 1 ... 
-		void SetInt(std::string const& name, int const value);
+		void SetInt(std::string const& name, int const value) const noexcept;
 
 		// load mat4 by name
 		void setMat4(std::string const& name, glm::mat4 const& mat) const noexcept;

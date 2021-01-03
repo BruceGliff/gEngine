@@ -16,7 +16,9 @@
 namespace Renderer
 {
 	class ShaderProgram;
+	class TextureGL;
 }
+
 struct aiNode;
 struct aiScene;
 struct aiMesh;
@@ -32,27 +34,21 @@ namespace Model
 		glm::vec2 texture_coord;
 	};
 
-	struct Texture
-	{
-		unsigned int id;
-		std::string type; // diffuse, specular ...
-		std::string path; // to future optimize if it has been loaded already
-	};
-
+	typedef std::shared_ptr<Renderer::TextureGL> type_pTextures;
 	class Mesh
 	{
 		unsigned int VAO, VBO, EBO;
-
+		
 		void setupMesh();
 
 	public:
-		Mesh(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, std::vector<Texture> const & textures);
-		void Draw(Renderer::ShaderProgram& shader);
+		Mesh(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, std::vector<type_pTextures> const & textures);
+		void Draw(Renderer::ShaderProgram const & shader);
 
 	public:
 		std::vector<Vertex>			m_vertices;
 		std::vector<unsigned int>	m_indices;
-		std::vector<Texture>		m_textures;
+		std::vector<type_pTextures>	m_textures;
 	};
 
 	class Model
@@ -63,11 +59,11 @@ namespace Model
 		void loadModel(std::filesystem::path const& path);
 		void processNode(aiNode* node, aiScene const * scene);
 		Mesh processMesh(aiMesh* mesh, aiScene const* scene);
-		std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string const& typeName);
+		std::vector<type_pTextures> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
 
 	public:
 		Model(std::filesystem::path const& path);
-		void Draw(Renderer::ShaderProgram& shader);
+		void Draw(Renderer::ShaderProgram const & shader);
 
 	};
 }

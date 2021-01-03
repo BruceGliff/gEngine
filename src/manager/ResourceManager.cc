@@ -7,6 +7,7 @@
 #include <fstream>
 #include <exception>
 
+
 std::string Resources::ResourcesManager::readFile(std::filesystem::path const& relativePath) const
 {
     std::ifstream file{ path_to_exec / relativePath, std::ios::in | std::ios::binary};
@@ -50,9 +51,18 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::getShaderP
     return nullptr;
 }
 
-std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::string const& textureName, std::filesystem::path const& relevantPath)
+std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType)
 {
-    return textures.emplace(textureName, std::make_shared<Renderer::TextureGL>(path_to_exec / relevantPath)).first->second;
+    std::filesystem::path const absolutePath{ path_to_exec / relevantPath };
+    
+    TexturesMap::const_iterator it = textures.find(absolutePath);
+
+    // if texture does not exist, then load it
+    if (it == textures.end())
+        return textures.emplace(absolutePath, std::make_shared<Renderer::TextureGL>(absolutePath, texType)).first->second;
+
+    // if texture already exists, return it
+    return it->second;
 }
 
 std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std::string const& textureName) const noexcept

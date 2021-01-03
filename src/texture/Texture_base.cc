@@ -25,14 +25,23 @@ Resources::Texture_base::Texture_base(std::filesystem::path const& path) noexcep
         width = 1;
         height = 1;
         channels = 3;
-        isError = true;
+        isNoNeedToDelete = true;
     }
+}
+
+void Resources::Texture_base::Release()
+{
+    if (isNoNeedToDelete)
+        return;
+
+    stbi_image_free(data);
+    isNoNeedToDelete = true;
 }
 
 Resources::Texture_base::~Texture_base()
 {
-    if (!isError)
-        stbi_image_free(data);
+    if (!isNoNeedToDelete)
+        Release();
 }
 
 void Resources::Texture_base::DumpTexture() const
