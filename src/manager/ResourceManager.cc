@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
-#include "../Renderer/ShaderProgram.h"
-#include "../Renderer/TextureGL.h"
+#include "../renderer/ShaderProgram.h"
+#include "../renderer/TextureGL.h"
 
 #include <iostream>
 #include <sstream>

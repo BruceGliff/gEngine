@@ -1,13 +1,13 @@
 #include "mesh_base.h"
 
-#include "../Renderer/ShaderProgram.h"
+#include "../renderer/ShaderProgram.h"
 
 #include <glad/glad.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../Renderer/TextureGL.h"
+#include "../renderer/TextureGL.h"
 #include "../process/global.h"
 #include "../manager/ResourceManager.h"
 
