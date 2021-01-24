@@ -11,10 +11,6 @@
 #include "../process/global.h"
 #include "../manager/ResourceManager.h"
 
-// TODO remove this
-#include "windows.h"
-#include <fstream>
-
 Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<type_pTextures> const& textures) :
 	m_vertices(vertices),
 	m_indices(indices),

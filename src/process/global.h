@@ -6,7 +6,7 @@ namespace Actor
 }
 namespace Resources
 {
-	class glWindows;
+	class glWindow;
 	class ResourcesManager;
 }
 
@@ -20,5 +20,5 @@ namespace GLOBAL
 	// Return current active ResourceManager
 	Resources::ResourcesManager& GetResManager();
 	// Return current active Window
-	Resources::glWindows& GetWindow();
+	Resources::glWindow& GetWindow();
 }

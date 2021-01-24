@@ -32,7 +32,7 @@ Resources::WindowSizeProperty& Resources::WindowSizeProperty::operator=(std::ini
     return *this;
 }
 
-Resources::glWindows::glWindows(int width, int height, std::string const & win_name) : name{win_name}
+Resources::glWindow::glWindow(int width, int height, std::string const & win_name) : name{win_name}
 {
     WindowProperty = { width, height };
     pWindow = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
@@ -52,22 +52,22 @@ Resources::glWindows::glWindows(int width, int height, std::string const & win_n
     glfwSetScrollCallback(pWindow, scroll_callback);
 }
 
-Resources::glWindows::operator bool() const noexcept
+Resources::glWindow::operator bool() const noexcept
 {
     return glfwWindowShouldClose(pWindow);
 }
 
-Resources::WindowSizeProperty const & Resources::glWindows::GetWindowSize() const noexcept
+Resources::WindowSizeProperty const & Resources::glWindow::GetWindowSize() const noexcept
 {
     return WindowProperty;
 }
 
-Resources::WindowSizeProperty& Resources::glWindows::GetWindowSize() noexcept
+Resources::WindowSizeProperty& Resources::glWindow::GetWindowSize() noexcept
 {
     return WindowProperty;
 }
 
-void Resources::glWindows::Draw() const noexcept
+void Resources::glWindow::Draw() const noexcept
 {
     /* Swap front and back buffers */
     glfwSwapBuffers(pWindow);
@@ -76,7 +76,7 @@ void Resources::glWindows::Draw() const noexcept
     glfwPollEvents();
 }
 
-bool Resources::glWindows::ProcessInput() const noexcept
+bool Resources::glWindow::ProcessInput() const noexcept
 {
     static float deltaTime = 0.0f;	// Time between current frame and last frame
     static float lastFrame = 0.0f; // Time of last frame
@@ -105,7 +105,7 @@ bool Resources::glWindows::ProcessInput() const noexcept
     return glfwWindowShouldClose(pWindow);
 }
 
-void Resources::glWindows::glfwWindowSizeCallback(GLFWwindow* window, int width, int height)
+void Resources::glWindow::glfwWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
     WindowProperty.width = width;
     WindowProperty.height = height;
@@ -114,7 +114,7 @@ void Resources::glWindows::glfwWindowSizeCallback(GLFWwindow* window, int width,
  
 
 // TODO check this with Process input!
-void Resources::glWindows::glfwKeyCallback(GLFWwindow* window, int key, int scanmode, int action, int mode)
+void Resources::glWindow::glfwKeyCallback(GLFWwindow* window, int key, int scanmode, int action, int mode)
 {
     // Close window due to escape
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -126,7 +126,7 @@ void Resources::glWindows::glfwKeyCallback(GLFWwindow* window, int key, int scan
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void Resources::glWindows::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
     // PARAMS of MOUSE or camera
     //                      ^
@@ -172,7 +172,7 @@ void Resources::glWindows::mouse_callback(GLFWwindow* window, double xpos, doubl
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void Resources::glWindows::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void Resources::glWindow::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     auto& fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
     fov -= (float)yoffset;

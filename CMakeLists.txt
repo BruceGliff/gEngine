@@ -11,8 +11,8 @@ add_executable(${PROGECT_NAME}
 	src/renderer/TextureGL.h
 	src/manager/ResourceManager.cc
 	src/manager/ResourceManager.h
-	src/manager/ResourceManager_wrap.cc
-	src/manager/ResourceManager_wrap.h
+	src/manager/EnvironmentHandler_wrap.cc
+	src/manager/EnvironmentHandler_wrap.h
 	src/manager/AccessHandler.cc
 	src/manager/AccessHandler.h
 	src/texture/Texture_base.cc
@@ -20,8 +20,6 @@ add_executable(${PROGECT_NAME}
 	src/texture/stb_image.h
 	src/window/window_base.cc
 	src/window/window_base.h
-	src/window/window_wrap.cc
-	src/window/window_wrap.h
 	src/geometry/geometry_base.cc
 	src/geometry/geometry_base.h
 	src/model/mesh_base.cc
