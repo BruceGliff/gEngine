@@ -1,30 +1,19 @@
 #include "ResourceManager.h"
-#include "../Renderer/ShaderProgram.h"
-#include "../Renderer/TextureGL.h"
+#include "../renderer/ShaderProgram.h"
+#include "../renderer/TextureGL.h"
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <exception>
 
-std::string Resources::ResourcesManager::computePath(std::string const & path) const
-{
-    size_t const slash_position = path.find_last_of("/\\");
-    if (slash_position == std::string::npos)
-    {
-        std::cerr << "ERROR:: path parse\n" << "cannot find '/' or '\\' in < " << path << " >" << std::endl;
-        throw std::runtime_error{ "ERROR:: path parse" };
-    }
 
-    return path.substr(0, slash_position);
-}
-
-std::string Resources::ResourcesManager::getFile(std::string const& relativePath) const
+std::string Resources::ResourcesManager::readFile(std::filesystem::path const& relativePath) const
 {
-    std::ifstream file{ path + "/" + relativePath.c_str(), std::ios::in | std::ios::binary};
+    std::ifstream file{ path_to_exec / relativePath, std::ios::in | std::ios::binary};
     if (!file.is_open())
     {
-        std::cerr << "ERROR:: file reading\n" << "cannot read file < " << relativePath << " >" << std::endl;
+        std::cerr << "ERROR:: file reading\n" << "cannot read file < " << relativePath.lexically_normal() << " >" << std::endl;
         throw std::runtime_error{ "ERROR:: file reading" };
     }
 
@@ -34,14 +23,17 @@ std::string Resources::ResourcesManager::getFile(std::string const& relativePath
     return buffer.str();
 }
 
-Resources::ResourcesManager::ResourcesManager(std::string const& execPath) : path{computePath(execPath)}
+Resources::ResourcesManager::ResourcesManager(std::filesystem::path const& execPath) : 
+    path_to_exec{ std::filesystem::path{execPath}.remove_filename() }
 {}
 
 
-std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::loadShaders(std::string const& shaderName, std::string const& vertexPath, std::string const& fragmentPath)
+std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::loadShaders(  std::string const& shaderName, 
+                                                                                    std::filesystem::path const& vertexPath, 
+                                                                                    std::filesystem::path const& fragmentPath)
 {
-    std::string const vertexCode{ getFile(vertexPath) };
-    std::string const fragmentCode{ getFile(fragmentPath) };
+    std::string const vertexCode{ readFile(vertexPath) };
+    std::string const fragmentCode{ readFile(fragmentPath) };
 
     // shader can be not compiled!
     return shaderPrograms.emplace(shaderName, std::make_shared<Renderer::ShaderProgram>(vertexCode, fragmentCode)).first->second;
@@ -59,9 +51,18 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::getShaderP
     return nullptr;
 }
 
-std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::string const& textureName, std::string const& relevantPath)
+std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType)
 {
-    return textures.emplace(textureName, std::make_shared<Renderer::TextureGL>(path + '/' + relevantPath)).first->second;
+    std::filesystem::path const absolutePath{ path_to_exec / relevantPath };
+    
+    TexturesMap::const_iterator it = textures.find(absolutePath);
+
+    // if texture does not exist, then load it
+    if (it == textures.end())
+        return textures.emplace(absolutePath, std::make_shared<Renderer::TextureGL>(absolutePath, texType)).first->second;
+
+    // if texture already exists, return it
+    return it->second;
 }
 
 std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std::string const& textureName) const noexcept
@@ -74,4 +75,9 @@ std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std
 
     std::cerr << "ERROR:: run-time:\n" << "No shader program with name: " << textureName << std::endl;
     return nullptr;
+}
+
+std::filesystem::path const& Resources::ResourcesManager::getPathToExucutable() const
+{
+    return path_to_exec;
 }

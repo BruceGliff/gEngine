@@ -31,7 +31,7 @@ namespace Resources
 	};
 
 	// Class implemented behavior of the window
-	class glWindows final
+	class glWindow final
 	{
 		// global __WindowProperty is a property of glWindow!
 		// default window name
@@ -43,14 +43,14 @@ namespace Resources
 
 
 	public:
-		glWindows()								= delete;
-		glWindows(glWindows const &)			= delete;
-		glWindows(glWindows &&)					= delete;
-		glWindows& operator= (glWindows const&) = delete;
-		glWindows& operator= (glWindows &&)		= delete;
+		glWindow()								= delete;
+		glWindow(glWindow const &)				= delete;
+		glWindow(glWindow &&)					= delete;
+		glWindow& operator= (glWindow const&)	= delete;
+		glWindow& operator= (glWindow &&)		= delete;
 
 		// Create window with size width, height and name(or gEngine as Default)
-		glWindows(int width, int height, std::string const &);
+		glWindow(int width, int height, std::string const &);
 
 		// Check if window is still active
 		operator bool() const noexcept;

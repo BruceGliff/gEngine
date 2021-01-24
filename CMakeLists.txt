@@ -11,15 +11,15 @@ add_executable(${PROGECT_NAME}
 	src/renderer/TextureGL.h
 	src/manager/ResourceManager.cc
 	src/manager/ResourceManager.h
-	src/manager/ResourceManager_wrap.cc
-	src/manager/ResourceManager_wrap.h
+	src/manager/EnvironmentHandler_wrap.cc
+	src/manager/EnvironmentHandler_wrap.h
+	src/manager/AccessHandler.cc
+	src/manager/AccessHandler.h
 	src/texture/Texture_base.cc
 	src/texture/Texture_base.h
 	src/texture/stb_image.h
 	src/window/window_base.cc
 	src/window/window_base.h
-	src/window/window_wrap.cc
-	src/window/window_wrap.h
 	src/geometry/geometry_base.cc
 	src/geometry/geometry_base.h
 	src/model/mesh_base.cc
@@ -45,10 +45,13 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-add_subdirectory(external/glfw)
 
-#link glfw library
+#link libraries
+add_subdirectory(external/glfw)
 target_link_libraries(${PROGECT_NAME} glfw)
+
+add_subdirectory(external/assimp)
+target_link_libraries(${PROGECT_NAME} assimp)
 
 add_subdirectory(external/glad)
 target_link_libraries(${PROGECT_NAME} glad)

@@ -6,13 +6,13 @@ namespace Actor
 }
 namespace Resources
 {
-	class glWindows;
+	class glWindow;
 	class ResourcesManager;
 }
 
 namespace GLOBAL
 {
-	// Init all program properties
+	// Init all program properties: window, resourseMgr, player, glad
 	void Initialize(char const* path_to_exec, int win_width, int win_height, char const* win_name);
 
 	// Return current active player
@@ -20,5 +20,5 @@ namespace GLOBAL
 	// Return current active ResourceManager
 	Resources::ResourcesManager& GetResManager();
 	// Return current active Window
-	Resources::glWindows& GetWindow();
+	Resources::glWindow& GetWindow();
 }

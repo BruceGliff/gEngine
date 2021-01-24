@@ -1,13 +1,16 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
 
 namespace Resources
 {
 	// Implementation of the texture as the raw data of pixels
 	class Texture_base
 	{
-		bool isError = false;
+		// flag if data cant be deleted (if errors occures or it has been already deleted)
+		bool isNoNeedToDelete = false;
+		// if errors occure white texture loads
 		unsigned char whiteErrorTexture[3] = { 255, 255, 255 };
 	protected:
 		unsigned char* data = 0;
@@ -21,7 +24,10 @@ namespace Resources
 		Texture_base& operator=(Texture_base const&)	= delete;
 		Texture_base& operator=(Texture_base&&)			= delete;
 
-		Texture_base(std::string const& relevantPath) noexcept;
+		Texture_base(std::filesystem::path const& relevantPath) noexcept;
+
+		// free stored data
+		void Release();
 		virtual ~Texture_base();
 
 		// Out texture in .ppm format. Without alpha. with name: out.ppm

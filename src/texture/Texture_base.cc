@@ -5,17 +5,18 @@
 #include <exception>
 
 #include <fstream>
+#include <filesystem>
 
 #define STBI_ONLY_PNG
 #define STBI_ONLY_JPEG
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-Resources::Texture_base::Texture_base(std::string const& path) noexcept
+Resources::Texture_base::Texture_base(std::filesystem::path const& path) noexcept
 {
     // Load texture upside down
     stbi_set_flip_vertically_on_load(true);
-    data = stbi_load(std::string{path}.c_str(), &width, &height, &channels, 0);
+    data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
 
     if (!data)
     {
@@ -24,14 +25,23 @@ Resources::Texture_base::Texture_base(std::string const& path) noexcept
         width = 1;
         height = 1;
         channels = 3;
-        isError = true;
+        isNoNeedToDelete = true;
     }
+}
+
+void Resources::Texture_base::Release()
+{
+    if (isNoNeedToDelete)
+        return;
+
+    stbi_image_free(data);
+    isNoNeedToDelete = true;
 }
 
 Resources::Texture_base::~Texture_base()
 {
-    if (!isError)
-        stbi_image_free(data);
+    if (!isNoNeedToDelete)
+        Release();
 }
 
 void Resources::Texture_base::DumpTexture() const
