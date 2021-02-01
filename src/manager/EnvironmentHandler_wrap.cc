@@ -13,8 +13,32 @@ Resources::EnvironmentHandler_wrap::EnvironmentHandler_wrap() noexcept
 void Resources::EnvironmentHandler_wrap::construct(int width, int height, std::string const& WindowName, std::string const& path_to_exec)
 {
     // Order is important
+    glfwInitialization();
     ConstructWindow(width, height, WindowName);
     ConstructManager(path_to_exec);
+}
+
+void Resources::EnvironmentHandler_wrap::glfwInitialization()
+{
+    static int number_of_copies = 0;
+    if (number_of_copies != 0)
+    {
+        std::cout << "WARN:: Creating more then one GFLW context is not allowed" << std::endl;
+        return;
+    }
+
+    if (!glfwInit())
+    {
+        std::cerr << "ERROR:: glfl initialization failed!" << std::endl;
+        throw std::runtime_error{ "EXCEPTION:: glfl initialization failed!" };
+    }
+
+    ++number_of_copies;
+
+    /* Setup version of OpenGL. If not compared then terminated */
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
 void Resources::EnvironmentHandler_wrap::ConstructManager(std::string const& path_to_exec)
@@ -90,4 +114,6 @@ Resources::EnvironmentHandler_wrap::~EnvironmentHandler_wrap()
         delete curr_window;
     else
         std::cerr << "WARN:: Somehow nullptr of glWindow apprear in ~EnvironmentHandler_wrap()!" << std::endl;
+
+    glfwTerminate();
 }

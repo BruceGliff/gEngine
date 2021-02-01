@@ -6,21 +6,6 @@
 
 namespace Resources
 {
-	// There is a singlton
-	// Class that wraps bahavior of GLFW
-	class GFLW_wrap final
-	{
-	public:
-		// Set up GLFW properties
-		GFLW_wrap();
-		GFLW_wrap(GFLW_wrap const&)					= delete;
-		GFLW_wrap(GFLW_wrap&&)						= delete;
-		GFLW_wrap& operator= (GFLW_wrap const&)		= delete;
-		GFLW_wrap& operator= (GFLW_wrap&&)			= delete;
-
-		~GFLW_wrap();
-	};
-
 	// Class that contaisn properies of the window for global access of GLFW, but nobody else
 	struct WindowSizeProperty final
 	{
@@ -36,8 +21,7 @@ namespace Resources
 		// global __WindowProperty is a property of glWindow!
 		// default window name
 		std::string const name;
-		// The first initialization of the gflw
-		GFLW_wrap const gflwProperties;
+
 		// window pointer
 		GLFWwindow* pWindow = nullptr;
 

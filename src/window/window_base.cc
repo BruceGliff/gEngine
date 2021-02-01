@@ -39,7 +39,7 @@ Resources::glWindow::glWindow(int width, int height, std::string const & win_nam
     if (!pWindow)
     {
         std::cerr << "ERROR:: window creating failed!" << std::endl;
-        throw std::runtime_error{ "EXCEPTION:: window creating failed!" };
+        throw std::runtime_error{ "ERROR:: window creating failed!" };
     }
 
     /* Make the window's context current */
@@ -180,32 +180,4 @@ void Resources::glWindow::scroll_callback(GLFWwindow* window, double xoffset, do
         fov = 1.0f;
     if (fov > 45.0f)
         fov = 45.0f;
-}
-
-Resources::GFLW_wrap::GFLW_wrap()
-{
-    static int number_of_copies = 0;
-    if (number_of_copies != 0)
-    {
-        std::cout << "Creating more then one GFLW context is not allowed" << std::endl;
-        return;
-    }
-
-    if (!glfwInit())
-    {
-        std::cerr << "ERROR:: glfl initialization failed!" << std::endl;
-        throw std::runtime_error{ "EXCEPTION:: glfl initialization failed!" };
-    }
-
-    ++number_of_copies;
-
-    /* Setup version of OpenGL. If not compared then terminated */
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-}
-
-Resources::GFLW_wrap::~GFLW_wrap()
-{
-    glfwTerminate();
 }

@@ -18,6 +18,7 @@ namespace Resources
 		// create new resourses handler context if it is not exist.
 		void ConstructManager(std::string const& path_to_exec);
 		void ConstructWindow(int width, int height, std::string const& WindowName);
+		void glfwInitialization();
 
 	public:
 		// do nothing

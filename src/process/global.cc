@@ -25,7 +25,6 @@ void GLOBAL::Initialize(char const * path_to_exec, int win_width, int win_height
 	if (!gladLoadGL())
 	{
 		std::cerr << "Cannot initialize GLAD" << std::endl;
-		glfwTerminate();
 		throw std::runtime_error{ "ERR:: Cannot initialize GLAD!" };
 	}
 
