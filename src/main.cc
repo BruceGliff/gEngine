@@ -78,6 +78,14 @@ int main(int argc, char * argv[])
     auto delta_time = glfwGetTime() - prev_time;
     std::cout << "TIMING: " << delta_frame / delta_time << std::endl;
 
+
+#ifdef gWINDOWS
+    std::cout << "WARN:: Win special" << std::endl;
     system("pause");
+#endif // gWINDOWS
+#ifdef gUNIX
+    std::cout << "WARN:: Unix special" << std::endl;
+#endif // gUNIX
+
     return 0;
 }
