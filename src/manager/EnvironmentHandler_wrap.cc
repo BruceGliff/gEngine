@@ -109,11 +109,12 @@ Resources::EnvironmentHandler_wrap::~EnvironmentHandler_wrap()
     if (curr_mng)
         delete curr_mng;
     else
-        std::cerr << "WARN:: Somehow nullptr of ResourcesManager apprear in ~EnvironmentHandler_wrap()!" << std::endl;
+        std::cerr << "WARN:: Somehow nullptr of ResourcesManager apprears in ~EnvironmentHandler_wrap()!" << std::endl;
     if (curr_window)
         delete curr_window;
     else
-        std::cerr << "WARN:: Somehow nullptr of glWindow apprear in ~EnvironmentHandler_wrap()!" << std::endl;
+        std::cerr << "WARN:: Somehow nullptr of glWindow apprears in ~EnvironmentHandler_wrap()!" << std::endl;
 
     glfwTerminate();
+
 }
