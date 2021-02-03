@@ -22,10 +22,25 @@ namespace Format
             BOLD        = 1,
             FAINT       = 2,
             ITALIC      = 3,
-            UNSERLINE   = 4,
+            UNDERLINE   = 4,
+
+            BOLD_OFF   = 22,
+            ITALIC_OFF  = 23,
+            UNDERLINE_OFF = 24,
         };
     }
 
+    // empty class responsible for reset format
+    class SingleCode final
+    {
+        unsigned char code_ = 0;
+
+    public:
+        SingleCode(int code) : code_{(unsigned char)code} {}
+        SingleCode() = default;
+        // Rest of constructors and operators are default
+        friend std::ostream& operator<<(std::ostream& os, SingleCode const& code);
+    };
     class Formater final
     {
         unsigned char set_codes[108] = {};
@@ -82,6 +97,4 @@ namespace Format
             return os << "m";
         }
     };
-    
-    char const * Reset = "\033[0m";
 }

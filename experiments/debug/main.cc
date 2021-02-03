@@ -1,18 +1,11 @@
 #include "../../src/debug/debug.h"
-#include "../../src/debug/logger.h"
 
-Debug::Logger LOG{};
-namespace GLOBAL
-{
-    Debug::Logger & GetLogger()
-    {
-        return LOG;
-    }
-}
+#include "global.h"
 
 int main()
 {
-
-
+    gWARNING("Smth bad happened");
+    //gERROR("AAAAAAAAAAA");
+    gWARNING("ASD");
     return 0;
 }

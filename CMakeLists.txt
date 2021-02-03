@@ -38,6 +38,8 @@ set(SOURCES_CC
 	src/process/global.cc
 	src/actor/components/component_base.cc
 	src/actor/components/camera.cc
+	src/debug/logger.cc
+	src/debug/formater.cc
 )
 
 # 3. generate .h names
@@ -48,9 +50,14 @@ endforeach()
 
 
 # 4. add .cc files which without .h pair
-list(APPEND SOURCES_CC src/main.cc)
+list(APPEND SOURCES_CC 
+		src/main.cc
+	)
 # 5. add .h files which without .cc pair
-list(APPEND SOURCES_H src/texture/stb_image.h)
+list(APPEND SOURCES_H 
+		src/texture/stb_image.h 
+		src/debug/debug.h
+	)
 
 # 6. set flags for .cc files
 set_source_files_properties(${SOURCES_CC} COMPILE_FLAGS "")#"-Wall")
