@@ -1,4 +1,5 @@
 #include "ShaderProgram.h"
+#include "../debug/debug.h"
 
 #include <iostream>
 #include <utility>
@@ -24,7 +25,7 @@ bool Renderer::ShaderProgram::CreateShader(std::string const& source, unsigned i
     {
         GLchar info_log[1024];
         glGetShaderInfoLog(shaderID, 1024, nullptr, info_log);
-        std::cerr << "ERROR:: Compile-time: Compile shader\n" << info_log << std::endl;
+        gWARNING(std::string{ "Compile shader failed " } + info_log);
         return false;
     }
 
@@ -95,13 +96,13 @@ Renderer::ShaderProgram::ShaderProgram(std::string const& vertex_shader, std::st
     isCompiled = CreateShader(vertex_shader, GL_VERTEX_SHADER, vsID);
     if (!isCompiled)
     {
-        std::cerr << "ERROR:: Can not create vertex sheder" << std::endl;
+        gWARNING("Can not create vertex sheder");
         return;
     }
     isCompiled = CreateShader(fragment_shader, GL_FRAGMENT_SHADER, fsID);
     if (!isCompiled)
     {
-        std::cerr << "ERROR:: Can not create fragment sheder" << std::endl;
+        gWARNING("Can not create fragment sheder");
         glDeleteShader(vsID);
         return;
     }
@@ -119,7 +120,7 @@ Renderer::ShaderProgram::ShaderProgram(std::string const& vertex_shader, std::st
     {
         GLchar info_log[1024];
         glGetProgramInfoLog(id, 1024, nullptr, info_log);
-        std::cerr << "ERROR:: Link-time: SHaderProgram\n" << info_log << std::endl;
+        gWARNING(std::string{"Cannot ling shader program "} + info_log);
         isCompiled = false;
     }
 

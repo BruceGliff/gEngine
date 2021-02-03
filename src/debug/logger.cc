@@ -16,7 +16,14 @@ void Debug::DebugInfo::print(std::ostream& os) const
 
 void Debug::Warning::Dump(std::ostream& os) const
 {
-	if (typeid(os) == typeid(std::cout))
+	// TODO make format out on WIN
+	bool isWindows = false;
+#ifdef gWINDOWS
+	isWindows = true;
+#endif // gWINDOWS
+
+
+	if (typeid(os) == typeid(std::cout) && !isWindows)
 		os << warnFormat << "WARN:: " << Format::SingleCode{ Format::TextFMT::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
 	else
 		os << "WARN:: " << explain << "\n";
@@ -33,7 +40,12 @@ Debug::Warning::Warning(std::string const& file, int line, std::string const& ex
 
 void Debug::Error::Dump(std::ostream& os) const
 {
-	if (typeid(os) == typeid(std::cerr))
+	// TODO make format out on WIN
+	bool isWindows = false;
+#ifdef gWINDOWS
+	isWindows = true;
+#endif // gWINDOWS
+	if (typeid(os) == typeid(std::cerr) && !isWindows)
 		os << errFormat << "ERR::  " << Format::SingleCode{ Format::TextFMT::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
 	else
 		os << "ERR::  " << explain << "\n";

@@ -1,7 +1,8 @@
 #include "actor.h"
-#include <exception>
 #include <iostream>
 #include <string>
+
+#include "../debug/debug.h"
 
 Actor::placeable_obj::placeable_obj() : actor_base{}, anchor{ 0.f, 0.f, 3.f }
 {}
@@ -40,8 +41,7 @@ Component::component_base * Actor::component_attachable::GetComponent(std::strin
 		return it->second;
 	}
 
-	std::cerr << "ERR:: cannot find component with name: " << comp_name << std::endl;
-	throw std::runtime_error{ std::string{"ERR:: cannot find component with name: "}.append(comp_name) };
+	gERROR(std::string{ "cannot find component with name: " + comp_name });
 }
 
 void Actor::moveable_obj::SetPosition(glm::vec3 const& pos)

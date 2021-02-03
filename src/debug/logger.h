@@ -8,7 +8,7 @@
 
 namespace Debug
 {
-	// contains plain info: file and line
+	// contains plain info: file, line and what happened
 	class DebugInfo
 	{
 		std::string const file_place;
@@ -21,12 +21,17 @@ namespace Debug
 		DebugInfo(DebugInfo&&)					= delete;
 		DebugInfo& operator= (DebugInfo const&) = delete;
 		DebugInfo& operator= (DebugInfo&&)		= delete;
+
+		// only one constructor 
 		DebugInfo(std::string const& file, int line, std::string const& explanation);
 
+		// Function which called by Warning and Error class to dump DebugInfo
 		virtual void Dump(std::ostream& os = std::cout) const = 0;
+		// Dump DebugInfo without formating
 		void print(std::ostream& os) const;
 		virtual ~DebugInfo() {};
 	};
+	// class represent Warnings with specific formating
 	class Warning final : public DebugInfo
 	{
 		Format::Formater warnFormat;
@@ -37,9 +42,12 @@ namespace Debug
 		Warning& operator= (Warning const&) = delete;
 		Warning& operator= (Warning&&) 		= delete;
 
+		// only one constructor
 		Warning(std::string const& file, int line, std::string const& explanation);
+		// Dump DebugInfo woth formating to specific out stream
 		void Dump(std::ostream& os = std::cout) const override;
 	};
+	// class represent Errors with specific formating
 	class Error final : public DebugInfo
 	{
 		Format::Formater errFormat;
@@ -50,12 +58,16 @@ namespace Debug
 		Error& operator= (Error const&) = delete;
 		Error& operator= (Error&&) 		= delete;
 
+		// only one constructor
 		Error(std::string const& file, int line, std::string const& explanation);
+		// Dump DebugInfo woth formating to specific out stream
 		void Dump(std::ostream& os = std::cerr) const override;
 	};
 
+	// Class contains all logs due to runnig program
 	class Logger
 	{
+		// vector of logs: Errors and Warnings
 		std::vector<DebugInfo const *> logs;
 
 	public:
@@ -65,12 +77,18 @@ namespace Debug
 		Logger& operator= (Logger const&) 	= delete;
 		Logger& operator= (Logger&&) 		= delete;
 
+		// Dump only Warnings to specific out stream (cout as default)
 		Logger const& DumpWarnings(std::ostream& os = std::cout) const;
+		// Dump only Errors to specific out stream (cerr as default)
 		Logger const& DumpErrors(std::ostream& os = std::cerr) const;
+		// Dump all logs to specific out stream
 		Logger const& Dump(std::ostream& os) const;
+		// Dump all logs to cout
 		Logger const& Dump() const;
 
+		// Add log
 		Logger& AddLog(DebugInfo const* log);
+		// Dump all logs to "dump.log" file
 		Logger const& DumpToFile() const;
 
 		~Logger();

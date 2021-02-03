@@ -1,11 +1,11 @@
 #include "ResourceManager.h"
 #include "../renderer/ShaderProgram.h"
 #include "../renderer/TextureGL.h"
+#include "../debug/debug.h"
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <exception>
 
 
 std::string Resources::ResourcesManager::readFile(std::filesystem::path const& relativePath) const
@@ -13,8 +13,7 @@ std::string Resources::ResourcesManager::readFile(std::filesystem::path const& r
     std::ifstream file{ path_to_exec / relativePath, std::ios::in | std::ios::binary};
     if (!file.is_open())
     {
-        std::cerr << "ERROR:: file reading\n" << "cannot read file < " << relativePath.lexically_normal() << " >" << std::endl;
-        throw std::runtime_error{ "ERROR:: file reading" };
+        gERROR(std::string{ "Cannot read file: " + relativePath.lexically_normal().string() });
     }
 
     std::stringstream buffer;
@@ -47,7 +46,7 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::getShaderP
         return it->second;
     }
 
-    std::cerr << "ERROR:: run-time:\n" << "No shader program with name: " << shaderName << std::endl;
+    gWARNING(std::string("No shader program with name: ") + shaderName);
     return nullptr;
 }
 
@@ -73,7 +72,7 @@ std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std
         return it->second;
     }
 
-    std::cerr << "ERROR:: run-time:\n" << "No shader program with name: " << textureName << std::endl;
+    gWARNING(std::string("No texture with name: ") + textureName);
     return nullptr;
 }
 

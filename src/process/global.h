@@ -10,6 +10,11 @@ namespace Resources
 	class ResourcesManager;
 }
 
+namespace Debug
+{
+	class Logger;
+}
+
 namespace GLOBAL
 {
 	// Init all program properties: window, resourseMgr, player, glad
@@ -21,4 +26,6 @@ namespace GLOBAL
 	Resources::ResourcesManager& GetResManager();
 	// Return current active Window
 	Resources::glWindow& GetWindow();
+
+	Debug::Logger& GetLogger();
 }

@@ -10,6 +10,7 @@
 #include "../renderer/TextureGL.h"
 #include "../process/global.h"
 #include "../manager/ResourceManager.h"
+#include "../debug/debug.h"
 
 Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<type_pTextures> const& textures) :
 	m_vertices(vertices),
@@ -71,7 +72,7 @@ void Model::Model::loadModel(std::filesystem::path const& path)
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+        gWARNING(std::string{ "ASSIMP problem: cannot load model > " } + import.GetErrorString());
         return;
     }
 

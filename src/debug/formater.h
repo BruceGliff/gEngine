@@ -3,6 +3,7 @@
 #include <ostream>
 namespace Format
 {
+    // Codes of text formating
     namespace TextFMT
     {
         enum ColorCode
@@ -41,8 +42,10 @@ namespace Format
         // Rest of constructors and operators are default
         friend std::ostream& operator<<(std::ostream& os, SingleCode const& code);
     };
+    // Contains all flags which apply on out stream
     class Formater final
     {
+        // flags of which code is applied
         unsigned char set_codes[108] = {};
 
     public:
@@ -52,8 +55,11 @@ namespace Format
         Formater(Formater && formater) = delete;
         Formater & operator=(Formater && formater) = delete;
 
+        // set all flags to 0
         Formater& clear() noexcept;
+        // set flag with code to 1
         Formater& setCode(int code) noexcept;
+        // set flag with code to 1 
         Formater& removeCode(int code) noexcept;
 
         friend std::ostream& operator<<(std::ostream& os, Formater const& fromat);

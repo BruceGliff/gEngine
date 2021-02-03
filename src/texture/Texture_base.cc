@@ -1,8 +1,7 @@
 #include "Texture_base.h"
+#include "../debug/debug.h"
 
-#include "stb_image.h"
 #include <iostream>
-#include <exception>
 
 #include <fstream>
 #include <filesystem>
@@ -20,7 +19,7 @@ Resources::Texture_base::Texture_base(std::filesystem::path const& path) noexcep
 
     if (!data)
     {
-        std::cerr << "ERROR:: run-time:\n" << "Can not load texture: " << path;
+        gWARNING(std::string{ "Can not load texture: " } + path.string());
         data = whiteErrorTexture;
         width = 1;
         height = 1;

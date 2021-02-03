@@ -12,7 +12,7 @@ namespace Resources
 		int width = 0;
 		int height = 0;
 
-		WindowSizeProperty& operator=(std::initializer_list<int>& list);
+		WindowSizeProperty& operator=(std::initializer_list<int>&& list);
 	};
 
 	// Class implemented behavior of the window

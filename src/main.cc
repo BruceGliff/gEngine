@@ -14,7 +14,7 @@
 #include "actor/actor.h"
 #include "actor/components/camera.h"
 #include "model/mesh_base.h"
-
+#include "debug/debug.h"
 
 
 
@@ -28,9 +28,8 @@ int main(int argc, char * argv[])
     auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "model.vs", SHADER_PATH + "model.fs");
     if (!pObjShaderProgram->IsCompiled())
     {
-        std::cerr << "ERROR:: Creating objShader program in main\n" << std::endl;
         glfwTerminate();
-        return -1;
+        gERROR("Creating objShader program in main");
     }
 
     Model::Model ourModel(resMng.getPathToExucutable() / "res/models/backpack/backpack.obj");

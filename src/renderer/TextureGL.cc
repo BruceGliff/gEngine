@@ -1,5 +1,5 @@
 #include "TextureGL.h"
-
+#include "../debug/debug.h"
 #include "ShaderProgram.h"
 
 #include <iostream>
@@ -66,7 +66,7 @@ void Renderer::TextureGL::activateTexture(int texOffset, ShaderProgram const& sh
 		name = std::string{ "texture_diffuse" + std::to_string(diffCount++) };
 		break;
 	default:
-		std::cerr << "ERR: Should not be happen while texture drawing!." << std::endl;
+		gWARNING("Should not be happen while texture drawing!");
 	}
 
 

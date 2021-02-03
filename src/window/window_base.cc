@@ -3,12 +3,12 @@
 #include "../process/global.h"
 #include "../actor/actor.h"
 #include "../actor/components/camera.h"
+#include "../debug/debug.h"
 
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
-#include <exception>
 #include <initializer_list>
 
 
@@ -16,13 +16,13 @@
 Resources::WindowSizeProperty WindowProperty;
 
 
-Resources::WindowSizeProperty& Resources::WindowSizeProperty::operator=(std::initializer_list<int>& list)
+Resources::WindowSizeProperty& Resources::WindowSizeProperty::operator=(std::initializer_list<int>&& list)
 {
     if (list.size() != 2)
     {
         width = 1600;
         height = 900;
-        std::cerr << "Wrong initializer lise size!\n" << "window will be with size: " << width << ' ' << height << std::endl;
+        gWARNING(std::string{ "Wrong initializer list size! window will be with size: " } + std::to_string(width) + std::string{ "x" } + std::to_string(height));
         return *this;
     }
 
@@ -38,8 +38,7 @@ Resources::glWindow::glWindow(int width, int height, std::string const & win_nam
     pWindow = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
     if (!pWindow)
     {
-        std::cerr << "ERROR:: window creating failed!" << std::endl;
-        throw std::runtime_error{ "ERROR:: window creating failed!" };
+        gERROR("window creating failed!");
     }
 
     /* Make the window's context current */

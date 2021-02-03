@@ -77,7 +77,8 @@ if(UNIX)
 	set(OS_FLAG "-DgUNIX")
 endif(UNIX)
 target_compile_options(${PROGECT_NAME} PUBLIC ${OS_FLAG})
-
+# set flag for debugging
+target_compile_options(${PROGECT_NAME} PUBLIC "-DgDEBUG")
 
 # 10. Setup properties for GLFW
 # template from GLFW Documentation

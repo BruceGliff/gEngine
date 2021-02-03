@@ -2,9 +2,9 @@
 #include "actor.h"
 
 #include "components/camera.h"
+#include "../debug/debug.h"
 
 #include <iostream>
-#include <exception>
 
 Actor::player_wrap::player_wrap() noexcept
 {}
@@ -19,27 +19,27 @@ void Actor::player_wrap::construct()
 		++counter;
 	}
 	else
-		std::cout << "WARN:: attempt to create new actor" << std::endl;
+		gWARNING("attempt to create new actor");
 }
 
 Actor::actor& Actor::player_wrap::GetPlayer()
 {
-	if (!curr_actor)
+	if (curr_actor)
 	{
-		std::cerr << "ERR:: getting null player!" << std::endl;
-		throw std::runtime_error{ "ERR:: gettin null player!" };
+		return *curr_actor;
 	}
-	return *curr_actor;
+	
+	gERROR("getting null player!");
 }
 
 Actor::actor const& Actor::player_wrap::GetPlayer() const
 {
-	if (!curr_actor)
+	if (curr_actor)
 	{
-		std::cerr << "ERR:: getting null player!" << std::endl;
-		throw std::runtime_error{ "ERR:: gettin null player!" };
+		return *curr_actor;
 	}
-	return *curr_actor;
+
+	gERROR("getting null player!");
 }
 
 Actor::player_wrap::~player_wrap()
