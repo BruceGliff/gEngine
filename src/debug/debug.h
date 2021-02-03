@@ -1,5 +1,6 @@
 #pragma once
-#include "../../src/debug/logger.h"
+#include "logger.h"
+#include "../process/global.h"
 #include <exception>
 
 #define gWARNING(x)                                                             \

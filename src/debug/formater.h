@@ -47,54 +47,15 @@ namespace Format
 
     public:
         Formater() = default;
-        Formater(Formater const & formater) noexcept
-        {
-            for (int i = 0; i != 108; ++i)
-                set_codes[i] = formater.set_codes[i];
-        }
-        Formater & operator=(Formater const & formater) noexcept
-        {
-            for (int i = 0; i != 108; ++i)
-                set_codes[i] = formater.set_codes[i];
-        }
+        Formater(Formater const& formater) noexcept;
+        Formater& operator=(Formater const& formater) noexcept;
         Formater(Formater && formater) = delete;
         Formater & operator=(Formater && formater) = delete;
 
-        Formater & clear() noexcept
-        {
-            for (int i = 0; i != 108; ++i)
-                set_codes[i] = 0;
-        }
-        Formater & setCode(int code) noexcept
-        {
-            if (code >= sizeof(set_codes) || code < 0)
-                return *this;
-            set_codes[code] = 1;
-            return *this;
-        }
-        Formater & removeCode(int code) noexcept
-        {
-            if (code >= sizeof(set_codes) || code < 0)
-                return *this;
-            set_codes[code] = 0;
-            return *this;
-        }
+        Formater& clear() noexcept;
+        Formater& setCode(int code) noexcept;
+        Formater& removeCode(int code) noexcept;
 
-        friend std::ostream& operator<<(std::ostream& os, Formater const& fromat) 
-        {
-            os << "\033[";
-            bool hasToPutSemicolon = false;
-            for (int i = 0; i != 108; ++i)
-            {
-                if (fromat.set_codes[i])
-                {
-                    if (hasToPutSemicolon)
-                        os << ';';
-                    os << i;
-                    hasToPutSemicolon = true;
-                }
-            }
-            return os << "m";
-        }
+        friend std::ostream& operator<<(std::ostream& os, Formater const& fromat);
     };
 }
