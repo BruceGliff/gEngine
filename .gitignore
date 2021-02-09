@@ -35,3 +35,4 @@ build/
 
 # Visual Studio Code
 .vscode/
+.vs/

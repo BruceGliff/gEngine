@@ -13,7 +13,7 @@
 #include "window/window_base.h"
 #include "actor/actor.h"
 #include "actor/components/camera.h"
-#include "model/mesh_base.h"
+#include "actor/components/staticMesh.h"
 #include "debug/debug.h"
 
 
@@ -32,7 +32,9 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
 
-    Model::Model ourModel(resMng.getPathToExucutable() / "res/models/backpack/backpack.obj");
+
+    Actor::actor backpack{};
+    backpack.AttachComponent("mesh", new Component::StaticMesh{resMng.getPathToExucutable() / "res/models/backpack/backpack.obj"});
 
     // Easiest benchmark
     int delta_frame = 0;
@@ -68,8 +70,8 @@ int main(int argc, char * argv[])
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));	// it's a bit too big for our scene, so scale it down
         pObjShaderProgram->setMat4("model", model);
-        ourModel.Draw(*pObjShaderProgram);
-
+        //ourModel.Draw(*pObjShaderProgram);
+        backpack.Process(*pObjShaderProgram, );
 
         win.Draw();
     }

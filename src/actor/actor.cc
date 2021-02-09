@@ -2,52 +2,103 @@
 #include <iostream>
 #include <string>
 
+#include "actorDEF.h"
+
 #include "../debug/debug.h"
 
-Actor::placeable_obj::placeable_obj() : actor_base{}, anchor{ 0.f, 0.f, 3.f }
-{}
+Actor::actor & Actor::actor::AttachComponent(std::string const& comp_name, Component::component_base * component)
+{	
+	// to get hints when insert propertied into define;
+	using namespace Property;
+	// firstly make pair
+	// secondly replace it
 
-Actor::placeable_obj::placeable_obj(glm::vec3 const& pos) : actor_base{}, anchor{pos}
-{}
 
-glm::vec3& Actor::placeable_obj::GetPosition() noexcept
-{
-	return anchor;
-}
+	ComponentAggregation aggregation;
+	aggregation.first = component;
 
-glm::vec3 const& Actor::placeable_obj::GetPosition() const noexcept
-{
-	return anchor;
-}
+	INSERT_PROPERTY(IDrawable);
+	INSERT_PROPERTY(IPhysicaly);
 
-void Actor::component_attachable::attach_component(std::string const& comp_name, Component::component_base * component)
-{
-	auto&& it = components_map.find(comp_name);
-	if (it != components_map.end())
+
+	auto&& it = components.find(comp_name);
+	if (it != components.end())
 	{
-		delete it->second;
-		it->second = component;
-		return;
+		// delete old components
+		ComponentAggregation oldAggr = std::move(it->second);
+		Component::component_base * oldComp = it->second.first;
+		it->second = std::move(aggregation);
+		remove_properties_from(oldAggr.second);
+
+		delete oldComp;
+
+		return *this;
 	}
 
-	components_map[comp_name] = component;
+	components[comp_name] = std::move(aggregation);
+
+	return *this;
 }
 
-Component::component_base * Actor::component_attachable::GetComponent(std::string const& comp_name) const
+Component::component_base * Actor::actor::GetComponent(std::string const& comp_name) const noexcept
 {
-	auto&& it = components_map.find(comp_name);
-	if (it != components_map.end())
+	auto&& it = components.find(comp_name);
+	if (it != components.end())
 	{
-		return it->second;
+		return it->second.first;
 	}
 
-	gERROR(std::string{ "cannot find component with name: " + comp_name });
+	return nullptr;
 }
 
-void Actor::moveable_obj::SetPosition(glm::vec3 const& pos)
+Component::component_base * Actor::actor::DetachComponent(std::string const& comp_name) noexcept
 {
-	anchor = pos;
+	auto && it = components.find(comp_name);
+	if (it != components.end())
+	{
+		Component::component_base * oldComp = it->second.first;
+		remove_properties_from(it->second.second);
+		components.erase(it);
+
+		return oldComp;
+	}
+
+	return nullptr;
 }
 
-Actor::moveable_obj::moveable_obj()
-{}
+Actor::actor & Actor::actor::DeleteComponent(std::string const& comp_name) noexcept
+{
+	auto && it = components.find(comp_name);
+	if (it != components.end())
+	{
+		Component::component_base * oldComp = it->second.first;
+		remove_properties_from(it->second.second);
+		components.erase(it);
+
+		delete oldComp;
+	}
+}
+
+void Actor::actor::remove_properties_from(std::vector<std::list<void *>::iterator> const & prop_array) noexcept
+{
+	for (auto && property : prop_array)
+	{
+		REMOVE_PROPERTY(IDrawable);
+		REMOVE_PROPERTY(IPhysicaly);
+	}
+}
+
+Actor::actor::~actor()
+{
+	for (auto && x : components)
+		delete x.second.first;
+}
+
+Actor::actor & Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr) const
+{
+	for (auto && x : Array_IDrawable)
+	{
+		Property::IDrawable * ptr = reinterpret_cast<Property::IDrawable *>(x);
+		ptr->Draw(sp);
+	}
+}

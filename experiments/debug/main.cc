@@ -5,7 +5,8 @@
 int main()
 {
     gWARNING("Smth bad happened");
-    //gERROR("AAAAAAAAAAA");
+    gERROR("AAAAAAAAAAA");
     gWARNING("ASD");
+    gERROR("AGGD");
     return 0;
 }
