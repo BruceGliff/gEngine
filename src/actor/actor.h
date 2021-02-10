@@ -8,6 +8,7 @@
 
 #include "components/component_base.h"
 #include "../properties/properties.h"
+#include "../manager/Entity.h"
 
 #include "actorDEF.h"
 
@@ -24,7 +25,10 @@ namespace Actor
 {
 	// Class represent main object in scene.
 	// It contains components and can be processes to draw or to calculate physics(in future)
-	class actor : public Property::IScalable, public Property::IMoveable, public Property::IRotatable
+	class actor : 	public Resources::Entity, 
+					public Property::IScalable, 
+					public Property::IMoveable, 
+					public Property::IRotatable
 	{
 		// For easy run-time drawing all compomenents separates by their behavior and then running across only one
 		// array without casts.
@@ -44,7 +48,7 @@ namespace Actor
 		
 
 	public:
-		actor() {};
+		actor() = default;
 		actor(actor const&)				= delete;
 		actor(actor&&)					= delete;
 		actor& operator= (actor const&) = delete;
@@ -57,14 +61,14 @@ namespace Actor
 		// Get component by name. Return nullptr if it was not found. Did not delete from actor
 		Component::component_base * GetComponent(std::string const& comp_name) const noexcept;
 
-		// Get component by name. Return nullptr if it was not found. Removed from actor  
+		// Get component by name. Return nullptr if it was not found. Removed from actor. Memory did not free
 		Component::component_base * DetachComponent(std::string const & comp_name) noexcept;
 
 		// Delete component by name. Do nothing if it is not found
 		actor & DeleteComponent(std::string const & comp_name) noexcept;
 
 		// Handle behavior of class. Do drawing or physics or so one
-		actor & Process(Renderer::ShaderProgram const &, Geometry::Transformation const &) const;
+		virtual actor & Process(Renderer::ShaderProgram const &, Geometry::Transformation const &) const;
 
 		~actor();
 	};

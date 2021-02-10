@@ -94,7 +94,7 @@ Actor::actor::~actor()
 		delete x.second.first;
 }
 
-Actor::actor & Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr) const
+virtual Actor::actor & Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr) const
 {
 	for (auto && x : Array_IDrawable)
 	{

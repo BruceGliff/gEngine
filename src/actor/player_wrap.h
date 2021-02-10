@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 namespace Actor
 {
@@ -8,18 +9,24 @@ namespace Actor
 	// singleton that represent current used playable class
 	class player_wrap final
 	{
-		actor* curr_actor = nullptr;
+		std::shared_ptr<Actor::actor> curr_actor;
+		bool isExist = false;
 
 	public:
-		player_wrap() noexcept;
-		void construct();
+		player_wrap() = default;
 		player_wrap(player_wrap const &) = delete;
 		player_wrap(player_wrap &&) = delete;
 		player_wrap operator=(player_wrap const&) = delete;
 		player_wrap operator=(player_wrap&&) = delete;
 
-		actor& GetPlayer();
-		actor const& GetPlayer() const;
+		//  Get current actor
+		Actor::actor & GetPlayer();
+		// Get current actor
+		Actor::actor const& GetPlayer() const;
+
+		// Set actor as current. Info about previous is lost;
+		void SetPlayer(std::shared_ptr<Actor::actor> const & actor);
+
 
 		~player_wrap();
 	};

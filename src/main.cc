@@ -12,6 +12,7 @@
 #include "renderer/TextureGL.h"
 #include "window/window_base.h"
 #include "actor/actor.h"
+#include "scene/scene.h"
 #include "actor/components/camera.h"
 #include "actor/components/staticMesh.h"
 #include "debug/debug.h"
@@ -23,6 +24,7 @@ std::string const SHADER_PATH{ "res/shaders/" };
 int main(int argc, char * argv[])
 {        
     GLOBAL::Initialize(argv[0], 1600, 900, "gEngine");
+    auto& Scene = GLOBAL::GetScene();
 
     Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
     auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "model.vs", SHADER_PATH + "model.fs");
@@ -32,9 +34,16 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
 
-
+    // backpack
     Actor::actor backpack{};
     backpack.AttachComponent("mesh", new Component::StaticMesh{resMng.getPathToExucutable() / "res/models/backpack/backpack.obj"});
+
+    Actor::actor player{};
+    player.AttachComponent("camera", new Component::camera{});
+
+    Scene.Attach(backpack);
+    GLOBAL::SetPlayer(Scene.Attach(player));
+
 
     // Easiest benchmark
     int delta_frame = 0;
@@ -53,11 +62,11 @@ int main(int argc, char * argv[])
         pObjShaderProgram->Use();
         //Change camera position
         // TODO think about view
-        Actor::actor    const & player = GLOBAL::GetPlayer();
+        auto                  & player = GLOBAL::GetPlayer();
         auto            const & cameraPos = player.GetPosition();
-        auto            const & cameraFront = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFront();
-        auto            const & cameraUp = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetUp();
-        auto            const & fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
+        auto            const & cameraFront = static_cast<Component::camera*>(player.GetComponent("camera"))->GetFront();
+        auto            const & cameraUp = static_cast<Component::camera*>(player.GetComponent("camera"))->GetUp();
+        auto            const & fov = static_cast<Component::camera*>(player.GetComponent("camera"))->GetFOV();
         glm::mat4       const   view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
         pObjShaderProgram->setMat4("view", view);
 
