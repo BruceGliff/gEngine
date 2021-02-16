@@ -10,16 +10,24 @@ Resources::Entity::Entity(Entity const& entity) noexcept
 {
     id = entity.id;
 }
-
+Resources::Entity::Entity(Entity && entity) noexcept
+{
+    *this = std::move(entity);
+}
+void Resources::Entity::swap(Entity & entity) noexcept
+{
+    std::swap(id, entity.id);
+}
 bool Resources::Entity::operator==(Entity const& other) const noexcept
 {
     return other.id == id;
 }
-
-int & Resources::Entity::GetEntityID() noexcept
+Resources::Entity & Resources::Entity::operator=(Entity && entity) noexcept
 {
-    return id;
+    swap(entity);
+    return *this;
 }
+
 int const & Resources::Entity::GetEntityID() const noexcept
 {
     return id;

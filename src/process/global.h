@@ -34,6 +34,7 @@ namespace GLOBAL
 	// Return current Scene
 	Scene::Scene & GetScene();
 	
+	// TODO make SetPlayer and player_wrap template T
 	// Set actor as curent playable object
 	void SetPlayer(std::shared_ptr<Actor::actor> const & actor);
 

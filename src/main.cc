@@ -37,12 +37,12 @@ int main(int argc, char * argv[])
     // backpack
     Actor::actor backpack{};
     backpack.AttachComponent("mesh", new Component::StaticMesh{resMng.getPathToExucutable() / "res/models/backpack/backpack.obj"});
-
-    Actor::actor player{};
-    player.AttachComponent("camera", new Component::camera{});
+    Actor::actor player_actor{};
+    player_actor.AttachComponent("camera", new Component::camera{});
 
     Scene.Attach(backpack);
-    GLOBAL::SetPlayer(Scene.Attach(player));
+    auto pPlayer = Scene.Attach(player_actor);
+    GLOBAL::SetPlayer(pPlayer);
 
 
     // Easiest benchmark
@@ -80,7 +80,9 @@ int main(int argc, char * argv[])
         model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));	// it's a bit too big for our scene, so scale it down
         pObjShaderProgram->setMat4("model", model);
         //ourModel.Draw(*pObjShaderProgram);
-        backpack.Process(*pObjShaderProgram, );
+        
+        //for (auto && x : Scene)
+        //    x.second->Process();
 
         win.Draw();
     }

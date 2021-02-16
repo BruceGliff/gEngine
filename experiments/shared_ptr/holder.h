@@ -13,7 +13,7 @@ public:
     Holder() = default;
     void Attach(Class && cl)
     {
-        pointer = std::make_shared<Class>(cl);
+        pointer = std::make_shared<Class>(std::move(cl));
     }
 };
 
