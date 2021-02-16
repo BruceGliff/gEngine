@@ -5,6 +5,7 @@
 #include "actorDEF.h"
 
 #include "../debug/debug.h"
+#include "../geometry/geometry_base.h"
 
 Actor::actor::actor(actor&& otherActor) noexcept :
 	Resources::Entity{std::move(otherActor)}
@@ -20,6 +21,9 @@ Actor::actor & Actor::actor::AttachComponent(std::string const& comp_name, Compo
 	using namespace Property;
 	// firstly make pair
 	// secondly replace it
+
+	// set this class as parent for component
+	component->SetParent(this);
 
 	// Aggregation is a pair of component and array of properties of the component
 	ComponentAggregation aggregation;
@@ -46,7 +50,6 @@ Actor::actor & Actor::actor::AttachComponent(std::string const& comp_name, Compo
 	}
 
 	components[comp_name] = std::move(aggregation);
-
 	return *this;
 }
 
@@ -70,6 +73,7 @@ Component::component_base * Actor::actor::DetachComponent(std::string const& com
 		remove_properties_from_generated_arrays(it->second.second);
 		components.erase(it);
 
+		oldComp->SetParent(nullptr);
 		return oldComp;
 	}
 
@@ -108,8 +112,14 @@ Actor::actor::~actor()
 
 void Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr)
 {
-	PROCESS_PROPERTY(IDrawable, Draw, sp, tr);
+	// TODO check is it is possible to do with define
 	//PROCESS_PROPERTY(IPhysicaly, DoPhysic, sp, tr);
 
-	
+	for (auto && x : Array_IDrawable)
+	{
+		reinterpret_cast<Property::IDrawable *>(x)->Draw(sp, tr + Geometry::Transformation{GetPosition(), 
+																						   GetRotation(), 
+																						   GetScale()});
+	}
+
 }

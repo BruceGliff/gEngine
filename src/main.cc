@@ -1,8 +1,3 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/vec4.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include <iostream>
 #include <cmath>
 
@@ -15,6 +10,7 @@
 #include "scene/scene.h"
 #include "actor/components/camera.h"
 #include "actor/components/staticMesh.h"
+#include "geometry/geometry_base.h"
 #include "debug/debug.h"
 
 
@@ -30,6 +26,7 @@ int main(int argc, char * argv[])
     auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "model.vs", SHADER_PATH + "model.fs");
     if (!pObjShaderProgram->IsCompiled())
     {
+        // TODO Check as it should be in global destructor
         glfwTerminate();
         gERROR("Creating objShader program in main");
     }
@@ -60,29 +57,11 @@ int main(int argc, char * argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         pObjShaderProgram->Use();
-        //Change camera position
-        // TODO think about view
-        auto                  & player = GLOBAL::GetPlayer();
-        auto            const & cameraPos = player.GetPosition();
-        auto            const & cameraFront = static_cast<Component::camera*>(player.GetComponent("camera"))->GetFront();
-        auto            const & cameraUp = static_cast<Component::camera*>(player.GetComponent("camera"))->GetUp();
-        auto            const & fov = static_cast<Component::camera*>(player.GetComponent("camera"))->GetFOV();
-        glm::mat4       const   view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
-        pObjShaderProgram->setMat4("view", view);
+    
+        for (auto && x : Scene)
+            x.second->Process(*pObjShaderProgram, Geometry::Transformation{});
 
-        // projection
-        // TODO change to camera
-        glm::mat4 const projection{ glm::perspective(glm::radians(fov), 1600.0f / 900.0f, 0.1f, 100.0f) };
-        pObjShaderProgram->setMat4("projection", projection);
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));	// it's a bit too big for our scene, so scale it down
-        pObjShaderProgram->setMat4("model", model);
-        //ourModel.Draw(*pObjShaderProgram);
-        
-        //for (auto && x : Scene)
-        //    x.second->Process();
 
         win.Draw();
     }

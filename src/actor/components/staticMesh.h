@@ -10,10 +10,17 @@ namespace Model
 {
     class Model;
 }
+namespace Geometry
+{
+    class Transformation;
+}
 
 namespace Component
 {
-    class StaticMesh final : public component_base, public Property::IDrawable, public Property::IMoveable
+    class StaticMesh final : 
+                            public component_base, 
+                            public Property::IDrawable,
+                            public Property::IMoveable
     {
         Model::Model * model = nullptr;
         
@@ -28,7 +35,7 @@ namespace Component
         StaticMesh & operator=(StaticMesh &&)       = delete;
 
 
-        void Draw(Renderer::ShaderProgram const & ) override;
+        void Draw(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr) override;
 
         ~StaticMesh();
     };

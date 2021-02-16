@@ -1,16 +1,23 @@
 #pragma once
 
 #include "component_base.h"
+#include "../../properties/properties.h"
 
 #include <glm/vec3.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Component
 {
-	class camera : public component_base
+	class camera : 	public component_base,
+					public Property::IMoveable,
+					public Property::IRotatable
 	{
 		float fov;
 		glm::vec3 front;
 		glm::vec3 up;
+
+		float nearClamp = 0.1f;
+		float farClamp = 100.f;
 		// TODO move ot constructor
 		glm::vec3 hand_dir{ 0.f, 0.f, -3.f };
 		float hand_lenght = 0.f;
@@ -31,6 +38,13 @@ namespace Component
 
 		float& GetFOV() noexcept;
 		float const& GetFOV() const noexcept;
+
+		// Calculate view matrix depend on camera absolute transformation
+		glm::mat4 GetViewMatrix() const;
+
+		// Calculate projection matrix depend on camera fov 
+		glm::mat4 GetProjectionMatrix() const;
+
 
 		virtual ~camera() {};
 	};

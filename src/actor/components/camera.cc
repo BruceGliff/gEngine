@@ -1,4 +1,7 @@
 #include "camera.h"
+#include "../../geometry/geometry_base.h"
+#include "../../process/global.h"
+#include "../../window/window_base.h"
 
 Component::camera::camera() : 
 		fov{ 45.f }, 
@@ -42,4 +45,42 @@ float& Component::camera::GetFOV() noexcept
 float const& Component::camera::GetFOV() const noexcept
 {
 	return fov;
+}
+
+glm::mat4 Component::camera::GetViewMatrix() const
+{
+	// TODO investigate if rotation is necessaty here 
+	Property::ICompound * parent = GetParent();
+	Geometry::Transformation transform;
+	transform.displace += GetPosition();
+	//transform.rotate   += GetRotation();
+
+	// Go up on hierarchy to got absolute transformation 
+	while (parent)
+	{
+		if(Property::IPlaceable * ptr = dynamic_cast<Property::IPlaceable *>(parent))
+		{
+			transform.displace += ptr->GetPosition();
+		}
+		// if(Property::IRotatable * ptr = dynamic_cast<Property::IRotatable *>(parent))
+		// {
+		// 	transform.rotate += ptr->GetRotation();
+		// }
+
+		// Parent has "parent_" only if it is component by itself!
+		if(Component::component_base * ptr = dynamic_cast<Component::component_base *>(parent))
+			parent = ptr->GetParent();
+		else
+			parent = nullptr;
+	}
+
+	// view{ glm::lookAt(cameraPos, cameraFront + cameraPos, cameraUp) };
+	return glm::lookAt(transform.displace, front + transform.displace, up);
+}
+
+glm::mat4 Component::camera::GetProjectionMatrix() const
+{
+	Resources::WindowSizeProperty const & size = GLOBAL::GetWindow().GetWindowSize();
+
+	glm::mat4 const projection{ glm::perspective(glm::radians(fov), ((float) size.width) / size.height, nearClamp, farClamp) };
 }
