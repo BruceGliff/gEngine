@@ -18,9 +18,6 @@ namespace Component
 
 		float nearClamp = 0.1f;
 		float farClamp = 100.f;
-		// TODO move ot constructor
-		glm::vec3 hand_dir{ 0.f, 0.f, -3.f };
-		float hand_lenght = 0.f;
 
 	public:
 		camera();

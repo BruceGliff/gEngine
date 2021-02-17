@@ -11,6 +11,13 @@ Actor::actor::actor(actor&& otherActor) noexcept :
 	Resources::Entity{std::move(otherActor)}
 {
 	components = std::move(otherActor.components);
+	
+	// set new parent to components
+	for (auto&& x : components)
+	{
+		x.second.first->SetParent(this);
+	}
+
 	MOVE_PROPERTY(IDrawable);
 }
 

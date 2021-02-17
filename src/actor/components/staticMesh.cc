@@ -22,8 +22,10 @@ void Component::StaticMesh::Draw(Renderer::ShaderProgram const & sp, Geometry::T
     sp.setMat4("view", mainCam->GetViewMatrix());
     sp.setMat4("projection", mainCam->GetProjectionMatrix());
 
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, tr.displace); // translate it down so it's at the center of the scene
-    model = glm::scale(model, tr.scale);	    // it's a bit too big for our scene, so scale it down
-    sp.setMat4("model", model);
+    glm::mat4 model_matrix = glm::mat4(1.0f);
+    model_matrix = glm::translate(model_matrix, tr.displace); // translate it down so it's at the center of the scene
+    model_matrix = glm::scale(model_matrix, tr.scale);	    // it's a bit too big for our scene, so scale it down
+    sp.setMat4("model", model_matrix);
+    
+    model->Draw(sp);
 }

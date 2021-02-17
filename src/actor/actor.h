@@ -92,7 +92,8 @@ namespace Actor
 		auto&& it = components.find(comp_name);
 		if (it != components.end())
 		{
-			return dynamic_cast<componentType *>(it->second.first);
+			// TODO may be dynamic_cast<>?
+			return static_cast<componentType *>(it->second.first);
 		}
 
 		return nullptr;

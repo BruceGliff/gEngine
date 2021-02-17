@@ -85,7 +85,7 @@ bool Resources::glWindow::ProcessInput() const noexcept
     lastFrame = currentFrame;
     const float cameraSpeed = 2.5f * deltaTime;
 
-    Actor::actor& player = GLOBAL::GetPlayer();
+    auto& player = GLOBAL::GetPlayer();
     auto& player_pos = player.GetPosition();
     Component::camera & cam = *player.GetComponentByName<Component::camera>("camera");
     auto& cameraFront = cam.GetFront();
@@ -165,7 +165,7 @@ void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos, double
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    auto& cameraFront = static_cast<Component::camera *>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFront();
+    auto& cameraFront = GLOBAL::GetPlayer().GetComponentByName<Component::camera>("camera")->GetFront();
     cameraFront = glm::normalize(front);
 }
 

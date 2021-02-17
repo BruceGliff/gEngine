@@ -64,7 +64,7 @@ void GLOBAL::SetPlayer(std::shared_ptr<Actor::actor> const & actor)
 	PLAYER.SetPlayer(actor);
 }
 
-Actor::actor & GLOBAL::GetPlayer()
+Actor::actor& GLOBAL::GetPlayer()
 {
 	return PLAYER.GetPlayer();
 }

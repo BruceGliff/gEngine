@@ -20,9 +20,9 @@ namespace Actor
 		player_wrap operator=(player_wrap&&) = delete;
 
 		//  Get current actor
-		Actor::actor & GetPlayer();
-		// Get current actor
-		Actor::actor const& GetPlayer() const;
+		Actor::actor& GetPlayer();
+		//  Get current actor
+		Actor::actor const & GetPlayer() const;
 
 		// Set actor as current. Info about previous is lost;
 		void SetPlayer(std::shared_ptr<Actor::actor> const & actor);

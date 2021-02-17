@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-Actor::actor & Actor::player_wrap::GetPlayer()
+Actor::actor& Actor::player_wrap::GetPlayer()
 {
 	if (isExist)
 		return *curr_actor;
@@ -21,6 +21,7 @@ Actor::actor const& Actor::player_wrap::GetPlayer() const
 
 	gERROR("getting null player!");
 }
+
 
 void Actor::player_wrap::SetPlayer(std::shared_ptr<Actor::actor> const & actor)
 {
