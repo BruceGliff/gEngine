@@ -102,6 +102,7 @@ namespace Property
 	class ICompound
 	{
 	public:
+		virtual void Process(Renderer::ShaderProgram const&, Geometry::Transformation const&) = 0;
 		virtual ~ICompound(){}
 	};
 

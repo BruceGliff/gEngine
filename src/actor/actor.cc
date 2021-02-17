@@ -21,6 +21,7 @@ Actor::actor::actor(actor&& otherActor) noexcept :
 	}
 
 	MOVE_PROPERTY(IDrawable);
+	MOVE_PROPERTY(ICompound);
 }
 
 
@@ -39,6 +40,7 @@ Actor::actor & Actor::actor::AttachComponent(std::string const& comp_name, Compo
 	aggregation.first = component;
 
 	INSERT_PROPERTY(IDrawable);
+	INSERT_PROPERTY(ICompound);
 	//INSERT_PROPERTY(IPhysicaly);
 
 
@@ -109,6 +111,7 @@ void Actor::actor::remove_properties_from_generated_arrays(std::vector<std::list
 	for (auto && property : prop_array)
 	{
 		REMOVE_PROPERTY(IDrawable);
+		REMOVE_PROPERTY(ICompound);
 		//REMOVE_PROPERTY(IPhysicaly);
 	}
 }
@@ -124,11 +127,15 @@ void Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transfo
 	// TODO check is it is possible to do with define
 	//PROCESS_PROPERTY(IPhysicaly, DoPhysic, sp, tr);
 
+	Geometry::Transformation const newTr{ tr + Geometry::Transformation{GetPosition(), GetRotation(), GetScale()} };
+
 	for (auto && x : Array_IDrawable)
 	{
-		reinterpret_cast<Property::IDrawable *>(x)->Draw(sp, tr + Geometry::Transformation{GetPosition(), 
-																						   GetRotation(), 
-																						   GetScale()});
+		reinterpret_cast<Property::IDrawable *>(x)->Draw(sp, newTr);
+	}
+	for (auto&& x : Array_ICompound)
+	{
+		reinterpret_cast<Property::ICompound*>(x)->Process(sp, newTr);
 	}
 
 }

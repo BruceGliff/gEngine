@@ -47,6 +47,7 @@ namespace Actor
 		ComponentMap components;
 
 		PROPERTIES_ARRAY(IDrawable);
+		PROPERTIES_ARRAY(ICompound);
 		//PROPERTIES_ARRAY(IPhysicaly);
 
 		// TODO Check if remove throw an exception
@@ -80,7 +81,7 @@ namespace Actor
 
 		// TODO make this via Args...
 		// Handle behavior of class. Do drawing or physics or so one
-		virtual void Process(Renderer::ShaderProgram const &, Geometry::Transformation const &);
+		virtual void Process(Renderer::ShaderProgram const &, Geometry::Transformation const &) override;
 
 		virtual ~actor();
 	};
