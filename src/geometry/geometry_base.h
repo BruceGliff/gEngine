@@ -1,13 +1,15 @@
 #pragma once
 
 #include <glm/vec3.hpp>
+#include <ostream>
 
 namespace Geometry
 {
 
     // TODO complete this
-    struct Transformation final
+    class Transformation final
     {
+    public:
         glm::vec3 displace{0.f};
         glm::vec3 rotate{0.f};
         glm::vec3 scale{1.f};
@@ -25,3 +27,5 @@ namespace Geometry
 
     Transformation operator+ (Transformation const & lval, Transformation const & rval);
 }
+
+std::ostream& operator<<(std::ostream& os, glm::vec3 const& vec);

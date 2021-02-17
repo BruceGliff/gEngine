@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+
 #include "component_base.h"
 #include "../../properties/properties.h"
 

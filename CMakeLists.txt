@@ -24,22 +24,26 @@ project(${PROGECT_NAME})
 
 # 2. set all .cc sources files what have .h
 set(SOURCES_CC
+	src/window/window_base.cc
+	src/texture/Texture_base.cc
+	src/scene/scene_wrap.cc
 	src/renderer/ShaderProgram.cc
 	src/renderer/TextureGL.cc
+	src/properties/properties.cc
+	src/process/global.cc
+	src/model/mesh_base.cc
 	src/manager/ResourceManager.cc
 	src/manager/EnvironmentHandler_wrap.cc
-	src/manager/AccessHandler.cc
-	src/texture/Texture_base.cc
-	src/window/window_base.cc
+	src/manager/Entity.cc
 	src/geometry/geometry_base.cc
-	src/model/mesh_base.cc
+	src/debug/logger.cc
+	src/debug/formater.cc	
 	src/actor/player_wrap.cc
 	src/actor/actor.cc
-	src/process/global.cc
 	src/actor/components/component_base.cc
 	src/actor/components/camera.cc
-	src/debug/logger.cc
-	src/debug/formater.cc
+	src/actor/components/staticMesh.cc
+
 )
 
 # 3. generate .h names
@@ -57,6 +61,8 @@ list(APPEND SOURCES_CC
 list(APPEND SOURCES_H 
 		src/texture/stb_image.h 
 		src/debug/debug.h
+		src/scene/scene.h
+		src/actor/actorDEF.h
 	)
 
 # 6. set flags for .cc files

@@ -28,6 +28,6 @@ namespace Actor
 		void SetPlayer(std::shared_ptr<Actor::actor> const & actor);
 
 
-		~player_wrap();
+		~player_wrap() {}
 	};
 }

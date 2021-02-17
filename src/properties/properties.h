@@ -65,8 +65,7 @@ namespace Property
     {
 		glm::vec3 rotator = {0.f, 0.f, 0.f};
 	public:
-		IRotatable() {}
-		IRotatable(glm::vec3 const& rot) 			= delete;
+		IRotatable() = default;
 		IRotatable(IRotatable const&)				= delete;
 		IRotatable(IRotatable&&)					= delete;
 		IRotatable& operator= (IRotatable const&)   = delete;
@@ -82,8 +81,7 @@ namespace Property
 	{
 		glm::vec3 scale = {1.f, 1.f, 1.f};
 	public:
-		IScalable() {}
-		IScalable(glm::vec3 const& scal)		= delete;
+		IScalable() = default;
 		IScalable(IScalable const&)				= delete;
 		IScalable(IScalable&&)					= delete;
 		IScalable& operator= (IScalable const&) = delete;

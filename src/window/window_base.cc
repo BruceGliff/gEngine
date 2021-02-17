@@ -87,7 +87,7 @@ bool Resources::glWindow::ProcessInput() const noexcept
 
     Actor::actor& player = GLOBAL::GetPlayer();
     auto& player_pos = player.GetPosition();
-    Component::camera & cam = *static_cast<Component::camera *>(player.GetComponent("camera"));
+    Component::camera & cam = *player.GetComponentByName<Component::camera>("camera");
     auto& cameraFront = cam.GetFront();
     auto& cameraUp = cam.GetUp();
 

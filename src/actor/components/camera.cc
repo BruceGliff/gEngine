@@ -82,5 +82,5 @@ glm::mat4 Component::camera::GetProjectionMatrix() const
 {
 	Resources::WindowSizeProperty const & size = GLOBAL::GetWindow().GetWindowSize();
 
-	glm::mat4 const projection{ glm::perspective(glm::radians(fov), ((float) size.width) / size.height, nearClamp, farClamp) };
+	return glm::perspective(glm::radians(fov), ((float) size.width) / size.height, nearClamp, farClamp);
 }

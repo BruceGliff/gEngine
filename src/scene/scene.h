@@ -112,29 +112,23 @@ public:
         return GetActor(en);
     }
 
-    iterator begin()                noexcept;
-    iterator end()                  noexcept;
-    const_iterator begin()  const   noexcept;
-    const_iterator end()    const   noexcept;
+    iterator begin() noexcept
+    {
+        return scene.begin();
+    }
+    iterator end() noexcept
+    {
+        return scene.end();
+    }
+    const_iterator begin() const noexcept
+    {
+        return scene.begin();
+    }
+    const_iterator end() const noexcept
+    {
+        return scene.end();
+    }
 
 };
-
-
-Scene::iterator Scene::begin() noexcept
-{
-    return scene.begin();
-}
-Scene::iterator Scene::end() noexcept
-{
-    return scene.end();
-}
-Scene::const_iterator Scene::begin() const noexcept
-{
-    return scene.begin();
-}
-Scene::const_iterator Scene::end() const noexcept
-{
-    return scene.end();
-}
 
 }

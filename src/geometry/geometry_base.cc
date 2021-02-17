@@ -1,44 +1,55 @@
 #include "geometry_base.h"
-using namespace Geometry;
 
-
-Transformation(glm::vec3 const & disp, glm::vec3 const & rot, glm::vec3 const & scl) :
-    displace{disp},
-    rotate{rot},
-    scale{scl}
+Geometry::Transformation::Transformation(glm::vec3 const & disp, glm::vec3 const & rot, glm::vec3 const & scl) :
+            displace{disp},
+            rotate{rot},
+            scale{scl}
 {}
-Transformation(Transformation const & tr) :
+
+Geometry::Transformation::Transformation(Transformation const & tr) :
     displace{tr.displace},
     rotate{tr.rotate},
     scale{tr.scale}
 {}
-Transformation(Transformation && tr)
+Geometry::Transformation::Transformation(Transformation && tr) noexcept
 {
     *this = std::move(tr);
 }
-Transformation & operator= (Transformation const & tr)
+Geometry::Transformation & Geometry::Transformation::operator= (Transformation const & tr)
 {
     displace = tr.displace;
     rotate = tr.rotate;
     scale = tr.scale;
+
+    return *this;
 }
-Transformation & operator= (Transformation && tr)
+Geometry::Transformation & Geometry::Transformation::operator= (Geometry::Transformation && tr) noexcept
 {
     displace = std::move(tr.displace);
     rotate = std::move(tr.rotate);
     scale = std::move(tr.scale);
+
+    return *this;
 }
 
-Transformation & operator+= (Transformation const & tr)
+Geometry::Transformation & Geometry::Transformation::operator+= (Transformation const & tr)
 {
     displace += tr.displace;
     rotate += tr.rotate;
     scale += tr.scale;
+
+    return *this;
 }
 
 
-Transformation operator+ (Transformation const & lval, Transformation const & rval)
+Geometry::Transformation Geometry::operator+ (Transformation const & lval, Transformation const & rval)
 {
     Transformation tmp{lval};
     return tmp+=rval;
+}
+
+std::ostream& operator<<(std::ostream& os, glm::vec3 const& vec)
+{
+    os << "[X: " << vec.x << ", Y: " << vec.y << ", Z: " << vec.z << "]" << std::endl;
+    return os;
 }

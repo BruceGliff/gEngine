@@ -58,9 +58,10 @@ int main(int argc, char * argv[])
 
         pObjShaderProgram->Use();
     
-        for (auto && x : Scene)
+        for (auto&& x : Scene)
+        {
             x.second->Process(*pObjShaderProgram, Geometry::Transformation{});
-
+        }
 
 
         win.Draw();

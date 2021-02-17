@@ -18,14 +18,8 @@ namespace Component
 		component_base& operator= (component_base const&)	= delete;
 		component_base& operator= (component_base&&)		= delete;
 
-		Property::ICompound * GetParent() const noexcept
-		{
-			return parent_;
-		}
-		void * SetParent(Property::ICompound * parent) noexcept
-		{
-			parent_ = parent;
-		}
+		Property::ICompound * GetParent() const noexcept;
+		void SetParent(Property::ICompound * parent) noexcept;
 
 		virtual ~component_base() {}
 	};
