@@ -12,6 +12,11 @@ namespace Renderer
 	enum class ETextureType;
 }
 
+namespace Model
+{
+	class Model;
+}
+
 
 // to use unordered_map<filesystem::path, ...>
 namespace std {
@@ -31,13 +36,16 @@ namespace Resources
 	class ResourcesManager final
 	{
 		// TODO make ordering or/and access via name and path?
-		// Map of the saders programs
+		// Map of the shaders programs
 		typedef std::unordered_map<std::string, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
 		ShaderProgramsMap shaderPrograms;
 
 		// Map of the textures
 		typedef std::unordered_map<std::filesystem::path, std::shared_ptr<Renderer::TextureGL>> TexturesMap;
 		TexturesMap textures;
+		// Map of models
+		typedef std::unordered_map<std::string, std::shared_ptr<Model::Model>> ModelMap;
+		ModelMap models;
 
 		// Path to executable file
 		std::filesystem::path const path_to_exec;
@@ -66,6 +74,12 @@ namespace Resources
 		// TODO make texture unique by path
 		// Load texture
 		std::shared_ptr <Renderer::TextureGL> loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType );
+		
+		// Load model. If model with name already created, then return it. Do not overwrite
+		std::shared_ptr <Model::Model> loadModel(std::string const & name, std::filesystem::path const& relevantPath);
+		// Get model by name. Return null if not found
+		std::shared_ptr <Model::Model> getModel(std::string const& name) const noexcept;
+
 		// Return texture by name or nullptr if it did ont find
 		std::shared_ptr <Renderer::TextureGL> getTexture(std::string const& textureName) const noexcept;
 

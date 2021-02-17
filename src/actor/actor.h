@@ -29,7 +29,8 @@ namespace Actor
 	// All class must be movable and if it has complex move object, then appears in move constructor as 
 	// Resources::Entity{std::move(otherActor)}
 					public Resources::Entity,
-					public Property::ICompound, 
+					public Property::ICompound,
+					public Component::component_base,
 					public Property::IScalable, 
 					public Property::IMoveable, 
 					public Property::IRotatable

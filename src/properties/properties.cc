@@ -5,6 +5,9 @@ Property::IPlaceable::IPlaceable() : anchor_position{ 0.f, 0.f, 0.f }
 
 Property::IPlaceable::IPlaceable(glm::vec3 const& pos) : anchor_position{pos}
 {}
+Property::IPlaceable::IPlaceable(IPlaceable && other) noexcept : 
+	anchor_position{ std::move(other.anchor_position) }
+{}
 
 glm::vec3& Property::IPlaceable::GetPosition() noexcept
 {
@@ -24,6 +27,14 @@ Property::IMoveable & Property::IMoveable::SetPosition(glm::vec3 const& pos) noe
 	return *this;
 }
 
+Property::IMoveable::IMoveable(IMoveable&& other) noexcept :
+	IPlaceable{std::move(other)}
+{}
+
+Property::IRotatable::IRotatable(IRotatable&& other) noexcept :
+	rotator{ std::move(other.rotator) }
+{}
+
 glm::vec3& Property::IRotatable::GetRotation() noexcept
 {
 	return rotator;
@@ -32,6 +43,10 @@ glm::vec3 const& Property::IRotatable::GetRotation() const noexcept
 {
 	return rotator;
 }
+
+Property::IScalable::IScalable(IScalable&& other) noexcept :
+	scale{std::move(other.scale)}
+{}
 
 glm::vec3& Property::IScalable::GetScale() noexcept
 {

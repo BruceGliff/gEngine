@@ -5,16 +5,22 @@
 #include "../actor.h"
 #include "../../renderer/ShaderProgram.h"
 #include "../../geometry/geometry_base.h"
+#include "../../manager/ResourceManager.h"
 
-Component::StaticMesh::StaticMesh(std::filesystem::path const& path)
-{
-    model = new Model::Model{path};
-}
+Component::StaticMesh::StaticMesh(std::string const& name, std::filesystem::path const& relevantPath) :
+    model{GLOBAL::GetResManager().loadModel(name, relevantPath)}
+{}
+
+Component::StaticMesh::StaticMesh(std::string const& name) :
+    model{GLOBAL::GetResManager().getModel(name)}
+{}
+
+Component::StaticMesh::StaticMesh(std::shared_ptr<Model::Model> const& model) :
+    model{model}
+{}
 
 Component::StaticMesh::~StaticMesh()
-{
-    delete model;
-}
+{}
 
 void Component::StaticMesh::Draw(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr)
 {

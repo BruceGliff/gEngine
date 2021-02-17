@@ -24,11 +24,19 @@ namespace Component
                             public Property::IDrawable,
                             public Property::IMoveable
     {
-        Model::Model * model = nullptr;
+        std::shared_ptr<Model::Model> model;
         
 
     public:
-        StaticMesh(std::filesystem::path const& path);
+        // Load model from disk by path. It occures in ResourceManager.
+        // If model with name already in ResourceManager, when get it from manager.
+        StaticMesh(std::string const & name, std::filesystem::path const& relevantPath);
+
+        // Load model from ResourceManager. If it is not found, when where will be nullptr
+        StaticMesh(std::string const& name);
+
+        // Attach already loaded model in static mesh
+        StaticMesh(std::shared_ptr<Model::Model> const& model);
 
         StaticMesh()                                = delete;
         StaticMesh(StaticMesh const & )             = delete;

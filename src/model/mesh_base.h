@@ -8,6 +8,8 @@
 #include <string>
 #include <filesystem>
 
+#include <assimp/scene.h>
+
 // TODO This is just from tutorial for testing
 // Make it on your way
 
@@ -18,12 +20,6 @@ namespace Renderer
 	class ShaderProgram;
 	class TextureGL;
 }
-
-struct aiNode;
-struct aiScene;
-struct aiMesh;
-struct aiMaterial;
-enum aiTextureType;
 
 namespace Model
 {

@@ -1,7 +1,6 @@
 #pragma once
 
-//#include <glm/vec3.hpp>
-#include "../../external/glm/glm/vec3.hpp"
+#include <glm/vec3.hpp>
 
 namespace Renderer
 {
@@ -22,7 +21,7 @@ namespace Property
 		IPlaceable();
 		IPlaceable(glm::vec3 const& pos);
 		IPlaceable(IPlaceable const&)				= delete;
-		IPlaceable(IPlaceable&&)					= delete;
+		IPlaceable(IPlaceable&& other) noexcept;
 		IPlaceable& operator= (IPlaceable const&)   = delete;
 		IPlaceable& operator= (IPlaceable&&)		= delete;
 
@@ -39,7 +38,7 @@ namespace Property
 
 		IMoveable() = default;
 		IMoveable(IMoveable const&)				= delete;
-		IMoveable(IMoveable&&)					= delete;
+		IMoveable(IMoveable&& other) noexcept;
 		IMoveable& operator= (IMoveable const&)	= delete;
 		IMoveable& operator= (IMoveable&&)		= delete;
 
@@ -67,7 +66,7 @@ namespace Property
 	public:
 		IRotatable() = default;
 		IRotatable(IRotatable const&)				= delete;
-		IRotatable(IRotatable&&)					= delete;
+		IRotatable(IRotatable&& other) noexcept;
 		IRotatable& operator= (IRotatable const&)   = delete;
 		IRotatable& operator= (IRotatable&&)		= delete;
 
@@ -83,7 +82,7 @@ namespace Property
 	public:
 		IScalable() = default;
 		IScalable(IScalable const&)				= delete;
-		IScalable(IScalable&&)					= delete;
+		IScalable(IScalable&& other) noexcept;
 		IScalable& operator= (IScalable const&) = delete;
 		IScalable& operator= (IScalable&&)		= delete;
 

@@ -33,11 +33,16 @@ int main(int argc, char * argv[])
 
     // backpack
     Actor::actor backpack{};
-    backpack.AttachComponent("mesh", new Component::StaticMesh{resMng.getPathToExucutable() / "res/models/backpack/backpack.obj"});
+    backpack.AttachComponent("mesh", new Component::StaticMesh{"backpack", "res/models/backpack/backpack.obj"});
+    auto a = Scene.Attach(backpack);
+
+    Actor::actor backPackRoot{};
+    backPackRoot.AttachComponent("mesh", new Component::StaticMesh{ "backpack" });
+    backPackRoot.SetPosition(glm::vec3{ 10.f, 10.f, 10.f });
+    auto aa = Scene.Attach(backPackRoot);
+
     Actor::actor player_actor{};
     player_actor.AttachComponent("camera", new Component::camera{});
-
-    Scene.Attach(backpack);
     auto pPlayer = Scene.Attach(player_actor);
     GLOBAL::SetPlayer(pPlayer);
 
@@ -57,12 +62,13 @@ int main(int argc, char * argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         pObjShaderProgram->Use();
-    
+        
+        int i = 0;
         for (auto&& x : Scene)
-        {
+        {  
             x.second->Process(*pObjShaderProgram, Geometry::Transformation{});
         }
-
+        i = 0;
 
         win.Draw();
     }

@@ -8,7 +8,9 @@
 #include "../geometry/geometry_base.h"
 
 Actor::actor::actor(actor&& otherActor) noexcept :
-	Resources::Entity{std::move(otherActor)}
+	Resources::Entity{std::move(otherActor)},
+	Component::component_base{std::move(otherActor)},
+	Property::IMoveable{std::move(otherActor)}
 {
 	components = std::move(otherActor.components);
 	

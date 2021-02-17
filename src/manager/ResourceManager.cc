@@ -2,6 +2,7 @@
 #include "../renderer/ShaderProgram.h"
 #include "../renderer/TextureGL.h"
 #include "../debug/debug.h"
+#include "../model/mesh_base.h"
 
 #include <iostream>
 #include <sstream>
@@ -62,6 +63,28 @@ std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::loadTexture(st
 
     // if texture already exists, return it
     return it->second;
+}
+
+std::shared_ptr<Model::Model> Resources::ResourcesManager::loadModel(std::string const& modelName, std::filesystem::path const& relevantPath)
+{
+    ModelMap::const_iterator it = models.find(modelName);
+    // if model does not exist, then load it
+    if (it == models.end())
+        return models.emplace(modelName, std::make_shared<Model::Model>(path_to_exec / relevantPath)).first->second;
+
+    // if model already exists, return it
+    return it->second;
+}
+
+std::shared_ptr<Model::Model> Resources::ResourcesManager::getModel(std::string const& modelName) const noexcept
+{
+    ModelMap::const_iterator it = models.find(modelName);
+    // if model does not exist, then load it
+    if (it != models.end())
+        return it->second;
+
+    gWARNING(std::string{ "No texture with name: " } + modelName);
+    return nullptr;
 }
 
 std::shared_ptr<Renderer::TextureGL> Resources::ResourcesManager::getTexture(std::string const& textureName) const noexcept
