@@ -17,7 +17,7 @@ namespace Component
 		glm::vec3 up;
 
 		float nearClamp = 0.1f;
-		float farClamp = 100.f;
+		float farClamp = 10000.f;
 
 	public:
 		camera();

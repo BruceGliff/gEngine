@@ -31,19 +31,19 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
 
-    // backpack
-    Actor::actor backpack{};
-    backpack.AttachComponent("mesh", new Component::StaticMesh{"backpack", "res/models/backpack/backpack.obj"});
+    Actor::actor* a = Scene.Spawn<Actor::actor>().get();
+    resMng.loadModel("backpack", "res/models/backpack/backpack.obj");
+
+    for (int i = 1; i != 10; ++i)
+    {
+        Actor::actor tmp;
+        tmp.AttachComponent("mesh", new Component::StaticMesh{ "backpack" });
+        tmp.SetPosition({ 10.f * i, 5.f * i, 1.f * i });
+        a->AttachComponent("actor", new Actor::actor{ std::move(tmp) });
+        a = a->GetComponentByName<Actor::actor>("actor");
+    }
 
 
-    Actor::actor backPackRoot{};
-    backPackRoot.AttachComponent("mesh", new Component::StaticMesh{ "backpack" });
-    backPackRoot.SetPosition(glm::vec3{ 10.f, 10.f, 10.f });
-
-    backpack.AttachComponent("actor", new Actor::actor{ std::move(backPackRoot) });
-
-    //auto aa = Scene.Attach(backPackRoot);
-    auto a = Scene.Attach(backpack);
 
     Actor::actor player_actor{};
     player_actor.AttachComponent("camera", new Component::camera{});
@@ -71,7 +71,6 @@ int main(int argc, char * argv[])
         {  
             x.second->Process(*pObjShaderProgram, Geometry::Transformation{});
         }
-        i = 0;
 
         win.Draw();
     }

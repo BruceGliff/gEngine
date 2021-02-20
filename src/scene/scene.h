@@ -36,7 +36,7 @@ public:
     // Return nullptr, if object cannot be spawned
     // Return shared_ptr of created object
     template<typename T, typename ... Args>
-    std::shared_ptr<T> & Spawn(Args && ... args)
+    std::shared_ptr<T> Spawn(Args && ... args)
     {
         std::shared_ptr<T> p = std::make_shared<T>(std::forward<Args>(args) ...);
         std::shared_ptr<Actor::actor> pA = std::dynamic_pointer_cast<Actor::actor>(p);

@@ -122,6 +122,7 @@ Actor::actor::~actor()
 		delete x.second.first;
 }
 
+#include <iostream>
 void Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr)
 {
 	// TODO check is it is possible to do with define
