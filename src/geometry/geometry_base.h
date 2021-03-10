@@ -29,4 +29,5 @@ namespace Geometry
     Transformation operator+ (Transformation const & lval, Transformation const & rval);
 }
 
+glm::vec3 operator*(glm::vec3 const& vec, float x);
 std::ostream& operator<<(std::ostream& os, glm::vec3 const& vec);

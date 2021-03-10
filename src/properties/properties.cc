@@ -1,5 +1,7 @@
 #include "properties.h"
 
+#include "../process/global.h"
+#include "../manager/ResourceManager.h"
 
 Property::IPlaceable::IPlaceable() : anchor_position{ 0.f, 0.f, 0.f }
 {}
@@ -62,6 +64,11 @@ Property::IScalable & Property::IScalable::SetScale(glm::vec3 const& sc) noexcep
 {
 	scale = sc;
 	return *this;
+}
+
+Property::IDrawable::IDrawable()
+{
+	borderShader = GLOBAL::GetResManager().loadShaders("boarderShader", "res/shaders/stencil/model.vs", "res/shaders/stencil/border.fs");
 }
 
 void Property::IDrawable::SetShaderProgram(std::shared_ptr<Renderer::ShaderProgram> const& sp) noexcept

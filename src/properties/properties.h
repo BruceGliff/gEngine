@@ -50,11 +50,12 @@ namespace Property
     class IDrawable
     {
 	protected:
+		std::shared_ptr<Renderer::ShaderProgram> borderShader;	
 		std::shared_ptr<Renderer::ShaderProgram> shader;
     public:
         virtual void Draw(Geometry::Transformation const &) = 0;
 
-        IDrawable() = default;
+		IDrawable();
         IDrawable(IDrawable const &) = delete;
         IDrawable(IDrawable &&) = delete;
         IDrawable& operator= (IDrawable const &)  =delete;

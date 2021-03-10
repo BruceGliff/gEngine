@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
     auto& Scene = GLOBAL::GetScene();
 
     Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
-    auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "model.vs", SHADER_PATH + "model.fs");
+    auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "stencil/model.vs", SHADER_PATH + "stencil/model.fs");
     if (!pObjShaderProgram->IsCompiled())
     {
         // TODO Check as it should be in global destructor
@@ -59,6 +59,9 @@ int main(int argc, char * argv[])
 
     Resources::glWindow& win = GLOBAL::GetWindow();
     glEnable(GL_DEPTH_TEST);
+    // Stencil for bordering
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
     while (!win.ProcessInput())
     {
@@ -66,7 +69,7 @@ int main(int argc, char * argv[])
 
         /* Render here */
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         for (auto&& x : Scene)
         {  

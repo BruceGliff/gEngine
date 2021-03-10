@@ -48,6 +48,16 @@ Geometry::Transformation Geometry::operator+ (Transformation const & lval, Trans
     return tmp+=rval;
 }
 
+glm::vec3 operator*(glm::vec3 const& vec, float x)
+{
+    glm::vec3 tmp{ vec };
+    tmp.x *= x;
+    tmp.y *= x;
+    tmp.z *= x;
+
+    return tmp;
+}
+
 std::ostream& operator<<(std::ostream& os, glm::vec3 const& vec)
 {
     os << "[X: " << vec.x << ", Y: " << vec.y << ", Z: " << vec.z << "]" << std::endl;
