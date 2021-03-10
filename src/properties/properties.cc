@@ -58,6 +58,12 @@ glm::vec3 const& Property::IScalable::GetScale() const noexcept
 	return scale;
 }
 
+Property::IScalable & Property::IScalable::SetScale(glm::vec3 const& sc) noexcept
+{
+	scale = sc;
+	return *this;
+}
+
 void Property::IDrawable::SetShaderProgram(std::shared_ptr<Renderer::ShaderProgram> const& sp) noexcept
 {
 	shader = sp;

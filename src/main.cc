@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
     
     Component::StaticMesh* bp_mesh = new Component::StaticMesh{ "backpack" };
     bp_mesh->SetShaderProgram(pObjShaderProgram);
-    Scene.Spawn<Actor::actor>()->AttachComponent("mesh", bp_mesh);
+    Scene.Spawn<Actor::actor>()->AttachComponent("mesh", bp_mesh).SetScale(glm::vec3{ 0.5f, 0.5f, 0.5f });
     //for (int i = 1; i != 10; ++i)
     //{
     //    Actor::actor tmp;
@@ -59,6 +59,7 @@ int main(int argc, char * argv[])
 
     Resources::glWindow& win = GLOBAL::GetWindow();
     glEnable(GL_DEPTH_TEST);
+
     while (!win.ProcessInput())
     {
         ++delta_frame;

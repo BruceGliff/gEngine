@@ -10,8 +10,10 @@
 Actor::actor::actor(actor&& otherActor) noexcept :
 	Resources::Entity{std::move(otherActor)},
 	Component::component_base{std::move(otherActor)},
-	Property::IMoveable{std::move(otherActor)}
+	Property::IMoveable{std::move(otherActor)},
+	Property::IScalable{std::move(otherActor)}
 {
+	using namespace Property;
 	components = std::move(otherActor.components);
 	
 	// set new parent to components
@@ -108,6 +110,7 @@ Actor::actor & Actor::actor::DeleteComponent(std::string const& comp_name) noexc
 
 void Actor::actor::remove_properties_from_generated_arrays(std::vector<std::list<void *>::iterator> const & prop_array) noexcept
 {
+	using namespace Property;
 	for (auto && property : prop_array)
 	{
 		REMOVE_PROPERTY(IDrawable);
@@ -127,7 +130,6 @@ void Actor::actor::Process(Geometry::Transformation const & tr)
 {
 	// TODO check is it is possible to do with define
 	//PROCESS_PROPERTY(IPhysicaly, DoPhysic, sp, tr);
-
 	Geometry::Transformation const newTr{ tr + Geometry::Transformation{GetPosition(), GetRotation(), GetScale()} };
 
 	for (auto && x : Array_IDrawable)

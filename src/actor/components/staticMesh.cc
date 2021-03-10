@@ -28,7 +28,6 @@ void Component::StaticMesh::Draw(Geometry::Transformation const & tr)
     auto mainCam = GLOBAL::GetPlayer().GetComponentByName<Component::camera>("camera");
     shader->setMat4("view", mainCam->GetViewMatrix());
     shader->setMat4("projection", mainCam->GetProjectionMatrix());
-
     glm::mat4 model_matrix = glm::mat4(1.0f);
     model_matrix = glm::translate(model_matrix, tr.displace); // translate it down so it's at the center of the scene
     model_matrix = glm::scale(model_matrix, tr.scale);	    // it's a bit too big for our scene, so scale it down

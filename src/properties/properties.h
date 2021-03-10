@@ -96,6 +96,8 @@ namespace Property
 		glm::vec3& GetScale() noexcept;
 		glm::vec3 const& GetScale() const noexcept;
 
+		IScalable & SetScale(glm::vec3 const& sc) noexcept;
+
 		virtual ~IScalable() {};
 	};
 

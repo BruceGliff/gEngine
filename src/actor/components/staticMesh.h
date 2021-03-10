@@ -22,7 +22,8 @@ namespace Component
     class StaticMesh final : 
                             public component_base, 
                             public Property::IDrawable,
-                            public Property::IMoveable
+                            public Property::IMoveable,
+                            public Property::IScalable
     {
         std::shared_ptr<Model::Model> model;
         

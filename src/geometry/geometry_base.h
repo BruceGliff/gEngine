@@ -22,9 +22,10 @@ namespace Geometry
         Transformation & operator= (Transformation const & tr);
         Transformation & operator= (Transformation && tr) noexcept;
         
+        // Scale by default does not add up, but multiplies
         Transformation & operator+= (Transformation const & tr);
     };
-
+    // Scale by default does not add up, but multiplies
     Transformation operator+ (Transformation const & lval, Transformation const & rval);
 }
 

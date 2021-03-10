@@ -36,7 +36,7 @@ Geometry::Transformation & Geometry::Transformation::operator+= (Transformation 
 {
     displace += tr.displace;
     rotate += tr.rotate;
-    scale += tr.scale;
+    scale *= tr.scale;
 
     return *this;
 }
