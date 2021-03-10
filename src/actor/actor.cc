@@ -123,7 +123,7 @@ Actor::actor::~actor()
 }
 
 #include <iostream>
-void Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr)
+void Actor::actor::Process(Geometry::Transformation const & tr)
 {
 	// TODO check is it is possible to do with define
 	//PROCESS_PROPERTY(IPhysicaly, DoPhysic, sp, tr);
@@ -132,11 +132,11 @@ void Actor::actor::Process(Renderer::ShaderProgram const & sp, Geometry::Transfo
 
 	for (auto && x : Array_IDrawable)
 	{
-		reinterpret_cast<Property::IDrawable *>(x)->Draw(sp, newTr);
+		reinterpret_cast<Property::IDrawable *>(x)->Draw(newTr);
 	}
 	for (auto&& x : Array_ICompound)
 	{
-		reinterpret_cast<Property::ICompound*>(x)->Process(sp, newTr);
+		reinterpret_cast<Property::ICompound*>(x)->Process(newTr);
 	}
 
 }

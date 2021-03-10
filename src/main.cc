@@ -31,17 +31,19 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
 
-    Actor::actor* a = Scene.Spawn<Actor::actor>().get();
     resMng.loadModel("backpack", "res/models/backpack/backpack.obj");
-
-    for (int i = 1; i != 10; ++i)
-    {
-        Actor::actor tmp;
-        tmp.AttachComponent("mesh", new Component::StaticMesh{ "backpack" });
-        tmp.SetPosition({ 10.f * i, 5.f * i, 1.f * i });
-        a->AttachComponent("actor", new Actor::actor{ std::move(tmp) });
-        a = a->GetComponentByName<Actor::actor>("actor");
-    }
+    
+    Component::StaticMesh* bp_mesh = new Component::StaticMesh{ "backpack" };
+    bp_mesh->SetShaderProgram(pObjShaderProgram);
+    Scene.Spawn<Actor::actor>()->AttachComponent("mesh", bp_mesh);
+    //for (int i = 1; i != 10; ++i)
+    //{
+    //    Actor::actor tmp;
+    //    tmp.AttachComponent("mesh", new Component::StaticMesh{ "backpack" });
+    //    tmp.SetPosition({ 10.f * i, 5.f * i, 1.f * i });
+    //    a->AttachComponent("actor", new Actor::actor{ std::move(tmp) });
+    //    a = a->GetComponentByName<Actor::actor>("actor");
+    //}
 
 
 
@@ -65,11 +67,9 @@ int main(int argc, char * argv[])
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        pObjShaderProgram->Use();
-
         for (auto&& x : Scene)
         {  
-            x.second->Process(*pObjShaderProgram, Geometry::Transformation{});
+            x.second->Process(Geometry::Transformation{});
         }
 
         win.Draw();

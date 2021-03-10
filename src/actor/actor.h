@@ -81,7 +81,7 @@ namespace Actor
 
 		// TODO make this via Args...
 		// Handle behavior of class. Do drawing or physics or so one
-		virtual void Process(Renderer::ShaderProgram const &, Geometry::Transformation const &) override;
+		virtual void Process(Geometry::Transformation const &) override;
 
 		virtual ~actor();
 	};

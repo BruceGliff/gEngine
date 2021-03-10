@@ -11,7 +11,7 @@ namespace Resources
 		// flag if data cant be deleted (if errors occures or it has been already deleted)
 		bool isNoNeedToDelete = false;
 		// if errors occure white texture loads
-		unsigned char whiteErrorTexture[3] = { 255, 255, 255 };
+		unsigned char whiteErrorTexture[6] = { 255, 255, 255, 0, 0, 0};
 	protected:
 		unsigned char* data = 0;
 		int channels = 0;

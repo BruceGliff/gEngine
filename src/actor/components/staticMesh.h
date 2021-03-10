@@ -45,7 +45,7 @@ namespace Component
         StaticMesh & operator=(StaticMesh &&)       = delete;
 
 
-        void Draw(Renderer::ShaderProgram const & sp, Geometry::Transformation const & tr) override;
+        void Draw(Geometry::Transformation const & tr) override;
 
         ~StaticMesh();
     };

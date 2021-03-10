@@ -1,5 +1,6 @@
 #include "properties.h"
 
+
 Property::IPlaceable::IPlaceable() : anchor_position{ 0.f, 0.f, 0.f }
 {}
 
@@ -55,4 +56,9 @@ glm::vec3& Property::IScalable::GetScale() noexcept
 glm::vec3 const& Property::IScalable::GetScale() const noexcept
 {
 	return scale;
+}
+
+void Property::IDrawable::SetShaderProgram(std::shared_ptr<Renderer::ShaderProgram> const& sp) noexcept
+{
+	shader = sp;
 }

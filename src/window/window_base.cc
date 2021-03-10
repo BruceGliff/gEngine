@@ -83,7 +83,7 @@ bool Resources::glWindow::ProcessInput() const noexcept
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-    const float cameraSpeed = 2.5f * deltaTime;
+    const float cameraSpeed = 20.5f * deltaTime;
 
     auto& player = GLOBAL::GetPlayer();
     auto& player_pos = player.GetPosition();

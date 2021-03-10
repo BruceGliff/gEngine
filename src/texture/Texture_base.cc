@@ -21,7 +21,7 @@ Resources::Texture_base::Texture_base(std::filesystem::path const& path) noexcep
     {
         gWARNING(std::string{ "Can not load texture: " } + path.string());
         data = whiteErrorTexture;
-        width = 1;
+        width = 2;
         height = 1;
         channels = 3;
         isNoNeedToDelete = true;
