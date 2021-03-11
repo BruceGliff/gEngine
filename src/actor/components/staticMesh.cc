@@ -33,10 +33,10 @@ void Component::StaticMesh::Draw(Geometry::Transformation const & tr)
     shader->setMat4("view", mainCam->GetViewMatrix());
     shader->setMat4("projection", mainCam->GetProjectionMatrix());
     glm::mat4 const model_tr_matrix = glm::translate(glm::mat4(1.0f), tr.displace); // translate it down so it's at the center of the scene
-    {
-        glm::mat4 const model_matrix = glm::scale(model_tr_matrix, tr.scale);	    // it's a bit too big for our scene, so scale it down
-        shader->setMat4("model", model_matrix);
-    }
+
+    glm::mat4 const model_matrix = glm::scale(model_tr_matrix, tr.scale);	    // it's a bit too big for our scene, so scale it down
+    shader->setMat4("model", model_matrix);
+
     // insert here for normal drawing without stencil
     // model->Draw(*shader);
     // return;
@@ -51,8 +51,6 @@ void Component::StaticMesh::Draw(Geometry::Transformation const & tr)
     borderShader->Use();
     borderShader->setMat4("view", mainCam->GetViewMatrix());
     borderShader->setMat4("projection", mainCam->GetProjectionMatrix());
-    glm::vec3 const borderScale = tr.scale * 1.02f;
-    glm::mat4 const model_matrix = glm::scale(model_tr_matrix, borderScale);
     borderShader->setMat4("model", model_matrix);
     model->Draw(*borderShader);
     glStencilMask(0xFF);

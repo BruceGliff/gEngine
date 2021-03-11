@@ -68,7 +68,7 @@ Property::IScalable & Property::IScalable::SetScale(glm::vec3 const& sc) noexcep
 
 Property::IDrawable::IDrawable()
 {
-	borderShader = GLOBAL::GetResManager().loadShaders("boarderShader", "res/shaders/stencil/model.vs", "res/shaders/stencil/border.fs");
+	borderShader = GLOBAL::GetResManager().loadShaders("boarderShader", "res/shaders/stencil/border.vs", "res/shaders/stencil/border.fs");
 }
 
 void Property::IDrawable::SetShaderProgram(std::shared_ptr<Renderer::ShaderProgram> const& sp) noexcept
