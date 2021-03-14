@@ -2,7 +2,7 @@
 #include "logger.h"
 #include "../process/global.h"
 #include <exception>
-
+extern int _J84659365ifInDebugMode;
 // add warning log to further dump
 #define gWARNING(x)                                                             \
     {                                                                           \
@@ -16,3 +16,12 @@
         GLOBAL::GetLogger().DumpToFile();                                       \
         throw std::runtime_error(x);                                            \
     }
+
+// add debug log only in debug mode
+#define gMESSAGE(x)                                                             \
+    if (_J84659365ifInDebugMode)                                                \
+    {                                                                           \
+        GLOBAL::GetLogger().AddLog(new Debug::Message{__FILE__, __LINE__, x});  \
+    }
+    
+

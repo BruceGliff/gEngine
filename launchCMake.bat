@@ -1,11 +1,12 @@
 :: Goto binary directory
+set BuildType=Debug
 mkdir build
 cd build
 
 :: Generate solution for different OS'es. <..> because CMakeLists.txt in project/ but project will be created in project/build/
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=%BuildType% ..
 
 :: Build solution. <.> becuse project in project/build/
-cmake --build . --config Release
+cmake --build . --config %BuildType%
 
 cd ..

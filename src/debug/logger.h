@@ -47,6 +47,22 @@ namespace Debug
 		// Dump DebugInfo woth formating to specific out stream
 		void Dump(std::ostream& os = std::cout) const override;
 	};
+	// class represent debug messages
+	class Message final : public DebugInfo
+	{
+		Format::Formater warnFormat;
+	public:
+		Message() 							= delete;
+		Message(Message const&)				= delete;
+		Message(Message&&) 					= delete;
+		Message& operator= (Message const&) = delete;
+		Message& operator= (Message&&) 		= delete;
+
+		// only one constructor
+		Message(std::string const& file, int line, std::string const& explanation);
+		// Dump DebugInfo woth formating to specific out stream
+		void Dump(std::ostream& os = std::cout) const override;
+	};
 	// class represent Errors with specific formating
 	class Error final : public DebugInfo
 	{
@@ -81,6 +97,8 @@ namespace Debug
 		Logger const& DumpWarnings(std::ostream& os = std::cout) const;
 		// Dump only Errors to specific out stream (cerr as default)
 		Logger const& DumpErrors(std::ostream& os = std::cerr) const;
+		// Dump only Messages to specific out stream (cout as default)
+		Logger const& DumpMessages(std::ostream& os = std::cerr) const;
 		// Dump all logs to specific out stream
 		Logger const& Dump(std::ostream& os) const;
 		// Dump all logs to cout

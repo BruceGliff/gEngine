@@ -62,7 +62,7 @@ namespace Actor
 		actor& operator= (actor const&) = delete;
 		actor& operator= (actor&&)		= delete;
 
-		// Attach component to object by name. Class occupies given resources and releases them by himself
+		// Attach component to object by name. Class occupies given resources and releases them by itself
 		// Reattaches component if it already exists and deletes old
 		actor & AttachComponent(std::string const& comp_name, Component::component_base * );
 

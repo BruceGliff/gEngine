@@ -24,6 +24,7 @@ project(${PROGECT_NAME})
 
 # 2. set all .cc sources files what have .h
 set(SOURCES_CC
+	src/debug/debug.cc
 	src/window/window_base.cc
 	src/texture/Texture_base.cc
 	src/scene/scene_wrap.cc
@@ -59,8 +60,7 @@ list(APPEND SOURCES_CC
 	)
 # 5. add .h files which without .cc pair
 list(APPEND SOURCES_H 
-		src/texture/stb_image.h 
-		src/debug/debug.h
+		src/texture/stb_image.h
 		src/scene/scene.h
 		src/actor/actorDEF.h
 	)
@@ -83,8 +83,12 @@ if(UNIX)
 	set(OS_FLAG "-DgUNIX")
 endif(UNIX)
 target_compile_options(${PROGECT_NAME} PUBLIC ${OS_FLAG})
+
+message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 # set flag for debugging
-target_compile_options(${PROGECT_NAME} PUBLIC "-DgDEBUG")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	target_compile_options(${PROGECT_NAME} PUBLIC "-DgDEBUG")
+endif()
 
 # 10. Setup properties for GLFW
 # template from GLFW Documentation

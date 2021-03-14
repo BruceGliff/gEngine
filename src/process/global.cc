@@ -36,8 +36,8 @@ void GLOBAL::Initialize(char const * path_to_exec, int win_width, int win_height
 		gERROR("Cannot initialize GLAD");
 	}
 
-	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-	std::cout << "OpenGL ver: " << glGetString(GL_VERSION) << std::endl;
+	gMESSAGE(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+	gMESSAGE(reinterpret_cast<const char *>(glGetString(GL_VERSION)));
 }
 Resources::ResourcesManager& GLOBAL::GetResManager()
 {

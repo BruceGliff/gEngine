@@ -37,6 +37,28 @@ Debug::Warning::Warning(std::string const& file, int line, std::string const& ex
 {
 	warnFormat.setCode(Format::TextFMT::ColorCode::YELLOW).setCode(Format::TextFMT::StyleCode::BOLD);
 }
+Debug::Message::Message(std::string const& file, int line, std::string const& explanation) : 
+	DebugInfo{ file, line, explanation }
+{
+	warnFormat.setCode(Format::TextFMT::ColorCode::CYAN).setCode(Format::TextFMT::StyleCode::BOLD);
+}
+void Debug::Message::Dump(std::ostream& os) const
+{
+	// TODO make format out on WIN
+	bool isWindows = false;
+#ifdef gWINDOWS
+	isWindows = true;
+#endif // gWINDOWS
+
+
+	if (typeid(os) == typeid(std::cout) && !isWindows)
+		os << warnFormat << "DMSG:: " << Format::SingleCode{ Format::TextFMT::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
+	else
+		os << "DMSG:: " << explain << "\n";
+
+	print(os);
+	os << std::endl;
+}
 
 void Debug::Error::Dump(std::ostream& os) const
 {
