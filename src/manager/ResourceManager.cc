@@ -32,9 +32,12 @@ std::shared_ptr<Renderer::ShaderProgram> Resources::ResourcesManager::loadShader
                                                                                     std::filesystem::path const& vertexPath, 
                                                                                     std::filesystem::path const& fragmentPath)
 {
+    auto && it = shaderPrograms.find(shaderName);
+    if (it != shaderPrograms.end())
+        return it->second; 
+
     std::string const vertexCode{ readFile(vertexPath) };
     std::string const fragmentCode{ readFile(fragmentPath) };
-
     // shader can be not compiled!
     return shaderPrograms.emplace(shaderName, std::make_shared<Renderer::ShaderProgram>(vertexCode, fragmentCode)).first->second;
 }

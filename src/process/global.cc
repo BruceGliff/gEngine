@@ -28,13 +28,12 @@ void GLOBAL::Initialize(char const * path_to_exec, int win_width, int win_height
 {
 	ENV_MGR.construct(win_width, win_height, win_name, path_to_exec);
 
-	SCENE.construct();
-
 	/* Initialize glad */
 	if (!gladLoadGL())
 	{
 		gERROR("Cannot initialize GLAD");
 	}
+	SCENE.construct();
 
 	gMESSAGE(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
 	gMESSAGE(reinterpret_cast<const char *>(glGetString(GL_VERSION)));

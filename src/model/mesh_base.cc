@@ -62,6 +62,8 @@ void Model::Mesh::setupMesh()
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::texture_coord));
 
         glBindVertexArray(0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Model::Model::loadModel(std::filesystem::path const& path)

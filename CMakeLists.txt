@@ -24,6 +24,7 @@ project(${PROGECT_NAME})
 
 # 2. set all .cc sources files what have .h
 set(SOURCES_CC
+	src/scene/gismo/grid.cc
 	src/debug/debug.cc
 	src/window/window_base.cc
 	src/texture/Texture_base.cc

@@ -11,12 +11,18 @@ bool Renderer::ShaderProgram::CreateShader(std::string const& source, unsigned i
 {
     // Create shader discription of shader
     GLuint const shaderID = glCreateShader(shader_type);
+    if (!shaderID)
+    {
+        GLchar info_log[1024];
+        glGetShaderInfoLog(shaderID, 1024, nullptr, info_log);
+        gWARNING(std::string{ "Creating shader failed " } + info_log);
+        return false;
+    }
     char const * code = source.c_str();
     // Load shader code
     glShaderSource(shaderID, 1, &code, nullptr);
     // Compile shader
     glCompileShader(shaderID);
-
     // Check if compiled successfuly
     GLint success = 0;
     glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
@@ -106,7 +112,6 @@ Renderer::ShaderProgram::ShaderProgram(std::string const& vertex_shader, std::st
         glDeleteShader(vsID);
         return;
     }
-
     // Create program and link shaders
     id = glCreateProgram();
     glAttachShader(id, vsID);

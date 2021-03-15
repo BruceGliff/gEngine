@@ -46,7 +46,7 @@ namespace Model
 		std::vector<unsigned int>	m_indices;
 		std::vector<type_pTextures>	m_textures;
 	};
-
+	// TODO check for virtual ~Model(MEsh)
 	class Model
 	{
 		std::vector<Mesh> m_meshes;

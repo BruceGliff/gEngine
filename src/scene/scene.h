@@ -6,6 +6,8 @@
 #include "../manager/Entity.h"
 #include "../actor/actor.h"
 #include "../debug/debug.h"
+#include "../geometry/geometry_base.h"
+#include "gismo/grid.h"
 
 namespace Actor
 {
@@ -19,6 +21,7 @@ namespace Scene
 // We assume, that scene occupies and releases all resources pass to it
 class Scene final
 {
+    Grid grid;
     std::unordered_map<Resources::Entity, std::shared_ptr<Actor::actor>> scene;
     // TODO make light seperate
 
@@ -31,6 +34,15 @@ public:
     Scene(Scene&&)					= delete;
     Scene& operator= (Scene const&) = delete;
     Scene& operator= (Scene&&)		= delete;
+
+    void Process()
+    {
+        Geometry::Transformation tr{};
+        grid.Draw(tr);
+        for (auto && x : scene)
+            x.second->Process(tr);        
+    }
+
 
     // Spawn an object at scene.
     // Return nullptr, if object cannot be spawned
