@@ -3,7 +3,7 @@
 #include <vector>
 
 #include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+#include <glm/vec2.hpp>
 #include <glad/glad.h>
 
 #include "../../properties/properties.h"
@@ -24,7 +24,7 @@ namespace Scene
         GLuint lenght;
         unsigned int VAO, VBO, EBO;
         std::vector<glm::vec3> vertices;
-        std::vector<glm::uvec4> indices;
+        std::vector<glm::uvec2> indices;
 
         void GenerateGrid(); 
     public:

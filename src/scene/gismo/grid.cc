@@ -13,7 +13,7 @@
 using namespace Scene;
 
 Grid::Grid() :
-    slices{50},
+    slices{10},
     lenght{static_cast<GLuint>(slices * slices * 8)},
     sizeOfSlice{2.f}
 {
@@ -24,32 +24,21 @@ Grid::Grid() :
 
 void Grid::GenerateGrid()
 {
-    for(int j = 0; j <= slices; ++j) 
+    for (int i = -slices / 2 + 1, j = 0; i != slices / 2; ++i, j += 4)
     {
-        for(int i = 0; i <= slices; ++i) 
-        {
-            // float const x = (float)i/(float)slices;
-            // float const y = 0;
-            // float const z = (float)j/(float)slices;
+        float const x1 = sizeOfSlice * i;
+        float const z1 = sizeOfSlice * (-slices / 2);
+        float const z2 = -z1;
+        
+        // First line perpend oX
+        vertices.push_back(glm::vec3(x1, 0.f, z1));
+        vertices.push_back(glm::vec3(x1, 0.f, z2));
+        indices.push_back(glm::uvec2(j, j + 1));
 
-            float const x = (i - slices / 2) * sizeOfSlice;
-            float const y = 0;
-            float const z = (j - slices / 2) * sizeOfSlice;
-
-            vertices.push_back(glm::vec3(x, y, z));
-        }
-    }
-
-    for(int j = 0; j < slices; ++j) 
-    {
-        for(int i = 0; i < slices; ++i) 
-        {
-            int row1 =  j    * (slices + 1);
-            int row2 = (j + 1) * (slices + 1);
-
-            indices.push_back(glm::uvec4(row1 + i, row1 + i + 1, row1 + i + 1, row2 + i + 1));
-            indices.push_back(glm::uvec4(row2 + i + 1, row2 + i, row2 + i, row1 + i));
-        }
+        // Second line perpend oZ
+        vertices.push_back(glm::vec3(z1, 0.f, x1));
+        vertices.push_back(glm::vec3(z2, 0.f, x1));
+        indices.push_back(glm::uvec2(j + 2, j + 3));
     }
 
     glGenVertexArrays(1, &VAO);
@@ -65,7 +54,7 @@ void Grid::GenerateGrid()
 
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(glm::uvec4), glm::value_ptr(indices[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(glm::uvec2), glm::value_ptr(indices[0]), GL_STATIC_DRAW);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
