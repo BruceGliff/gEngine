@@ -89,6 +89,7 @@ message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 # set flag for debugging
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	target_compile_options(${PROGECT_NAME} PUBLIC "-DgDEBUG")
+	set_source_files_properties(${SOURCES_CC} COMPILE_FLAGS "-g -Wall")
 endif()
 
 # 10. Setup properties for GLFW
