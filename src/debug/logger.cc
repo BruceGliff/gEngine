@@ -16,15 +16,8 @@ void Debug::DebugInfo::print(std::ostream& os) const
 
 void Debug::Warning::Dump(std::ostream& os) const
 {
-	// TODO make format out on WIN
-	bool isWindows = false;
-#ifdef gWINDOWS
-	isWindows = true;
-#endif // gWINDOWS
-
-
-	if (typeid(os) == typeid(std::cout) && !isWindows)
-		os << warnFormat << "WARN:: " << Format::SingleCode{ Format::TextFMT::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
+	if (typeid(os) == typeid(std::cout))
+		os << warnFormat << "WARN:: " << Format::SingleCode{ Format::TextFMT::StyleCode::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
 	else
 		os << "WARN:: " << explain << "\n";
 
@@ -44,15 +37,8 @@ Debug::Message::Message(std::string const& file, int line, std::string const& ex
 }
 void Debug::Message::Dump(std::ostream& os) const
 {
-	// TODO make format out on WIN
-	bool isWindows = false;
-#ifdef gWINDOWS
-	isWindows = true;
-#endif // gWINDOWS
-
-
-	if (typeid(os) == typeid(std::cout) && !isWindows)
-		os << warnFormat << "DMSG:: " << Format::SingleCode{ Format::TextFMT::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
+	if (typeid(os) == typeid(std::cout))
+		os << warnFormat << "DMSG:: " << Format::SingleCode{ Format::TextFMT::StyleCode::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
 	else
 		os << "DMSG:: " << explain << "\n";
 
@@ -62,13 +48,8 @@ void Debug::Message::Dump(std::ostream& os) const
 
 void Debug::Error::Dump(std::ostream& os) const
 {
-	// TODO make format out on WIN
-	bool isWindows = false;
-#ifdef gWINDOWS
-	isWindows = true;
-#endif // gWINDOWS
-	if (typeid(os) == typeid(std::cerr) && !isWindows)
-		os << errFormat << "ERR::  " << Format::SingleCode{ Format::TextFMT::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
+	if (typeid(os) == typeid(std::cerr))
+		os << errFormat << "ERR::  " << Format::SingleCode{ Format::TextFMT::StyleCode::BOLD_OFF } << explain << Format::SingleCode{} << "\n";
 	else
 		os << "ERR::  " << explain << "\n";
 	print(os);

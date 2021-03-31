@@ -2,11 +2,16 @@
 
 #include "global.h"
 
+#include <string>
+#include <iostream>
+
+
 int main()
 {
     gWARNING("Smth bad happened");
-    gERROR("AAAAAAAAAAA");
+    gMESSAGE("AAAAAAAAAAA");
     gWARNING("ASD");
+
     gERROR("AGGD");
     return 0;
 }

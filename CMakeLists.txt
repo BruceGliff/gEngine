@@ -6,17 +6,17 @@ Comment what describes CMAKE behavior
 # 3. generate .h names
 # 4. add .cc files which without .h pair
 # 5. add .h files which without .cc pair
-# 6. set flags for .cc files
-# 7. assembly project files
-# 8. set standart C++17
-# 9. separte behavior depends on OS
+# 6. separte behavior depends on OS
+# 7. set flags for .cc files
+# 8. assembly project files
+# 9. set standart C++17
 # 10. Setup properties for GLFW
 # 11. link libraries
 # 12. put executable file at specific folder
 ]]
 
 # 1. setup requirements and project
-cmake_minimum_required(VERSION 3.16.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
 
 set(PROGECT_NAME gEngine)
 project(${PROGECT_NAME})
@@ -39,7 +39,6 @@ set(SOURCES_CC
 	src/manager/Entity.cc
 	src/geometry/geometry_base.cc
 	src/debug/logger.cc
-	src/debug/formater.cc	
 	src/actor/player_wrap.cc
 	src/actor/actor.cc
 	src/actor/components/component_base.cc
@@ -65,6 +64,27 @@ list(APPEND SOURCES_H
 		src/scene/scene.h
 		src/actor/actorDEF.h
 	)
+# 6. separte behavior depends on OS
+if(WIN32)
+	#set windows flag
+	set(OS_FLAG "-DgWINDOWS")
+	list(APPEND SOURCES_CC
+		src/debug/formater_WIN.cc
+	)
+	list(APPEND SOURCES_H
+		src/debug/formater_WIN.h
+	)
+endif(WIN32)
+if(UNIX)
+	#set linux flag: NOT TESTED
+	set(OS_FLAG "-DgUNIX")
+	list(APPEND SOURCES_CC
+		src/debug/formater_UNIX.cc
+	)
+	list(APPEND SOURCES_H
+		src/debug/formater_UNIX.h
+	)
+endif(UNIX)
 
 # 6. set flags for .cc files
 set_source_files_properties(${SOURCES_CC} COMPILE_FLAGS "")#"-Wall")
@@ -74,19 +94,11 @@ add_executable(${PROGECT_NAME} ${SOURCES_CC} ${SOURCES_H})
 # 8. set standart C++17
 target_compile_features(${PROGECT_NAME} PUBLIC cxx_std_17)
 
-# 9. separte behavior depends on OS
-if(WIN32)
-	#set windows flag
-	set(OS_FLAG "-DgWINDOWS")
-endif(WIN32)
-if(UNIX)
-	#set linux flag: NOT TESTED
-	set(OS_FLAG "-DgUNIX")
-endif(UNIX)
 target_compile_options(${PROGECT_NAME} PUBLIC ${OS_FLAG})
 
 message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
-# set flag for debugging
+
+# 9. set flag for debugging
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	target_compile_options(${PROGECT_NAME} PUBLIC "-DgDEBUG")
 endif()

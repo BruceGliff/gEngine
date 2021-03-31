@@ -4,7 +4,12 @@
 #include <vector>
 #include <iostream>
 
-#include "formater.h"
+#ifdef gWINDOWS
+	#include "formater_WIN.h"
+#endif // gWINDOWS
+#ifndef gWINDOWS
+	#include "formater_UNIX.h"
+#endif // gWINDOWS
 
 namespace Debug
 {
