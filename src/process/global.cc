@@ -58,7 +58,7 @@ Debug::Logger& GLOBAL::GetLogger()
 	return LOG;
 }
 
-void GLOBAL::SetPlayer(std::shared_ptr<Actor::actor> const & actor)
+void GLOBAL::SetPlayer(Actor::actor * actor)
 {
 	PLAYER.SetPlayer(actor);
 }

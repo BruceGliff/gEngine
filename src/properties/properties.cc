@@ -71,7 +71,7 @@ Property::IDrawable::IDrawable()
 	borderShader = GLOBAL::GetResManager().loadShaders("boarderShader", "res/shaders/stencil/border.vs", "res/shaders/stencil/border.fs");
 }
 
-void Property::IDrawable::SetShaderProgram(std::shared_ptr<Renderer::ShaderProgram> const& sp) noexcept
+void Property::IDrawable::SetShaderProgram(Renderer::ShaderProgram * sp) noexcept
 {
 	shader = sp;
 }

@@ -25,7 +25,8 @@ namespace Component
                             public Property::IMoveable,
                             public Property::IScalable
     {
-        std::shared_ptr<Model::Model> model;
+        // Non owning ptr
+        Model::Model * model;
         
 
     public:
@@ -37,7 +38,7 @@ namespace Component
         StaticMesh(std::string const& name);
 
         // Attach already loaded model in static mesh
-        StaticMesh(std::shared_ptr<Model::Model> const& model);
+        StaticMesh(Model::Model * model);
 
         StaticMesh()                                = delete;
         StaticMesh(StaticMesh const & )             = delete;

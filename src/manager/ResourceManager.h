@@ -5,16 +5,14 @@
 #include <string>
 #include <filesystem>
 
+// For unique_ptr
+#include "renderer/ShaderProgram.h"
+#include "renderer/TextureGL.h"
+#include "model/mesh_base.h"
+
 namespace Renderer
 {
-	class ShaderProgram;
-	class TextureGL;
 	enum class ETextureType;
-}
-
-namespace Model
-{
-	class Model;
 }
 
 
@@ -37,14 +35,14 @@ namespace Resources
 	{
 		// TODO make ordering or/and access via name and path?
 		// Map of the shaders programs
-		typedef std::unordered_map<std::string, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
+		typedef std::unordered_map<std::string, std::unique_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
 		ShaderProgramsMap shaderPrograms;
 
 		// Map of the textures
-		typedef std::unordered_map<std::filesystem::path, std::shared_ptr<Renderer::TextureGL>> TexturesMap;
+		typedef std::unordered_map<std::filesystem::path, std::unique_ptr<Renderer::TextureGL>> TexturesMap;
 		TexturesMap textures;
 		// Map of models
-		typedef std::unordered_map<std::string, std::shared_ptr<Model::Model>> ModelMap;
+		typedef std::unordered_map<std::string, std::unique_ptr<Model::Model>> ModelMap;
 		ModelMap models;
 
 		// Path to executable file
@@ -65,23 +63,23 @@ namespace Resources
 		ResourcesManager(std::filesystem::path const& execPath);
 
 		// Compile shader program with shaderName from the sources - vertexPath and fragmentPath
-		std::shared_ptr <Renderer::ShaderProgram> loadShaders(	std::string const& shaderProgramName,
-																std::filesystem::path const& vertexPath,
-																std::filesystem::path const& fragmentPath);
+		Renderer::ShaderProgram * loadShaders(	std::string const& shaderProgramName,
+												std::filesystem::path const& vertexPath,
+												std::filesystem::path const& fragmentPath);
 		// Return ShaderProgram by name or nullptr if it did not find (map<>.find() may throw an exception?>
-		std::shared_ptr <Renderer::ShaderProgram> getShaderProgram(std::string const& shaderProgramName) const noexcept;
+		Renderer::ShaderProgram * getShaderProgram(std::string const& shaderProgramName) const noexcept;
 
 		// TODO make texture unique by path
 		// Load texture
-		std::shared_ptr <Renderer::TextureGL> loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType );
+		Renderer::TextureGL * loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType );
 		
 		// Load model. If model with name already created, then return it. Do not overwrite
-		std::shared_ptr <Model::Model> loadModel(std::string const & name, std::filesystem::path const& relevantPath);
+		Model::Model * loadModel(std::string const & name, std::filesystem::path const& relevantPath);
 		// Get model by name. Return null if not found
-		std::shared_ptr <Model::Model> getModel(std::string const& name) const noexcept;
+		Model::Model * getModel(std::string const& name) const noexcept;
 
 		// Return texture by name or nullptr if it did ont find
-		std::shared_ptr <Renderer::TextureGL> getTexture(std::string const& textureName) const noexcept;
+		Renderer::TextureGL * getTexture(std::string const& textureName) const noexcept;
 
 		std::filesystem::path const& getPathToExucutable() const;
 

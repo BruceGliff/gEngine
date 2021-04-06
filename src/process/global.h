@@ -1,6 +1,4 @@
 #pragma once
-#include <memory>
-
 
 // forward declarations
 namespace Actor
@@ -36,7 +34,7 @@ namespace GLOBAL
 	
 	// TODO make SetPlayer and player_wrap template T
 	// Set actor as curent playable object
-	void SetPlayer(std::shared_ptr<Actor::actor> const & actor);
+	void SetPlayer(Actor::actor * actor);
 
 	// Get current playable object
 	Actor::actor & GetPlayer();

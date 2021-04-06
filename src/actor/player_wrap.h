@@ -9,7 +9,7 @@ namespace Actor
 	// singleton that represent current used playable class
 	class player_wrap final
 	{
-		std::shared_ptr<Actor::actor> curr_actor;
+		Actor::actor * curr_actor;
 		bool isExist = false;
 
 	public:
@@ -25,7 +25,7 @@ namespace Actor
 		Actor::actor const & GetPlayer() const;
 
 		// Set actor as current. Info about previous is lost;
-		void SetPlayer(std::shared_ptr<Actor::actor> const & actor);
+		void SetPlayer(Actor::actor * actor);
 
 
 		~player_wrap() {}

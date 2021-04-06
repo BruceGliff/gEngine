@@ -18,7 +18,7 @@ Component::StaticMesh::StaticMesh(std::string const& name) :
     model{GLOBAL::GetResManager().getModel(name)}
 {}
 
-Component::StaticMesh::StaticMesh(std::shared_ptr<Model::Model> const& model) :
+Component::StaticMesh::StaticMesh(Model::Model * model) :
     model{model}
 {}
 

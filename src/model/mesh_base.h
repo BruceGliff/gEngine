@@ -30,7 +30,7 @@ namespace Model
 		glm::vec2 texture_coord;
 	};
 
-	typedef std::shared_ptr<Renderer::TextureGL> type_pTextures;
+	typedef Renderer::TextureGL* type_pTextures;
 	class Mesh
 	{
 		unsigned int VAO, VBO, EBO;

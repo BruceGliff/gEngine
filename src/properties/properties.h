@@ -2,8 +2,6 @@
 
 #include <glm/vec3.hpp>
 
-#include <memory>
-
 namespace Renderer
 {
     class ShaderProgram;
@@ -50,8 +48,8 @@ namespace Property
     class IDrawable
     {
 	protected:
-		std::shared_ptr<Renderer::ShaderProgram> borderShader;	
-		std::shared_ptr<Renderer::ShaderProgram> shader;
+		Renderer::ShaderProgram * borderShader;	
+		Renderer::ShaderProgram * shader;
     public:
         virtual void Draw(Geometry::Transformation const &) = 0;
 
@@ -62,7 +60,7 @@ namespace Property
         IDrawable& operator=(IDrawable &&) = delete;
 
 		// Assign to each drawable object shader program what is responsible for drawing
-		void SetShaderProgram(std::shared_ptr<Renderer::ShaderProgram> const& sp) noexcept;
+		void SetShaderProgram(Renderer::ShaderProgram * sp) noexcept;
 
 		virtual ~IDrawable(){}
     };

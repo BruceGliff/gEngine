@@ -23,7 +23,7 @@ Actor::actor const& Actor::player_wrap::GetPlayer() const
 }
 
 
-void Actor::player_wrap::SetPlayer(std::shared_ptr<Actor::actor> const & actor)
+void Actor::player_wrap::SetPlayer(Actor::actor * actor)
 {
 	curr_actor = actor;
 	isExist = true;
