@@ -101,7 +101,7 @@ message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 # 9. set flag for debugging
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	target_compile_options(${PROGECT_NAME} PUBLIC "-DgDEBUG")
-	set_source_files_properties(${SOURCES_CC} COMPILE_FLAGS "-g -Wall")
+	set_source_files_properties(${SOURCES_CC} COMPILE_FLAGS "")
 endif()
 
 # 10. Setup properties for GLFW
@@ -123,6 +123,7 @@ add_subdirectory(external/glad)
 target_link_libraries(${PROGECT_NAME} glad)
 
 include_directories(external/glm)
+include_directories(src)
 
 # 12. put executable file at specific folder
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)

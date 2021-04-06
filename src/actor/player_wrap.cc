@@ -1,7 +1,7 @@
 #include "player_wrap.h"
 #include "actor.h"
 
-#include "../debug/debug.h"
+#include "debug/debug.h"
 
 #include <iostream>
 

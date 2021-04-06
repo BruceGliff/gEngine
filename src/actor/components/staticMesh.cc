@@ -1,11 +1,11 @@
 #include "staticMesh.h"
-#include "../../model/mesh_base.h"
-#include "../../process/global.h"
+#include "model/mesh_base.h"
+#include "process/global.h"
 #include "camera.h"
 #include "../actor.h"
-#include "../../renderer/ShaderProgram.h"
-#include "../../geometry/geometry_base.h"
-#include "../../manager/ResourceManager.h"
+#include "renderer/ShaderProgram.h"
+#include "geometry/geometry_base.h"
+#include "manager/ResourceManager.h"
 
 #include "glad/glad.h"
 

@@ -1,8 +1,8 @@
 #include "EnvironmentHandler_wrap.h"
 
 #include "ResourceManager.h"
-#include "../window/window_base.h"
-#include "../debug/debug.h"
+#include "window/window_base.h"
+#include "debug/debug.h"
 
 #include <iostream>
 

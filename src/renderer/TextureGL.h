@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glad/glad.h"
-#include "../texture/Texture_base.h"
+#include "texture/Texture_base.h"
 
 
 namespace Renderer

@@ -1,9 +1,9 @@
 #include "window_base.h"
 
-#include "../process/global.h"
-#include "../actor/actor.h"
-#include "../actor/components/camera.h"
-#include "../debug/debug.h"
+#include "process/global.h"
+#include "actor/actor.h"
+#include "actor/components/camera.h"
+#include "debug/debug.h"
 
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -80,7 +80,7 @@ bool Resources::glWindow::ProcessInput() const noexcept
     static float deltaTime = 0.0f;	// Time between current frame and last frame
     static float lastFrame = 0.0f; // Time of last frame
 
-    float currentFrame = glfwGetTime();
+    float currentFrame = static_cast<float>(glfwGetTime()); // cast from double to float
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
     const float cameraSpeed = 20.5f * deltaTime;
@@ -125,10 +125,12 @@ void Resources::glWindow::glfwKeyCallback(GLFWwindow* window, int key, int scanm
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos_d, double ypos_d)
 {
     // PARAMS of MOUSE or camera
     //                      ^
+    float xpos = static_cast<float>(xpos_d);
+    float ypos = static_cast<float>(ypos_d);
     static bool firstMouse = true;
     static float lastX = 1600.f / 2.f;
     static float lastY = 900.f / 2.f;

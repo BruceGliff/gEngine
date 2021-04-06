@@ -1,6 +1,6 @@
 #pragma once
 #include "logger.h"
-#include "../process/global.h"
+#include "process/global.h"
 #include <exception>
 extern int _J84659365ifInDebugMode;
 // add warning log to further dump

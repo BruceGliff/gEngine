@@ -1,7 +1,7 @@
 #include "properties.h"
 
-#include "../process/global.h"
-#include "../manager/ResourceManager.h"
+#include "process/global.h"
+#include "manager/ResourceManager.h"
 
 Property::IPlaceable::IPlaceable() : anchor_position{ 0.f, 0.f, 0.f }
 {}

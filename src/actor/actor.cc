@@ -4,8 +4,8 @@
 
 #include "actorDEF.h"
 
-#include "../debug/debug.h"
-#include "../geometry/geometry_base.h"
+#include "debug/debug.h"
+#include "geometry/geometry_base.h"
 
 Actor::actor::actor(actor&& otherActor) noexcept :
 	Resources::Entity{std::move(otherActor)},

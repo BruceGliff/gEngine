@@ -1,7 +1,7 @@
 #pragma once
 
 #include "component_base.h"
-#include "../../properties/properties.h"
+#include "properties/properties.h"
 
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>

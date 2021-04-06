@@ -3,7 +3,7 @@
 #include <filesystem>
 
 #include "component_base.h"
-#include "../../properties/properties.h"
+#include "properties/properties.h"
 
 #include <glm/vec3.hpp>
 

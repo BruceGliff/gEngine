@@ -1,5 +1,5 @@
 #include "Texture_base.h"
-#include "../debug/debug.h"
+#include "debug/debug.h"
 
 #include <iostream>
 

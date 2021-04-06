@@ -1,8 +1,8 @@
 #include "ResourceManager.h"
-#include "../renderer/ShaderProgram.h"
-#include "../renderer/TextureGL.h"
-#include "../debug/debug.h"
-#include "../model/mesh_base.h"
+#include "renderer/ShaderProgram.h"
+#include "renderer/TextureGL.h"
+#include "debug/debug.h"
+#include "model/mesh_base.h"
 
 #include <iostream>
 #include <sstream>

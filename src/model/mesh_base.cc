@@ -6,10 +6,10 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-#include "../renderer/TextureGL.h"
-#include "../process/global.h"
-#include "../manager/ResourceManager.h"
-#include "../debug/debug.h"
+#include "renderer/TextureGL.h"
+#include "process/global.h"
+#include "manager/ResourceManager.h"
+#include "debug/debug.h"
 
 Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<type_pTextures> const& textures) :
 	m_vertices(vertices),

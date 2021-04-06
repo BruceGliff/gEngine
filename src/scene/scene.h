@@ -3,10 +3,10 @@
 #include <unordered_map>
 #include <memory>
 
-#include "../manager/Entity.h"
-#include "../actor/actor.h"
-#include "../debug/debug.h"
-#include "../geometry/geometry_base.h"
+#include "manager/Entity.h"
+#include "actor/actor.h"
+#include "debug/debug.h"
+#include "geometry/geometry_base.h"
 #include "gismo/grid.h"
 
 namespace Actor
