@@ -33,21 +33,16 @@ int main(int argc, char * argv[])
         glfwTerminate();
         gERROR("Creating objShader program in main");
     }
-
-    resMng.loadModel("backpack", "res/models/backpack/backpack.obj");
     
-    Component::StaticMesh* bp_mesh = new Component::StaticMesh{ "backpack" };
+    Component::StaticMesh* bp_mesh = new Component::StaticMesh{ resMng.loadModel<Model::Model3D>("backpack", "res/models/backpack/backpack.obj") };
+    std::vector<Renderer::TextureGL*> textures = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
+    Component::StaticMesh* win_mesh = new Component::StaticMesh{ resMng.loadModel<Model::Plane>(textures) };
+    win_mesh->SetShaderProgram(pObjShaderProgram);
     bp_mesh->SetShaderProgram(pObjShaderProgram);
-    Scene.Spawn<Actor::actor>()->AttachComponent("mesh", bp_mesh).SetScale(glm::vec3{ 0.5f, 0.5f, 0.5f });
-    //for (int i = 1; i != 10; ++i)
-    //{
-    //    Actor::actor tmp;
-    //    tmp.AttachComponent("mesh", new Component::StaticMesh{ "backpack" });
-    //    tmp.SetPosition({ 10.f * i, 5.f * i, 1.f * i });
-    //    a->AttachComponent("actor", new Actor::actor{ std::move(tmp) });
-    //    a = a->GetComponentByName<Actor::actor>("actor");
-    //}
-
+    auto & obj = *Scene.Spawn<Actor::actor>();
+    obj.AttachComponent("mesh", win_mesh).SetScale(glm::vec3{ 0.5f, 0.5f, 0.5f });
+    obj.SetPosition({10,0,0});
+    Scene.Spawn<Actor::actor>()->AttachComponent("mesh1", bp_mesh);
 
 
     Actor::actor player_actor{};

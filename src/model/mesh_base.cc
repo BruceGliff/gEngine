@@ -11,7 +11,7 @@
 #include "manager/ResourceManager.h"
 #include "debug/debug.h"
 
-Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<type_pTextures> const& textures) :
+Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<Renderer::TextureGL*> const& textures) :
 	m_vertices(vertices),
 	m_indices(indices),
 	m_textures(textures)
@@ -19,7 +19,7 @@ Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int>
 	setupMesh();
 }
 
-void Model::Mesh::Draw(Renderer::ShaderProgram const & shader)
+void Model::Mesh::Draw(Renderer::ShaderProgram const & shader) const
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -66,7 +66,7 @@ void Model::Mesh::setupMesh()
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Model::Model::loadModel(std::filesystem::path const& path)
+void Model::Model3D::loadModel(std::filesystem::path const& path)
 {
     Assimp::Importer import;
     aiScene const * scene = import.ReadFile(path.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -84,7 +84,7 @@ void Model::Model::loadModel(std::filesystem::path const& path)
     processNode(scene->mRootNode, scene);
 }
 
-void Model::Model::processNode(aiNode* node, aiScene const* scene)
+void Model::Model3D::processNode(aiNode* node, aiScene const* scene)
 {
     // process all the node's meshes (if any)
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -99,11 +99,11 @@ void Model::Model::processNode(aiNode* node, aiScene const* scene)
     }
 }
 
-Model::Mesh Model::Model::processMesh(aiMesh* mesh, aiScene const* scene)
+Model::Mesh Model::Model3D::processMesh(aiMesh* mesh, aiScene const* scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<type_pTextures> textures;
+    std::vector<Renderer::TextureGL*> textures;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -144,18 +144,18 @@ Model::Mesh Model::Model::processMesh(aiMesh* mesh, aiScene const* scene)
     {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         // TODO optimize this
-        std::vector<type_pTextures> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
+        std::vector<Renderer::TextureGL*> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        std::vector<type_pTextures> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR);
+        std::vector<Renderer::TextureGL*> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR);
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
     return Mesh{ vertices, indices, textures };
 }
 
-std::vector<Model::type_pTextures> Model::Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
+std::vector<Renderer::TextureGL*> Model::Model3D::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
 {
-    std::vector<type_pTextures> textures;
+    std::vector<Renderer::TextureGL*> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
@@ -181,12 +181,12 @@ std::vector<Model::type_pTextures> Model::Model::loadMaterialTextures(aiMaterial
     return textures;
 }
 
-Model::Model::Model(std::filesystem::path const& path)
+Model::Model3D::Model3D(std::filesystem::path const& path)
 {
     loadModel(path);
 }
 
-void Model::Model::Draw(Renderer::ShaderProgram const & shader)
+void Model::Model3D::Draw(Renderer::ShaderProgram const & shader) const
 {
     for (auto&& mesh : m_meshes)
         mesh.Draw(shader);

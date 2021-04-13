@@ -11,14 +11,14 @@
 
 
 Component::StaticMesh::StaticMesh(std::string const& name, std::filesystem::path const& relevantPath) :
-    model{GLOBAL::GetResManager().loadModel(name, relevantPath)}
+    model{GLOBAL::GetResManager().loadModel<Model::Model3D>(name, relevantPath)}
 {}
 
 Component::StaticMesh::StaticMesh(std::string const& name) :
     model{GLOBAL::GetResManager().getModel(name)}
 {}
 
-Component::StaticMesh::StaticMesh(Model::Model * model) :
+Component::StaticMesh::StaticMesh(Model::IModel * model) :
     model{model}
 {}
 

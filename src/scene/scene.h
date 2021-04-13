@@ -46,7 +46,7 @@ public:
     T * Spawn(Args && ... args)
     {
         // We assume that type has to be actor to be spawned in scene!
-        if (typeid(Actor::actor *) != typeid(T *))
+        if (!std::is_base_of<Actor::actor, T>::value)
         {
             gWARNING(std::string{"Type is not an actor: "} + typeid(T).name());
             return nullptr;

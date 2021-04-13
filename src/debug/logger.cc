@@ -103,7 +103,6 @@ Debug::Logger const& Debug::Logger::Dump() const
 Debug::Logger& Debug::Logger::AddLog(DebugInfo const* log)
 {
 	logs.push_back(log);
-
 	#ifdef gDEBUG
 		log->Dump();
 	#endif //gDEBUG

@@ -18,8 +18,8 @@ Comment what describes CMAKE behavior
 # 1. setup requirements and project
 cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
 
-set(PROGECT_NAME gEngine)
-project(${PROGECT_NAME})
+set(PROJECT_NAME gEngine)
+project(${PROJECT_NAME})
 
 
 # 2. set all .cc sources files what have .h
@@ -34,6 +34,7 @@ set(SOURCES_CC
 	src/properties/properties.cc
 	src/process/global.cc
 	src/model/mesh_base.cc
+	src/model/primitives.cc
 	src/manager/ResourceManager.cc
 	src/manager/EnvironmentHandler_wrap.cc
 	src/manager/Entity.cc
@@ -89,18 +90,18 @@ endif(UNIX)
 # 6. set flags for .cc files
 set_source_files_properties(${SOURCES_CC} COMPILE_FLAGS "")#"-Wall")
 # 7. assembly project files
-add_executable(${PROGECT_NAME} ${SOURCES_CC} ${SOURCES_H})
+add_executable(${PROJECT_NAME} ${SOURCES_CC} ${SOURCES_H})
 
 # 8. set standart C++17
-target_compile_features(${PROGECT_NAME} PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
-target_compile_options(${PROGECT_NAME} PUBLIC ${OS_FLAG})
+target_compile_options(${PROJECT_NAME} PUBLIC ${OS_FLAG})
 
 message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 
 # 9. set flag for debugging
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	target_compile_options(${PROGECT_NAME} PUBLIC "-DgDEBUG")
+	target_compile_options(${PROJECT_NAME} PUBLIC "-DgDEBUG")
 	set_source_files_properties(${SOURCES_CC} COMPILE_FLAGS "")
 endif()
 
@@ -114,13 +115,13 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
 # 11. link libraries
 add_subdirectory(external/glfw)
-target_link_libraries(${PROGECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME} glfw)
 
 add_subdirectory(external/assimp)
-target_link_libraries(${PROGECT_NAME} assimp)
+target_link_libraries(${PROJECT_NAME} assimp)
 
 add_subdirectory(external/glad)
-target_link_libraries(${PROGECT_NAME} glad)
+target_link_libraries(${PROJECT_NAME} glad)
 
 include_directories(external/glm)
 include_directories(src)

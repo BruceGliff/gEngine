@@ -1,7 +1,6 @@
 #include "ResourceManager.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/TextureGL.h"
-#include "debug/debug.h"
 #include "model/mesh_base.h"
 
 #include <iostream>
@@ -70,25 +69,14 @@ Renderer::TextureGL * Resources::ResourcesManager::loadTexture(std::filesystem::
     return it->second.get();
 }
 
-Model::Model * Resources::ResourcesManager::loadModel(std::string const& modelName, std::filesystem::path const& relevantPath)
-{
-    ModelMap::const_iterator it = models.find(modelName);
-    // if model does not exist, then load it
-    if (it == models.end())
-        return models.emplace(modelName, std::make_unique<Model::Model>(path_to_exec / relevantPath)).first->second.get();
-
-    // if model already exists, return it
-    return it->second.get();
-}
-
-Model::Model * Resources::ResourcesManager::getModel(std::string const& modelName) const noexcept
+Model::IModel * Resources::ResourcesManager::getModel(std::string const& modelName) const noexcept
 {
     ModelMap::const_iterator it = models.find(modelName);
     // if model does not exist, then load it
     if (it != models.end())
         return it->second.get();
 
-    gWARNING(std::string{ "No texture with name: " } + modelName);
+    gWARNING(std::string{ "No model with name: " } + modelName);
     return nullptr;
 }
 

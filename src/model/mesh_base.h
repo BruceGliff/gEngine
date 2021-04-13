@@ -22,7 +22,7 @@ namespace Renderer
 }
 
 namespace Model
-{
+{	
 	struct Vertex
 	{
 		glm::vec3 position;
@@ -30,7 +30,14 @@ namespace Model
 		glm::vec2 texture_coord;
 	};
 
-	typedef Renderer::TextureGL* type_pTextures;
+	class IModel {
+	protected:
+		IModel() {}
+	public:
+		virtual void Draw(Renderer::ShaderProgram const & shader) const = 0;
+		virtual ~IModel() {}
+	};
+
 	class Mesh
 	{
 		unsigned int VAO, VBO, EBO;
@@ -38,16 +45,17 @@ namespace Model
 		void setupMesh();
 
 	public:
-		Mesh(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, std::vector<type_pTextures> const & textures);
-		void Draw(Renderer::ShaderProgram const & shader);
+		Mesh(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, std::vector<Renderer::TextureGL*> const & textures);
+		void Draw(Renderer::ShaderProgram const & shader) const;
 
 	public:
 		std::vector<Vertex>			m_vertices;
 		std::vector<unsigned int>	m_indices;
-		std::vector<type_pTextures>	m_textures;
+		std::vector<Renderer::TextureGL*>	m_textures;
 	};
+
 	// TODO check for virtual ~Model(MEsh)
-	class Model
+	class Model3D : public IModel
 	{
 		std::vector<Mesh> m_meshes;
 		std::filesystem::path m_directory_path;
@@ -55,11 +63,12 @@ namespace Model
 		void loadModel(std::filesystem::path const& path);
 		void processNode(aiNode* node, aiScene const * scene);
 		Mesh processMesh(aiMesh* mesh, aiScene const* scene);
-		std::vector<type_pTextures> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
+		std::vector<Renderer::TextureGL*> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
 
 	public:
-		Model(std::filesystem::path const& path);
-		void Draw(Renderer::ShaderProgram const & shader);
+		Model3D(std::filesystem::path const& path);
+		void Draw(Renderer::ShaderProgram const & shader) const override;
 
 	};
+
 }

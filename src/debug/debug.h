@@ -4,9 +4,12 @@
 #include <exception>
 extern int _J84659365ifInDebugMode;
 // add warning log to further dump
+// TODO logger should append file, not rewrite it from the begining
 #define gWARNING(x)                                                             \
     {                                                                           \
         GLOBAL::GetLogger().AddLog(new Debug::Warning{__FILE__, __LINE__, x});  \
+        if (_J84659365ifInDebugMode)                                            \
+            GLOBAL::GetLogger().DumpToFile();                                   \
     }
 
 // add error log, dump everything to file, throw std::runtime_error

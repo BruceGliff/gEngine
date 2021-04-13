@@ -10,7 +10,8 @@
 
 namespace Model
 {
-    class Model;
+    class IModel;
+    class Primitive;
 }
 namespace Geometry
 {
@@ -26,7 +27,7 @@ namespace Component
                             public Property::IScalable
     {
         // Non owning ptr
-        Model::Model * model;
+        Model::IModel * model;
         
 
     public:
@@ -34,11 +35,14 @@ namespace Component
         // If model with name already in ResourceManager, when get it from manager.
         StaticMesh(std::string const & name, std::filesystem::path const& relevantPath);
 
-        // Load model from ResourceManager. If it is not found, when where will be nullptr
+        // Takes model from ResourceManager. If it is not found, when where will be nullptr
         StaticMesh(std::string const& name);
 
         // Attach already loaded model in static mesh
-        StaticMesh(Model::Model * model);
+        StaticMesh(Model::IModel * model);
+
+        // Attach primitive. 
+        StaticMesh(Model::Primitive const & primitive);
 
         StaticMesh()                                = delete;
         StaticMesh(StaticMesh const & )             = delete;
