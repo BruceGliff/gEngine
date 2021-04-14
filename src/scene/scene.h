@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <algorithm>
 
 #include "actor/actor.h"
 #include "manager/Entity.h"
@@ -8,6 +9,8 @@
 #include "debug/debug.h"
 #include "geometry/geometry_base.h"
 #include "gismo/grid.h"
+
+#include <glm/gtx/norm.hpp>
 
 namespace Scene
 {
@@ -17,8 +20,10 @@ namespace Scene
 class Scene final
 {
     Grid grid;
+    // TODO make maped container to scene which represent sorted objects
     std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>> scene;
     // TODO make light seperate
+    // TODO separate transparent objects and opaque to sort transparent from furthes to nearest
 
     typedef std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>>::iterator iterator;
     typedef std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>>::const_iterator const_iterator;
@@ -34,8 +39,23 @@ public:
     {
         Geometry::Transformation tr{};
         grid.Draw(tr);
-        for (auto && x : scene)
-            x.second->Process(tr);        
+
+        std::vector<const_iterator> arr;
+        arr.reserve(scene.size());
+        for (auto it = scene.begin(); it != scene.end(); ++it)
+            arr.push_back(it);
+
+        auto & camPos = GLOBAL::GetPlayer().GetPosition();
+
+        // may be apply more sutable sort algorithm for sort weak changed objects
+        std::sort(arr.begin(), arr.end(), [&camPos](const_iterator const & a, const_iterator const & b)
+                                                    {
+                                                        return  glm::length2(a->second->GetPosition() - camPos) > 
+                                                                glm::length2(b->second->GetPosition() - camPos);
+                                                    });
+        for (auto && x : arr)
+            x->second->Process(tr);
+
     }
 
 

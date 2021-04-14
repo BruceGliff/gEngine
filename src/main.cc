@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
 
     Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
     // TODO move shader program to actor?staticMesh?
-    auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "stencil/model.vs", SHADER_PATH + "stencil/model.fs");
+    auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "blending/model.vs", SHADER_PATH + "blending/model.fs");
     if (!pObjShaderProgram->IsCompiled())
     {
         // TODO Check as it should be in global destructor
@@ -34,16 +34,12 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
     
-    Component::StaticMesh* bp_mesh = new Component::StaticMesh{ resMng.loadModel<Model::Model3D>("backpack", "res/models/backpack/backpack.obj") };
-    std::vector<Renderer::TextureGL*> textures = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
-    Component::StaticMesh* win_mesh = new Component::StaticMesh{ resMng.loadModel<Model::Plane>(textures) };
-    win_mesh->SetShaderProgram(pObjShaderProgram);
-    bp_mesh->SetShaderProgram(pObjShaderProgram);
-    auto & obj = *Scene.Spawn<Actor::actor>();
-    obj.AttachComponent("mesh", win_mesh).SetScale(glm::vec3{ 0.5f, 0.5f, 0.5f });
-    obj.SetPosition({10,0,0});
-    Scene.Spawn<Actor::actor>()->AttachComponent("mesh1", bp_mesh);
-
+    std::vector<Renderer::TextureGL*> grass_texture = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
+    for (int i = 0; i != 10;  ++i) {
+        Component::StaticMesh* plane = new Component::StaticMesh{ resMng.loadModel<Model::Plane>(grass_texture) };
+        plane->SetShaderProgram(pObjShaderProgram);
+        Scene.Spawn<Actor::actor>()->AttachComponent("grass", plane).SetPosition({2 * i, 0, (i % 3) * 1.4 + 2});
+    }
 
     Actor::actor player_actor{};
     player_actor.AttachComponent("camera", new Component::camera{});
@@ -57,6 +53,8 @@ int main(int argc, char * argv[])
 
     Resources::glWindow& win = GLOBAL::GetWindow();
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     while (!win.ProcessInput())
     {
