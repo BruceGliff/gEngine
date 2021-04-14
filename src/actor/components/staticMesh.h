@@ -8,13 +8,11 @@
 #include <glm/vec3.hpp>
 
 
-namespace Model
-{
+namespace Model {
     class IModel;
     class Primitive;
 }
-namespace Geometry
-{
+namespace Geometry  {
     class Transformation;
 }
 
@@ -33,7 +31,7 @@ namespace Component
     public:
         // Load model from disk by path. It occures in ResourceManager.
         // If model with name already in ResourceManager, when get it from manager.
-        StaticMesh(std::string const & name, std::filesystem::path const& relevantPath);
+        StaticMesh(std::string const & name, std::filesystem::path const& relevantPath); // TODO check if it is needed
 
         // Takes model from ResourceManager. If it is not found, when where will be nullptr
         StaticMesh(std::string const& name);
@@ -41,8 +39,9 @@ namespace Component
         // Attach already loaded model in static mesh
         StaticMesh(Model::IModel * model);
 
-        // Attach primitive. 
-        StaticMesh(Model::Primitive const & primitive);
+        // Attach primitive.
+        // TODO check if it is needed
+        //StaticMesh(Model::Primitive const & primitive);
 
         StaticMesh()                                = delete;
         StaticMesh(StaticMesh const & )             = delete;

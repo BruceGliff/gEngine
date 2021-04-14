@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glm/mat4x4.hpp>
-
 #include <string>
+
+#include <glm/mat4x4.hpp>
 
 namespace Renderer
 {

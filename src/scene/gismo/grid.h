@@ -4,7 +4,6 @@
 
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
-#include <glad/glad.h>
 
 #include "../../properties/properties.h"
 #include "../../actor/components/component_base.h"
@@ -21,7 +20,7 @@ namespace Scene
 
         int slices;
         float sizeOfSlice;
-        GLuint lenght;
+        unsigned int lenght;
         unsigned int VAO, VBO, EBO;
         std::vector<glm::vec3> vertices;
         std::vector<glm::uvec2> indices;

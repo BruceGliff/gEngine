@@ -25,6 +25,7 @@ project(${PROJECT_NAME})
 # 2. set all .cc sources files what have .h
 set(SOURCES_CC
 	src/scene/gismo/grid.cc
+	src/scene/scene.cc
 	src/debug/debug.cc
 	src/window/window_base.cc
 	src/texture/Texture_base.cc
@@ -34,6 +35,7 @@ set(SOURCES_CC
 	src/properties/properties.cc
 	src/process/global.cc
 	src/model/mesh_base.cc
+	src/model/model3D.cc
 	src/model/primitives.cc
 	src/manager/ResourceManager.cc
 	src/manager/EnvironmentHandler_wrap.cc
@@ -59,11 +61,12 @@ endforeach()
 list(APPEND SOURCES_CC 
 		src/main.cc
 	)
-# 5. add .h files which without .cc pair
-list(APPEND SOURCES_H 
+# 5. add .h files which without .cc pair and .hpp files
+list(APPEND SOURCES_H
 		src/texture/stb_image.h
-		src/scene/scene.h
 		src/actor/actorDEF.h
+		src/actor/actor.hpp
+		src/manager/ResourceManager.hpp
 	)
 # 6. separte behavior depends on OS
 if(WIN32)

@@ -1,5 +1,5 @@
-#include "TextureGL.h"
 #include "debug/debug.h"
+#include "TextureGL.h"
 #include "ShaderProgram.h"
 
 #include <iostream>

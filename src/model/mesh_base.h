@@ -3,20 +3,14 @@
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 
-#include <iostream>
 #include <vector>
-#include <string>
-#include <filesystem>
-
-#include <assimp/scene.h>
 
 // TODO This is just from tutorial for testing
 // Make it on your way
 
 
 // forward delaration
-namespace Renderer
-{
+namespace Renderer {
 	class ShaderProgram;
 	class TextureGL;
 }
@@ -52,23 +46,6 @@ namespace Model
 		std::vector<Vertex>			m_vertices;
 		std::vector<unsigned int>	m_indices;
 		std::vector<Renderer::TextureGL*>	m_textures;
-	};
-
-	// TODO check for virtual ~Model(MEsh)
-	class Model3D : public IModel
-	{
-		std::vector<Mesh> m_meshes;
-		std::filesystem::path m_directory_path;
-		
-		void loadModel(std::filesystem::path const& path);
-		void processNode(aiNode* node, aiScene const * scene);
-		Mesh processMesh(aiMesh* mesh, aiScene const* scene);
-		std::vector<Renderer::TextureGL*> loadMaterialTextures(aiMaterial* mat, aiTextureType type);
-
-	public:
-		Model3D(std::filesystem::path const& path);
-		void Draw(Renderer::ShaderProgram const & shader) const override;
-
 	};
 
 }

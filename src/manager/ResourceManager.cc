@@ -1,12 +1,8 @@
 #include "ResourceManager.h"
-#include "renderer/ShaderProgram.h"
-#include "renderer/TextureGL.h"
-#include "model/mesh_base.h"
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
-
 
 std::string Resources::ResourcesManager::readFile(std::filesystem::path const& relativePath) const
 {

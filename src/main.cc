@@ -11,9 +11,6 @@
 #include "actor/components/camera.h"
 #include "actor/components/staticMesh.h"
 #include "geometry/geometry_base.h"
-#include "debug/debug.h"
-
-
 
 std::string const SHADER_PATH{ "res/shaders/" };
 

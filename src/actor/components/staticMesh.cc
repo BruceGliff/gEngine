@@ -1,5 +1,5 @@
 #include "staticMesh.h"
-#include "model/mesh_base.h"
+#include "model/model3D.h"
 #include "process/global.h"
 #include "camera.h"
 #include "../actor.h"

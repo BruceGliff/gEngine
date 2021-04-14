@@ -12,17 +12,14 @@
 
 #include "actorDEF.h"
 
-namespace Renderer
-{
+namespace Renderer {
 	class ShaderProgram;
 }
-namespace Geometry
-{
+namespace Geometry {
 	class Transformation;
 }
 
-namespace Actor
-{
+namespace Actor {
 	// Class represent main object in scene.
 	// It contains components and can be processes to draw or to calculate physics(in future)
 	class actor : 	
@@ -67,50 +64,7 @@ namespace Actor
 		// Reattaches component if it already exists and deletes old
 		// Call: AttachComponent<Component::type>(name, params for type constructor)
 		template <typename T, typename ... Args>
-		actor & AttachComponent(std::string const & comp_name, Args && ... args)
-		{
-			if (!std::is_base_of<Component::component_base, T>::value)
-				gERROR(std::string{"Attaching not component: "} + typeid(T).name());
-			
-			// to get hints when insert propertied into define;
-			using namespace Property;
-			// first - make pair
-			// second - replace it
-
-			T * p = new T{std::forward<Args>(args) ...};
-			Component::component_base * component = p;
-
-			// set this class as parent for component
-			component->SetParent(this);
-
-			// Aggregation is a pair of component and array of properties of the component
-			ComponentAggregation aggregation;
-			aggregation.first = component;
-
-			INSERT_PROPERTY(IDrawable);
-			INSERT_PROPERTY(ICompound);
-
-
-			auto&& it = components.find(comp_name);
-			if (it != components.end())
-			{
-				// delete old components
-				// TODO this is work part(maybe)
-				// ComponentAggregation oldAggr = std::move(it->second);
-				// Component::component_base * oldComp = it->second.first;
-				// it->second = std::move(aggregation);
-				// remove_properties_from_generated_arrays(oldAggr.second);
-
-				std::swap(aggregation, it->second);
-				delete aggregation.first;
-
-				return *this;
-			}
-
-			components[comp_name] = std::move(aggregation);
-			return *this;
-
-		}
+		actor & AttachComponent(std::string const & comp_name, Args && ... args);
 
 		// Get component by name. Return nullptr if it was not found. Did not delete from actor
 		Component::component_base * GetComponent(std::string const& comp_name) const noexcept;
@@ -131,22 +85,9 @@ namespace Actor
 
 		virtual ~actor();
 	};
-
-
-
-	template <typename componentType>
-	componentType * actor::GetComponentByName(std::string const& comp_name) const noexcept
-	{
-		auto&& it = components.find(comp_name);
-		if (it != components.end())
-		{
-			// TODO may be dynamic_cast<>?
-			return static_cast<componentType *>(it->second.first);
-		}
-
-		return nullptr;
-	}
 }
+
+#include  "actor.hpp"
 
 #undef PROPERTIES_ARRAY
 #undef INSERT_PROPERTY

@@ -1,27 +1,22 @@
 #pragma once
 
 // forward declarations
-namespace Actor
-{
+namespace Actor {
 	class actor;
 }
-namespace Resources
-{
+namespace Resources {
 	class glWindow;
 	class ResourcesManager;
 }
-namespace Scene
-{
+namespace Scene {
 	class Scene;
 }
 
-namespace Debug
-{
+namespace Debug {
 	class Logger;
 }
 
-namespace GLOBAL
-{
+namespace GLOBAL {
 	// Init all program properties: window, resourseMgr, scene, glad
 	void Initialize(char const* path_to_exec, int win_width, int win_height, char const* win_name);
 

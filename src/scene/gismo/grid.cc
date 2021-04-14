@@ -1,5 +1,7 @@
 #include "grid.h"
 
+#include <iostream>
+
 #include "../../renderer/ShaderProgram.h"
 #include "../../process/global.h"
 #include "../../manager/ResourceManager.h"
@@ -8,7 +10,7 @@
 #include "../../geometry/geometry_base.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
+#include <glad/glad.h>
 
 using namespace Scene;
 

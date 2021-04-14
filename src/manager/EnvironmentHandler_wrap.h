@@ -2,8 +2,7 @@
 
 #include <string>
 
-namespace Resources
-{
+namespace Resources {
 	// forward declaration
 	class ResourcesManager;
 	class glWindow;

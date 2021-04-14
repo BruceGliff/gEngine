@@ -1,11 +1,7 @@
 #pragma once
 
+#include <memory>
 #include "mesh_base.h"
-
-#include <glm/vec3.hpp>
-#include <glm/vec2.hpp>
-
-#include <vector>
 
 namespace Model {
 
