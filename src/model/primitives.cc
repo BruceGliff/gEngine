@@ -23,9 +23,10 @@ std::vector<Vertex> Plane::generateVertices() {
 }
 
 std::vector<unsigned int> Plane::generateIndices() {
+    // order has been change to be couter-clockwise for face culing
     return std::vector<unsigned int>    {
-                                            0, 1, 2,
-                                            2, 1, 3
+                                            0, 2, 1,
+                                            2, 3, 1
                                         };
 }
 

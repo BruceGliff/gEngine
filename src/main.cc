@@ -11,6 +11,7 @@
 #include "actor/components/camera.h"
 #include "actor/components/staticMesh.h"
 #include "geometry/geometry_base.h"
+#include "model/model3D.h"
 
 std::string const SHADER_PATH{ "res/shaders/" };
 
@@ -30,11 +31,16 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
     
+    Scene.Spawn<Actor::actor>()->
+                            AttachComponent<Component::StaticMesh>("backpack", 
+                                resMng.loadModel<Model::Model3D>("backpack", "res/models/backpack/backpack.obj")).
+                            SetScale({0.5,0.5,0.5});
+
     std::vector<Renderer::TextureGL*> grass_texture = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
     for (int i = 0; i != 10;  ++i) {
         Scene.Spawn<Actor::actor>()->
                             AttachComponent<Component::StaticMesh>("grass", resMng.loadModel<Model::Plane>(grass_texture)).
-                            SetPosition({2 * i, 0, (i % 3) * 1.4 + 2});
+                            SetPosition({2 * i, 2, (i % 3) * 1.4 + 2});
     }
 
     Actor::actor player_actor{};
@@ -51,6 +57,7 @@ int main(int argc, char * argv[])
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
 
     while (!win.ProcessInput())
     {
