@@ -27,7 +27,6 @@ Debug::Logger LOG{};
 void GLOBAL::Initialize(char const * path_to_exec, int win_width, int win_height, char const * win_name)
 {
 	ENV_MGR.construct(win_width, win_height, win_name, path_to_exec);
-
 	/* Initialize glad */
 	if (!gladLoadGL())
 	{

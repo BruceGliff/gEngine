@@ -68,7 +68,19 @@ Property::IScalable & Property::IScalable::SetScale(glm::vec3 const& sc) noexcep
 
 Property::IDrawable::IDrawable()
 {
-	borderShader = GLOBAL::GetResManager().loadShaders("boarderShader", "res/shaders/stencil/border.vs", "res/shaders/stencil/border.fs");
+	// Be default All drawable shaders load already created shaders. So DefaultObjShader HAS to be created!
+	auto & Mgr = GLOBAL::GetResManager();
+	borderShader = Mgr.loadShaders("boarderShader", "res/shaders/stencil/border.vs", "res/shaders/stencil/border.fs");
+	shader = Mgr.getShaderProgram("DefaultObjShader");
+	if (!shader)
+		gERROR("Loading unexisted DefaultObjShader! It has to be created first");
+}
+
+Property::IDrawable::IDrawable(Renderer::ShaderProgram * sp)
+{
+	auto & Mgr = GLOBAL::GetResManager();
+	borderShader = Mgr.loadShaders("boarderShader", "res/shaders/stencil/border.vs", "res/shaders/stencil/border.fs");
+	shader = sp;
 }
 
 void Property::IDrawable::SetShaderProgram(Renderer::ShaderProgram * sp) noexcept

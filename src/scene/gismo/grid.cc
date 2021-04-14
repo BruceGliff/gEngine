@@ -13,13 +13,12 @@
 using namespace Scene;
 
 Grid::Grid() :
+    Property::IDrawable{GLOBAL::GetResManager().loadShaders("gridShader", "res/shaders/grid/grid.vs", "res/shaders/grid/grid.fs")},
     slices{10},
     lenght{static_cast<GLuint>(slices * slices * 8)},
     sizeOfSlice{2.f}
 {
     GenerateGrid();
-    
-    shader = GLOBAL::GetResManager().loadShaders("gridShader", "res/shaders/grid/grid.vs", "res/shaders/grid/grid.fs");
 }
 
 void Grid::GenerateGrid()

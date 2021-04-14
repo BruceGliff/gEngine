@@ -21,12 +21,11 @@ int main(int argc, char * argv[])
 {
     gMESSAGE("Debug Mode");
     GLOBAL::Initialize(argv[0], 1600, 900, "gEngine");
-    
     auto& Scene = GLOBAL::GetScene();
 
     Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
     // TODO move shader program to actor?staticMesh?
-    auto pObjShaderProgram = resMng.loadShaders("objShader", SHADER_PATH + "blending/model.vs", SHADER_PATH + "blending/model.fs");
+    auto pObjShaderProgram = resMng.loadShaders("DefaultObjShader", SHADER_PATH + "blending/model.vs", SHADER_PATH + "blending/model.fs");
     if (!pObjShaderProgram->IsCompiled())
     {
         // TODO Check as it should be in global destructor
@@ -37,7 +36,6 @@ int main(int argc, char * argv[])
     std::vector<Renderer::TextureGL*> grass_texture = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
     for (int i = 0; i != 10;  ++i) {
         Component::StaticMesh* plane = new Component::StaticMesh{ resMng.loadModel<Model::Plane>(grass_texture) };
-        plane->SetShaderProgram(pObjShaderProgram);
         Scene.Spawn<Actor::actor>()->AttachComponent("grass", plane).SetPosition({2 * i, 0, (i % 3) * 1.4 + 2});
     }
 

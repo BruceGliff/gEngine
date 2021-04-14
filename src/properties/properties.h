@@ -54,6 +54,7 @@ namespace Property
         virtual void Draw(Geometry::Transformation const &) = 0;
 
 		IDrawable();
+		IDrawable(Renderer::ShaderProgram * sp);
         IDrawable(IDrawable const &) = delete;
         IDrawable(IDrawable &&) = delete;
         IDrawable& operator= (IDrawable const &)  =delete;
