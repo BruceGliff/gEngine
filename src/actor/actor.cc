@@ -26,46 +26,6 @@ Actor::actor::actor(actor&& otherActor) noexcept :
 	MOVE_PROPERTY(ICompound);
 }
 
-
-Actor::actor & Actor::actor::AttachComponent(std::string const& comp_name, Component::component_base * component)
-{	
-	// to get hints when insert propertied into define;
-	using namespace Property;
-	// firstly make pair
-	// secondly replace it
-
-	// set this class as parent for component
-	component->SetParent(this);
-
-	// Aggregation is a pair of component and array of properties of the component
-	ComponentAggregation aggregation;
-	aggregation.first = component;
-
-	INSERT_PROPERTY(IDrawable);
-	INSERT_PROPERTY(ICompound);
-	//INSERT_PROPERTY(IPhysicaly);
-
-
-	auto&& it = components.find(comp_name);
-	if (it != components.end())
-	{
-		// delete old components
-		// TODO this is work part(maybe)
-		// ComponentAggregation oldAggr = std::move(it->second);
-		// Component::component_base * oldComp = it->second.first;
-		// it->second = std::move(aggregation);
-		// remove_properties_from_generated_arrays(oldAggr.second);
-
-		std::swap(aggregation, it->second);
-		delete aggregation.first;
-
-		return *this;
-	}
-
-	components[comp_name] = std::move(aggregation);
-	return *this;
-}
-
 Component::component_base * Actor::actor::GetComponent(std::string const& comp_name) const noexcept
 {
 	auto&& it = components.find(comp_name);

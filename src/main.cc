@@ -35,8 +35,9 @@ int main(int argc, char * argv[])
     
     std::vector<Renderer::TextureGL*> grass_texture = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
     for (int i = 0; i != 10;  ++i) {
-        Component::StaticMesh* plane = new Component::StaticMesh{ resMng.loadModel<Model::Plane>(grass_texture) };
-        Scene.Spawn<Actor::actor>()->AttachComponent("grass", plane).SetPosition({2 * i, 0, (i % 3) * 1.4 + 2});
+        Scene.Spawn<Actor::actor>()->
+                            AttachComponent<Component::StaticMesh>("grass", resMng.loadModel<Model::Plane>(grass_texture)).
+                            SetPosition({2 * i, 0, (i % 3) * 1.4 + 2});
     }
 
     Actor::actor player_actor{};
