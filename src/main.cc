@@ -41,7 +41,7 @@ int main(int argc, char * argv[])
     }
 
     Actor::actor player_actor{};
-    player_actor.AttachComponent("camera", new Component::camera{});
+    player_actor.AttachComponent<Component::camera>("camera");
     auto pPlayer = Scene.Attach(player_actor);
     GLOBAL::SetPlayer(pPlayer);
 
