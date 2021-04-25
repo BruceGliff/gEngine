@@ -1,9 +1,11 @@
+#include "debug/debug.h"
+
 #include "window_base.h"
 
 #include "process/global.h"
 #include "actor/actor.h"
 #include "actor/components/camera.h"
-#include "debug/debug.h"
+
 
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>

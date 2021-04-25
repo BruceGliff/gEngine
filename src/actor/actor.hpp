@@ -1,5 +1,7 @@
 #include "debug/debug.h"
 
+#include <functional>
+
 template <typename T, typename ... Args>
 Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args && ... args)
 {
@@ -8,8 +10,6 @@ Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args
         return *this;
     }
     
-    // to get hints when insert propertied into define;
-    using namespace Property;
     // first - make pair
     // second - replace it
 
@@ -23,8 +23,9 @@ Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args
     ComponentAggregation aggregation;
     aggregation.first = component;
 
-    INSERT_PROPERTY(IDrawable);
-    INSERT_PROPERTY(ICompound);
+
+    insertProperty<Property::IDrawable>(component, /*OUT*/ aggregation);
+    insertProperty<Property::ICompound>(component, /*OUT*/ aggregation);
 
 
     auto&& it = components.find(comp_name);
@@ -48,15 +49,40 @@ Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args
 
 }
 
+template<typename PropertyToInsert>
+void Actor::actor::insertProperty(Component::component_base * component, ComponentAggregation & aggregation) {
+    if (PropertyToInsert * p = dynamic_cast<PropertyToInsert *>(component)) {
+        properties[std::type_index(typeid(PropertyToInsert))].push_front(p);
+        aggregation.second.push_back(properties[std::type_index(typeid(PropertyToInsert))].begin());
+    }
+}
+template<typename PropertyToDelete>
+void Actor::actor::removeProperty(std::list<Property::IProcessable *>::iterator const & property) {
+    // TODO check if this check is required
+    auto && prop = properties.find(std::type_index(typeid(PropertyToDelete)));
+
+    if (prop != properties.end()) {
+        prop->second.remove(*property);
+    }
+}
+
 template <typename componentType>
 componentType * Actor::actor::GetComponentByName(std::string const& comp_name) const noexcept
 {
     auto&& it = components.find(comp_name);
-    if (it != components.end())
-    {
-        // TODO may be dynamic_cast<>?
+    if (it != components.end()) {
         return static_cast<componentType *>(it->second.first);
     }
 
     return nullptr;
+}
+
+template<typename T, typename Function, typename ... Args>
+void Actor::actor::processProperty(Function && call, Args && ... args) {
+    for (auto && x : properties[std::type_index(typeid(T))]) {
+        T * pProp = static_cast<T *>(x);
+
+        auto process = std::bind( call, pProp, std::forward<Args>(args)... );
+        process();
+    }
 }

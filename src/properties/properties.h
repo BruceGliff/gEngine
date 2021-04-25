@@ -13,6 +13,11 @@ namespace Geometry
 
 namespace Property
 {
+	class IProcessable {
+	public:
+		virtual ~IProcessable() {};
+	};
+
     class IPlaceable
 	{
 	protected:
@@ -45,13 +50,13 @@ namespace Property
 		virtual ~IMoveable() {};
 	};
 
-    class IDrawable
+    class IDrawable : public IProcessable
     {
 	protected:
 		Renderer::ShaderProgram * borderShader;	
 		Renderer::ShaderProgram * shader;
     public:
-        virtual void Draw(Geometry::Transformation const &) = 0;
+        virtual void Draw(Geometry::Transformation const &) {};
 
 		IDrawable();
 		IDrawable(Renderer::ShaderProgram * sp);
@@ -108,10 +113,10 @@ namespace Property
 	};
 
 	// This is used in objects which have component_base attached to them 
-	class ICompound
+	class ICompound : public IProcessable
 	{
 	public:
-		virtual void Process(Geometry::Transformation const&) = 0;
+		virtual void Process(Geometry::Transformation const&) {};
 		virtual ~ICompound(){}
 	};
 

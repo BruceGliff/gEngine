@@ -64,7 +64,6 @@ list(APPEND SOURCES_CC
 # 5. add .h files which without .cc pair and .hpp files
 list(APPEND SOURCES_H
 		src/texture/stb_image.h
-		src/actor/actorDEF.h
 		src/actor/actor.hpp
 		src/manager/ResourceManager.hpp
 	)
@@ -132,6 +131,6 @@ include_directories(src)
 # 12. put executable file at specific folder
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(	TARGET ${PROJECT_NAME} POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_directory
 					${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)

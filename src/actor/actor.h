@@ -5,12 +5,12 @@
 #include <memory>
 #include <list>
 #include <vector>
+#include <typeindex>
+
 
 #include "components/component_base.h"
 #include "properties/properties.h"
 #include "manager/Entity.h"
-
-#include "actorDEF.h"
 
 namespace Renderer {
 	class ShaderProgram;
@@ -27,30 +27,40 @@ namespace Actor {
 	// Resources::Entity{std::move(otherActor)}
 					public Resources::Entity,
 					public Property::ICompound,
-					public Component::component_base,
 					public Property::IScalable, 
 					public Property::IMoveable, 
-					public Property::IRotatable
+					public Property::IRotatable,
+					public Component::component_base // component_base after ICompound
 	{
 		// For easy run-time drawing all compomenents separates by their behavior and then running across only one
-		// array without casts.
+		// array without casts (separated by type in unordered_map).
 		// Hovewer all pointers in general are the same object, only Component::component_base * represent the
-		// physicaly object what can be deleted.
-		// We assume that one component may have a lot of properties, that would be represented as void *
-		// All operations on component must accompanied with operations on PROPERTIES_ARRAY(INSERT, REMOVE, MOVE, PROCESS)
-		// What defined in file actorDEF.h
-		typedef std::pair<Component::component_base*, std::vector<std::list<void *>::iterator>> ComponentAggregation;
+		// real object what can be deleted.
+		// We assume that one component may have a lot of properties, that would be represented as IProcessable *
+		// All operations on component must accompanied with operations
+		// insertProperty, removeProperty, processProperty
+
+		typedef std::pair<Component::component_base*, std::vector<std::list<Property::IProcessable *>::iterator>> ComponentAggregation;
 		typedef std::unordered_map<std::string, ComponentAggregation> ComponentMap;
 		ComponentMap components;
 
-		PROPERTIES_ARRAY(IDrawable);
-		PROPERTIES_ARRAY(ICompound);
-		//PROPERTIES_ARRAY(IPhysicaly);
+		std::unordered_map<std::type_index, std::list<Property::IProcessable *>> properties;
 
 		// TODO Check if remove throw an exception
-		void remove_properties_from_generated_arrays(std::vector<std::list<void *>::iterator> const & prop_array) noexcept;
+		void remove_properties_from_generated_arrays(std::vector<std::list<Property::IProcessable *>::iterator> const & prop_array) noexcept;
 
-		
+		// insert properties are contained in component into aggregation
+		template<typename PropertyToInsert>
+		void insertProperty(Component::component_base * component, ComponentAggregation & /*OUT*/ aggregation);
+
+		// revome property from arrays TODO : which array?
+		template<typename PropertyToDelete>
+		void removeProperty(std::list<Property::IProcessable *>::iterator const & property);
+
+		// Process property.
+		// Each property has to be processed within own function
+		template<typename T, typename Function, typename ... Args>
+		void processProperty(Function && process, Args && ... args);
 
 	public:
 		actor() = default;
@@ -79,7 +89,6 @@ namespace Actor {
 		// Delete component by name. Do nothing if it is not found
 		actor & DeleteComponent(std::string const & comp_name) noexcept;
 
-		// TODO make this via Args...
 		// Handle behavior of class. Do drawing or physics or so one
 		virtual void Process(Geometry::Transformation const &) override;
 
@@ -88,9 +97,3 @@ namespace Actor {
 }
 
 #include  "actor.hpp"
-
-#undef PROPERTIES_ARRAY
-#undef INSERT_PROPERTY
-#undef REMOVE_PROPERTY
-#undef PROCESS_PROPERTY
-#undef MOVE_PROPERTY

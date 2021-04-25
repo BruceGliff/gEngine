@@ -1,29 +1,25 @@
+#include "debug/debug.h"
+
 #include "actor.h"
 #include <iostream>
 #include <string>
 
-#include "actorDEF.h"
-
-#include "debug/debug.h"
 #include "geometry/geometry_base.h"
 
 Actor::actor::actor(actor&& otherActor) noexcept :
 	Resources::Entity{std::move(otherActor)},
 	Component::component_base{std::move(otherActor)},
 	Property::IMoveable{std::move(otherActor)},
-	Property::IScalable{std::move(otherActor)}
+	Property::IScalable{std::move(otherActor)},
+
+	components{std::move(otherActor.components)},
+	properties{std::move(otherActor.properties)}
 {
-	using namespace Property;
-	components = std::move(otherActor.components);
-	
 	// set new parent to components
 	for (auto&& x : components)
 	{
 		x.second.first->SetParent(this);
 	}
-
-	MOVE_PROPERTY(IDrawable);
-	MOVE_PROPERTY(ICompound);
 }
 
 Component::component_base * Actor::actor::GetComponent(std::string const& comp_name) const noexcept
@@ -68,14 +64,12 @@ Actor::actor & Actor::actor::DeleteComponent(std::string const& comp_name) noexc
 	return *this;
 }
 
-void Actor::actor::remove_properties_from_generated_arrays(std::vector<std::list<void *>::iterator> const & prop_array) noexcept
+void Actor::actor::remove_properties_from_generated_arrays(std::vector<std::list<Property::IProcessable *>::iterator> const & prop_array) noexcept
 {
-	using namespace Property;
 	for (auto && property : prop_array)
 	{
-		REMOVE_PROPERTY(IDrawable);
-		REMOVE_PROPERTY(ICompound);
-		//REMOVE_PROPERTY(IPhysicaly);
+		removeProperty<Property::IDrawable>(property);
+		removeProperty<Property::ICompound>(property);
 	}
 }
 
@@ -88,17 +82,8 @@ Actor::actor::~actor()
 #include <iostream>
 void Actor::actor::Process(Geometry::Transformation const & tr)
 {
-	// TODO check is it is possible to do with define
-	//PROCESS_PROPERTY(IPhysicaly, DoPhysic, sp, tr);
 	Geometry::Transformation const newTr{ tr + Geometry::Transformation{GetPosition(), GetRotation(), GetScale()} };
 
-	for (auto && x : Array_IDrawable)
-	{
-		reinterpret_cast<Property::IDrawable *>(x)->Draw(newTr);
-	}
-	for (auto&& x : Array_ICompound)
-	{
-		reinterpret_cast<Property::ICompound*>(x)->Process(newTr);
-	}
-
+	processProperty<Property::IDrawable>(&Property::IDrawable::Draw, 	newTr);
+	processProperty<Property::ICompound>(&Property::ICompound::Process, newTr);
 }
