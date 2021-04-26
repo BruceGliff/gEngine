@@ -5,26 +5,25 @@
 
 #include "geometry/geometry_base.h"
 
+Scene::Scene::Scene() {
+    blendedObjects.reserve(sceneDefSize);
+}
 
 void Scene::Scene::Process()
 {
     Geometry::Transformation tr{};
     grid.Draw(tr);
 
-    std::vector<const_iterator> arr;
-    arr.reserve(scene.size());
-    for (auto it = scene.begin(); it != scene.end(); ++it)
-        arr.push_back(it);
-
     auto & camPos = GLOBAL::GetPlayer().GetPosition();
 
     // may be apply more sutable sort algorithm for sort weak changed objects
-    std::sort(arr.begin(), arr.end(), [&camPos](const_iterator const & a, const_iterator const & b)
-                                                {
-                                                    return  glm::length2(a->second->GetPosition() - camPos) > 
-                                                            glm::length2(b->second->GetPosition() - camPos);
-                                                });
-    for (auto && x : arr)
+    std::sort(blendedObjects.begin(), blendedObjects.end(), 
+                [&camPos](const_iterator const & a, const_iterator const & b)
+                {
+                    return  glm::length2(a->second->GetPosition() - camPos) > 
+                            glm::length2(b->second->GetPosition() - camPos);
+                });
+    for (auto && x : blendedObjects)
         x->second->Process(tr);
 
 }

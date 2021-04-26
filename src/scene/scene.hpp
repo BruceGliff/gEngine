@@ -18,8 +18,8 @@ T * Scene::Scene::Spawn(Args && ... args)
         return nullptr;
     }
 
-    //scene[pA->GetEntity()] = pA;
-    scene.emplace(pA->GetEntity(), pA);
+    auto spawned = scene.emplace(pA->GetEntity(), pA);
+    blendedObjects.push_back(spawned.first);
 
     return p;
     }
@@ -49,7 +49,8 @@ NoRefT * Scene::Scene:: Attach(T && obj)
         return nullptr;
     }
     
-    scene.emplace(pA->GetEntity(), pA);
+    auto spawned = scene.emplace(pA->GetEntity(), pA);
+    blendedObjects.push_back(spawned.first);
 
     return p;
 }

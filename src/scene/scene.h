@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 
 #include "actor/actor.h"
 #include "manager/Entity.h"
@@ -22,8 +23,12 @@ class Scene final
     typedef std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>>::iterator iterator;
     typedef std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>>::const_iterator const_iterator;
 
+    int const sceneDefSize = 100; // default there are max 100 objects in scene to avoid rallocations
+    std::vector<const_iterator> blendedObjects;
+
+
 public:
-    Scene() = default;
+    Scene();
     Scene(Scene const&)				= delete;
     Scene(Scene&&)					= delete;
     Scene& operator= (Scene const&) = delete;
@@ -32,6 +37,9 @@ public:
     // Process all objects in scene
     void Process();
 
+    // TODO as I don't have deletions from scene blendedObjects are increased in
+    // Spawn and Attach methods. As there will be deletions, have to think how to
+    // delete from blendedObjects.
 
     // Spawn an object at scene.
     // Return nullptr, if object cannot be spawned
