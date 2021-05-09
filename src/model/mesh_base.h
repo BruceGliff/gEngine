@@ -40,8 +40,9 @@ namespace Model
 
 	public:
 		Mesh(std::vector<Vertex> const & vertices, std::vector<unsigned int> const & indices, std::vector<Renderer::TextureGL*> const & textures);
+		Mesh(std::vector<Vertex> && vertices, std::vector<unsigned int> && indices, std::vector<Renderer::TextureGL*> && textures);
 		void Draw(Renderer::ShaderProgram const & shader) const;
-
+		
 	public:
 		std::vector<Vertex>			m_vertices;
 		std::vector<unsigned int>	m_indices;

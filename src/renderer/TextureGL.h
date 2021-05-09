@@ -22,14 +22,18 @@ namespace Renderer
 		GLuint ID = 0;
 		ETextureType texType;
 
+		void prepairTexture(GLenum const filter, GLenum const wrapMode);
 	public:
-		TextureGL()									= delete;
+		TextureGL();
 		TextureGL(TextureGL const&)					= delete;
 		TextureGL(TextureGL&&)						= delete;
 		TextureGL& operator=(TextureGL const&)		= delete;
 		TextureGL& operator=(TextureGL&&)			= delete;
 
-		TextureGL(std::filesystem::path const& path, ETextureType textureType = ETextureType::DIFFUSE, GLenum const filter = GL_LINEAR, GLenum const wrapMode = GL_CLAMP_TO_EDGE) noexcept;
+		TextureGL(	std::filesystem::path const& path,
+					ETextureType const & textureType = ETextureType::DIFFUSE,
+					GLenum const filter = GL_LINEAR,
+					GLenum const wrapMode = GL_CLAMP_TO_EDGE) noexcept;
 		~TextureGL();
 		
 		// activate texture for drawing

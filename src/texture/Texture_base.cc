@@ -1,5 +1,6 @@
-#include "Texture_base.h"
 #include "debug/debug.h"
+
+#include "Texture_base.h"
 
 #include <iostream>
 
@@ -20,15 +21,26 @@ Resources::Texture_base::Texture_base(std::filesystem::path const& path) noexcep
     if (!data)
     {
         gWARNING(std::string{ "Can not load texture: " } + path.string());
-        data = whiteErrorTexture;
-        width = 2;
-        height = 1;
-        channels = 3;
-        isNoNeedToDelete = true;
+        generateErrorTexture();
     }
+    isNoNeedToDelete = false;
+}
+Resources::Texture_base::Texture_base() noexcept {
+    generateErrorTexture();
 }
 
-void Resources::Texture_base::Release()
+void Resources::Texture_base::generateErrorTexture() noexcept {
+    if (!isNoNeedToDelete) {
+        Release();
+    }
+    data = whiteErrorTexture;
+    width = 2;
+    height = 1;
+    channels = 3;
+    isNoNeedToDelete = true;
+}
+
+void Resources::Texture_base::Release() noexcept
 {
     if (isNoNeedToDelete)
         return;

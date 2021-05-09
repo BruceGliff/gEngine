@@ -4,10 +4,21 @@
 
 #include <iostream>
 
-Renderer::TextureGL::TextureGL(std::filesystem::path const& path, ETextureType textureType, GLenum const filter, GLenum const wrapMode) noexcept :
+Renderer::TextureGL::TextureGL(std::filesystem::path const& path, ETextureType const & textureType, GLenum const filter, GLenum const wrapMode) noexcept :
 	Resources::Texture_base{path},
 	texType{textureType}
 {
+	prepairTexture(filter, wrapMode);
+}
+
+Renderer::TextureGL::TextureGL() :
+	Resources::Texture_base{},
+	texType{ETextureType::DIFFUSE}
+{
+	prepairTexture(GL_LINEAR, GL_CLAMP_TO_EDGE);
+}
+
+void Renderer::TextureGL::prepairTexture(GLenum const filter, GLenum const wrapMode) {
 	GLint tex_mod = 0;
 	switch (channels)
 	{
@@ -22,10 +33,10 @@ Renderer::TextureGL::TextureGL(std::filesystem::path const& path, ETextureType t
 		break;
 	}
 
-	glGenTextures(1, &ID);	
+	glGenTextures(1, &ID);
 	glBindTexture(GL_TEXTURE_2D, ID);
 	glTexImage2D(GL_TEXTURE_2D, 0, tex_mod, width, height, 0, tex_mod, GL_UNSIGNED_BYTE, data);
-
+	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
@@ -33,6 +44,7 @@ Renderer::TextureGL::TextureGL(std::filesystem::path const& path, ETextureType t
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	Release();
+
 }
 
 Renderer::TextureGL::~TextureGL()

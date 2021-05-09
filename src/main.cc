@@ -42,6 +42,7 @@ int main(int argc, char * argv[])
                             AttachComponent<Component::StaticMesh>("grass", resMng.loadModel<Model::Plane>(grass_texture)).
                             SetPosition({2 * i, 2, (i % 3) * 1.4 + 2});
     }
+    Scene.Spawn<Actor::actor>()->AttachComponent<Component::StaticMesh>("cube",resMng.loadModel<Model::Cube>()).SetPosition({0, 10, 0}); // strange behavior
 
     Actor::actor player_actor{};
     player_actor.AttachComponent<Component::camera>("camera");
@@ -57,7 +58,7 @@ int main(int argc, char * argv[])
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
 
     while (!win.ProcessInput())
     {

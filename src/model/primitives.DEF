@@ -1,0 +1,10 @@
+#define CONTRUCT_PRIMITIVE(PRIM)                                        \
+    class PRIM final : public Primitive {                               \
+    public:                                                             \
+        PRIM() :                                                        \
+            Primitive{ {GLOBAL::GetResManager().loadTexture()}, #PRIM }                                      \
+        {}                                                              \
+        PRIM(std::vector<Renderer::TextureGL*> const & texturesIn) :    \
+            Primitive{texturesIn, #PRIM}                                \
+        {}                                                              \
+    };                                                          

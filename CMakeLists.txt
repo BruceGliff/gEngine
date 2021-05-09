@@ -65,6 +65,7 @@ list(APPEND SOURCES_CC
 list(APPEND SOURCES_H
 		src/texture/stb_image.h
 		src/actor/actor.hpp
+		src/model/primitives.DEF
 		src/manager/ResourceManager.hpp
 	)
 # 6. separte behavior depends on OS

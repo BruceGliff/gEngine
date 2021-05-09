@@ -51,6 +51,9 @@ Resources::glWindow::glWindow(int width, int height, std::string const & win_nam
     glfwSetKeyCallback(pWindow, glfwKeyCallback);
     glfwSetCursorPosCallback(pWindow, mouse_callback);
     glfwSetScrollCallback(pWindow, scroll_callback);
+
+    glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 }
 
 Resources::glWindow::operator bool() const noexcept

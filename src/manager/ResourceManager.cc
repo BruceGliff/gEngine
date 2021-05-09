@@ -50,6 +50,15 @@ Renderer::ShaderProgram * Resources::ResourcesManager::getShaderProgram(std::str
     return nullptr;
 }
 
+Renderer::TextureGL * Resources::ResourcesManager::loadTexture() {
+    TexturesMap::const_iterator it = textures.find("empty");
+    if (it == textures.end()) {
+        return textures.emplace("empty", std::make_unique<Renderer::TextureGL>())
+                                .first->second.get();
+    }
+    return it->second.get();
+}
+
 Renderer::TextureGL * Resources::ResourcesManager::loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType)
 {
     std::filesystem::path const absolutePath{ path_to_exec / relevantPath };

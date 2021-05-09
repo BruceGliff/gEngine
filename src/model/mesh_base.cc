@@ -12,6 +12,13 @@ Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int>
 {
 	setupMesh();
 }
+Model::Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<unsigned int> && indices, std::vector<Renderer::TextureGL*> && textures) :
+	m_vertices(std::move(vertices)),
+	m_indices(std::move(indices)),
+	m_textures(std::move(textures))
+{
+	setupMesh();
+}
 
 void Model::Mesh::Draw(Renderer::ShaderProgram const & shader) const
 {

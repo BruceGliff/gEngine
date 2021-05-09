@@ -79,6 +79,8 @@ namespace Resources
 		// TODO make texture unique by path
 		// Load texture
 		Renderer::TextureGL * loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType );
+		// Load default error texture
+		Renderer::TextureGL * loadTexture();
 		
 		// Load promitives or model3d
 		template<typename T, typename ... Args>

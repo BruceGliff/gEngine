@@ -1,31 +1,29 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include "mesh_base.h"
+
+#include "../process/global.h"
+#include "../manager/ResourceManager.h"
 
 namespace Model {
 
-    class Primitive {
+    class Primitive : public IModel{
 	protected:
-		Primitive() {}
+        Primitive(  std::vector<Renderer::TextureGL*> const & texturesIn,
+                    std::string const & name);
 		std::unique_ptr<Mesh> mesh;
 
-        virtual std::vector<Vertex> 	  generateVertices() = 0;
-        virtual std::vector<unsigned int> generateIndices()  = 0;
 	public:
+        void Draw(Renderer::ShaderProgram const & shader) const override;
 		virtual ~Primitive() {}
 	};
 
-    class Plane final : public IModel,
-                        public Primitive {
+    #include "primitives.DEF"
+    CONTRUCT_PRIMITIVE(Plane);
+    CONTRUCT_PRIMITIVE(Cube);
+    
+    #undef CONTRUCT_PRIMITIVE
+} // namespace Model
 
-        std::vector<Vertex> 				generateVertices() override;
-        std::vector<unsigned int> 			generateIndices()  override;
-    public:
-        Plane();
-        Plane(std::vector<Renderer::TextureGL*> const & texturesIn);
-        void Draw(Renderer::ShaderProgram const & shader) const override;
-
-        // TODO
-    };
-} // namespace gEng

@@ -10,7 +10,6 @@
 
 namespace Model {
     class IModel;
-    class Primitive;
 }
 namespace Geometry  {
     class Transformation;

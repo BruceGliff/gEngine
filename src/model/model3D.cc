@@ -49,30 +49,12 @@ Model::Mesh Model::Model3D::processMesh(aiMesh* mesh, aiScene const* scene)
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
-        Vertex vertex;
-        // process vertex positions, normals and texture coordinates
-        glm::vec3 vector;
-        vector.x = mesh->mVertices[i].x;
-        vector.y = mesh->mVertices[i].y;
-        vector.z = mesh->mVertices[i].z;
-        vertex.position = vector;
-
-        vector.x = mesh->mNormals[i].x;
-        vector.y = mesh->mNormals[i].y;
-        vector.z = mesh->mNormals[i].z;
-        vertex.normal = vector;
-
-        if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-        {
-            glm::vec2 vec;
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.texture_coord = vec;
-        }
-        else
-            vertex.texture_coord = glm::vec2(0.0f, 0.0f);
-
-        vertices.push_back(vertex);
+        vertices.emplace_back(Vertex{
+                                glm::vec3{mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z}, // pos
+                                glm::vec3{mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z}, // norm
+                                glm::vec2{mesh->mTextureCoords[0] ? mesh->mTextureCoords[0][i].x : 0.f,
+                                          mesh->mTextureCoords[0] ? mesh->mTextureCoords[0][i].y : 0.f }  // text    
+        });
     }
     // process indices
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -92,7 +74,7 @@ Model::Mesh Model::Model3D::processMesh(aiMesh* mesh, aiScene const* scene)
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
-    return Mesh{ vertices, indices, textures };
+    return Mesh{ std::move(vertices), std::move(indices), std::move(textures) };
 }
 
 std::vector<Renderer::TextureGL*> Model::Model3D::loadMaterialTextures(aiMaterial* mat, aiTextureType type)
