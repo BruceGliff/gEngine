@@ -20,10 +20,10 @@ namespace Model {
 		virtual ~Primitive() {}
 	};
 
+
     #include "primitives.DEF"
     CONTRUCT_PRIMITIVE(Plane);
-    CONTRUCT_PRIMITIVE(Cube);
-    
+    CONTRUCT_PRIMITIVE(Cube);  
     #undef CONTRUCT_PRIMITIVE
 } // namespace Model
 

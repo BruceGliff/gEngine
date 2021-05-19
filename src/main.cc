@@ -36,15 +36,18 @@ int main(int argc, char * argv[])
     //                             resMng.loadModel<Model::Model3D>("backpack", "res/models/backpack/backpack.obj")).
     //                         SetScale({0.5,0.5,0.5});
 
-    std::vector<Renderer::TextureGL*> cont_tex = {resMng.loadTexture("res/textures/container.png", Renderer::ETextureType::DIFFUSE)};
     Scene.Spawn<Actor::actor>()->
-                            AttachComponent<Component::StaticMesh>("box", resMng.loadModel<Model::Cube>(cont_tex));
-
-    std::vector<Renderer::TextureGL*> grass_texture = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
+                            AttachComponent<Component::StaticMesh>("box",
+                                                                    resMng.loadModel<Model::Cube>(
+                                                                        resMng.loadTexture("res/textures/container.png",
+                                                                                            Renderer::ETextureType::DIFFUSE)));
     for (int i = 0; i != 10;  ++i) {
         Scene.Spawn<Actor::actor>()->
-                            AttachComponent<Component::StaticMesh>("grass", resMng.loadModel<Model::Plane>(grass_texture)).
-                            SetPosition({2 * i, 2, (i % 3) * 1.4 + 2});
+                            AttachComponent<Component::StaticMesh>("glass",
+                                                                    resMng.loadModel<Model::Plane>(
+                                                                        resMng.loadTexture("res/textures/windows_texture.png",
+                                                                                            Renderer::ETextureType::DIFFUSE)))
+                            .SetPosition({2 * i, 2, (i % 3) * 1.4 + 2});
     }
     Scene.Spawn<Actor::actor>()->AttachComponent<Component::StaticMesh>("cube",resMng.loadModel<Model::Cube>()).SetPosition({0, 10, 0}); // strange behavior
 

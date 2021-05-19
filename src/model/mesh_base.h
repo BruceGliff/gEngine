@@ -46,7 +46,7 @@ namespace Model
 	public:
 		std::vector<Vertex>			m_vertices;
 		std::vector<unsigned int>	m_indices;
-		std::vector<Renderer::TextureGL*>	m_textures;
+		std::vector<Renderer::TextureGL*>	m_textures; // TODO vector of textures should be changed to struct Material!
 	};
 
 }

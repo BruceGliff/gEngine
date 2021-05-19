@@ -30,8 +30,6 @@ aiMesh * recursiveTreeCheck(aiNode * node, aiScene const * scene) {
     return nullptr;
 }
 
-
-// Special for plane
 std::unique_ptr<Mesh> getMesh(std::vector<Renderer::TextureGL*> const & textures, std::string const & name) {
     Assimp::Importer import;
     std::filesystem::path PathToModel = GLOBAL::GetResManager().getPathToExucutable() / "res/models/primitives" / (name + ".obj");
