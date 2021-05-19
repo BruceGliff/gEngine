@@ -10,15 +10,15 @@
 namespace Model {
 
     class Primitive : public IModel{
-	protected:
+    protected:
         Primitive(  std::vector<Renderer::TextureGL*> const & texturesIn,
                     std::string const & name);
-		std::unique_ptr<Mesh> mesh;
+        std::unique_ptr<Mesh> mesh;
 
-	public:
+    public:
         void Draw(Renderer::ShaderProgram const & shader) const override;
-		virtual ~Primitive() {}
-	};
+        virtual ~Primitive() {}
+    };
 
 
     #include "primitives.DEF"

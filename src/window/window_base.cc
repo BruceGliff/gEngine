@@ -82,7 +82,7 @@ void Resources::glWindow::Draw() const noexcept
 
 bool Resources::glWindow::ProcessInput() const noexcept
 {
-    static float deltaTime = 0.0f;	// Time between current frame and last frame
+    static float deltaTime = 0.0f;    // Time between current frame and last frame
     static float lastFrame = 0.0f; // Time of last frame
 
     float currentFrame = static_cast<float>(glfwGetTime()); // cast from double to float
@@ -139,7 +139,7 @@ void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos_d, doub
     static bool firstMouse = true;
     static float lastX = 1600.f / 2.f;
     static float lastY = 900.f / 2.f;
-    static float yaw = -90.0f;	
+    static float yaw = -90.0f;    
     static float pitch = 0.0f;
 
 

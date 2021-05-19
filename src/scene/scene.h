@@ -29,10 +29,10 @@ class Scene final
 
 public:
     Scene();
-    Scene(Scene const&)				= delete;
-    Scene(Scene&&)					= delete;
+    Scene(Scene const&)                = delete;
+    Scene(Scene&&)                    = delete;
     Scene& operator= (Scene const&) = delete;
-    Scene& operator= (Scene&&)		= delete;
+    Scene& operator= (Scene&&)        = delete;
 
     // Process all objects in scene
     void Process();

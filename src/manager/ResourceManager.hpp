@@ -20,7 +20,7 @@ Model::IModel * Resources::ResourcesManager::loadPrimitive(Args && ... args)
     ModelMap::const_iterator it = models.find(modelName);
     if (it == models.end()) {
         T * p = T::Create(args ...);
-        Model::IModel * pM = static_cast<Model::IModel *>(p);	
+        Model::IModel * pM = static_cast<Model::IModel *>(p);    
         if (!pM) {
             delete p;
             gWARNING(std::string{"This is not suppose to happen: Check with is_base_of<>() gave wrong result!\n "} + typeid(T).name());

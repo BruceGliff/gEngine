@@ -6,38 +6,38 @@
 
 namespace Renderer
 {
-	enum class ETextureType
-	{
-		SPECULAR,
-		DIFFUSE
-		// ...
-	};
-	
-	class ShaderProgram;
+    enum class ETextureType
+    {
+        SPECULAR,
+        DIFFUSE
+        // ...
+    };
+    
+    class ShaderProgram;
 
-	// Loader texture in GPU
-	// This class not in Resources NS as it is not loaded in RAM
-	class TextureGL final : public Resources::Texture_base
-	{
-		GLuint ID = 0;
-		ETextureType texType;
+    // Loader texture in GPU
+    // This class not in Resources NS as it is not loaded in RAM
+    class TextureGL final : public Resources::Texture_base
+    {
+        GLuint ID = 0;
+        ETextureType texType;
 
-		void prepairTexture(GLenum const filter, GLenum const wrapMode);
-	public:
-		TextureGL();
-		TextureGL(TextureGL const&)					= delete;
-		TextureGL(TextureGL&&)						= delete;
-		TextureGL& operator=(TextureGL const&)		= delete;
-		TextureGL& operator=(TextureGL&&)			= delete;
+        void prepairTexture(GLenum const filter, GLenum const wrapMode);
+    public:
+        TextureGL();
+        TextureGL(TextureGL const&)                    = delete;
+        TextureGL(TextureGL&&)                        = delete;
+        TextureGL& operator=(TextureGL const&)        = delete;
+        TextureGL& operator=(TextureGL&&)            = delete;
 
-		TextureGL(	std::filesystem::path const& path,
-					ETextureType const & textureType = ETextureType::DIFFUSE,
-					GLenum const filter = GL_LINEAR,
-					GLenum const wrapMode = GL_CLAMP_TO_EDGE) noexcept;
-		~TextureGL();
-		
-		// activate texture for drawing
-		void activateTexture(int texOffset, ShaderProgram const& shader);
+        TextureGL(    std::filesystem::path const& path,
+                    ETextureType const & textureType = ETextureType::DIFFUSE,
+                    GLenum const filter = GL_LINEAR,
+                    GLenum const wrapMode = GL_CLAMP_TO_EDGE) noexcept;
+        ~TextureGL();
+        
+        // activate texture for drawing
+        void activateTexture(int texOffset, ShaderProgram const& shader);
 
-	};
+    };
 }

@@ -6,18 +6,18 @@
 #include "renderer/TextureGL.h"
 
 Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<Renderer::TextureGL*> const& textures) :
-	m_vertices(vertices),
-	m_indices(indices),
-	m_textures(textures)
+    m_vertices(vertices),
+    m_indices(indices),
+    m_textures(textures)
 {
-	setupMesh();
+    setupMesh();
 }
 Model::Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<unsigned int> && indices, std::vector<Renderer::TextureGL*> && textures) :
-	m_vertices(std::move(vertices)),
-	m_indices(std::move(indices)),
-	m_textures(std::move(textures))
+    m_vertices(std::move(vertices)),
+    m_indices(std::move(indices)),
+    m_textures(std::move(textures))
 {
-	setupMesh();
+    setupMesh();
 }
 
 void Model::Mesh::Draw(Renderer::ShaderProgram const & shader) const
