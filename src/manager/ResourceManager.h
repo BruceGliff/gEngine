@@ -49,15 +49,15 @@ namespace Resources
 		// Path to executable file
 		std::filesystem::path const path_to_exec;
 
-		// read file from res/ directory fe: readFile(res/shaders/fragment.glsl);
+		// reads file from res/ directory fe: readFile(res/shaders/fragment.glsl);
 		std::string readFile(std::filesystem::path const& relativePath) const;
 
-		// overloaded function to load model3d
+		// loads model
 		template <typename T>
-		Model::IModel * load(std::string const & modelName, std::filesystem::path const& relevantPath);
-		// overloaded function to load primitives
-		template <typename T>
-		Model::IModel * load(std::vector<Renderer::TextureGL *> const & textures = {});
+		Model::IModel * loadMesh(std::string const & modelName, std::filesystem::path const& relevantPath);
+		// loads primitives
+		template <typename T, typename ... Args>
+		Model::IModel * loadPrimitive(Args && ... args);
 
 	public:
 		ResourcesManager() = delete;
@@ -82,14 +82,14 @@ namespace Resources
 		// Load default error texture
 		Renderer::TextureGL * loadTexture();
 		
-		// Load promitives or model3d
+		// Loads promitives or model3d depends on type T
 		template<typename T, typename ... Args>
 		Model::IModel * loadModel(Args && ... args);
 
-		// Get model by name. Return null if not found
+		// Gets model by name. Return null if not found
 		Model::IModel * getModel(std::string const& name) const noexcept;
 
-		// Return texture by name or nullptr if it did ont find
+		// Returns texture by name or nullptr if it did not find
 		Renderer::TextureGL * getTexture(std::string const& textureName) const noexcept;
 
 		std::filesystem::path const& getPathToExucutable() const;

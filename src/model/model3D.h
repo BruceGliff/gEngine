@@ -8,7 +8,7 @@
 
 namespace Model {
 	// TODO check for virtual ~Model(MEsh)
-	class Model3D : public IModel
+	class Model3D final: public IModel
 	{
 		std::vector<Mesh> m_meshes;
 		std::filesystem::path m_directory_path;

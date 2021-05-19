@@ -1,10 +1,25 @@
-#define CONTRUCT_PRIMITIVE(PRIM)                                        \
-    class PRIM final : public Primitive {                               \
-    public:                                                             \
-        PRIM() :                                                        \
-            Primitive{ {GLOBAL::GetResManager().loadTexture()}, #PRIM }                                      \
-        {}                                                              \
-        PRIM(std::vector<Renderer::TextureGL*> const & texturesIn) :    \
-            Primitive{texturesIn, #PRIM}                                \
-        {}                                                              \
+// All operation with primitive creation should be operate with Create.
+// It is coverage for new operator
+
+#define CONTRUCT_PRIMITIVE(PRIM)                                                        \
+    class PRIM final : public Primitive {                                               \
+    private:                                                                            \
+        PRIM() :                                                                        \
+            Primitive{ {GLOBAL::GetResManager().loadTexture()}, #PRIM }                 \
+        {}                                                                              \
+        PRIM(std::vector<Renderer::TextureGL*> const & texturesIn) :                    \
+            Primitive{texturesIn, #PRIM}                                                \
+        {}                                                                              \
+    private:                                                                            \
+        static PRIM * construct() {                                                     \
+            return new PRIM {};                                                         \
+        }                                                                               \
+        static PRIM * construct(std::vector<Renderer::TextureGL*> const & texturesIn) { \
+            return new PRIM {texturesIn};                                               \
+        }                                                                               \
+    public:                                                                             \
+        template <typename ... Args>                                                    \
+        static PRIM * Create(Args && ... args) {                                        \
+            return construct(args ...);                                                 \
+        }                                                                               \
     };                                                          

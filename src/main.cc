@@ -31,10 +31,14 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
     
+    // Scene.Spawn<Actor::actor>()->
+    //                         AttachComponent<Component::StaticMesh>("backpack", 
+    //                             resMng.loadModel<Model::Model3D>("backpack", "res/models/backpack/backpack.obj")).
+    //                         SetScale({0.5,0.5,0.5});
+
+    std::vector<Renderer::TextureGL*> cont_tex = {resMng.loadTexture("res/textures/container.png", Renderer::ETextureType::DIFFUSE)};
     Scene.Spawn<Actor::actor>()->
-                            AttachComponent<Component::StaticMesh>("backpack", 
-                                resMng.loadModel<Model::Model3D>("backpack", "res/models/backpack/backpack.obj")).
-                            SetScale({0.5,0.5,0.5});
+                            AttachComponent<Component::StaticMesh>("box", resMng.loadModel<Model::Cube>(cont_tex));
 
     std::vector<Renderer::TextureGL*> grass_texture = {resMng.loadTexture("res/textures/windows_texture.png", Renderer::ETextureType::DIFFUSE)};
     for (int i = 0; i != 10;  ++i) {

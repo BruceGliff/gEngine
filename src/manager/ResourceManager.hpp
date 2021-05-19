@@ -1,33 +1,29 @@
 #include "model/primitives.h"
 
-template <typename T>
-Model::IModel * Resources::ResourcesManager::load(std::string const & modelName, std::filesystem::path const& relevantPath) {
-    ModelMap::const_iterator it = models.find(modelName);
-    // if model does not exist, then load it
-    if (it == models.end()) {
-        return models.emplace(modelName, std::make_unique<T>(path_to_exec / relevantPath)).first->second.get();
-    }
-    
-    // if model already exists, return it
-    return it->second.get();
-}
-template <typename T>
-Model::IModel * Resources::ResourcesManager::load(std::vector<Renderer::TextureGL *> const & textures)
+template<typename T, typename ... Args>
+Model::IModel * Resources::ResourcesManager::loadModel(Args && ... args)
 {
-    // We assume that type has to be a primitive
-    if (!std::is_base_of<Model::Primitive, T>::value)
-    {
-        gWARNING(std::string{"Type is not a primitive: "} + typeid(T).name());
-        return nullptr;
+    if constexpr (std::is_base_of<Model::Primitive, T>::value) {
+        return loadPrimitive<T>(args ...);
+    } else {
+        return loadMesh<T>(args ...);
     }
-    std::string const modelName = typeid(T).name();
-    ModelMap::const_iterator it = models.find(typeid(T).name());
+}
+
+
+
+template<typename T, typename ... Args>
+Model::IModel * Resources::ResourcesManager::loadPrimitive(Args && ... args)
+{
+    // primitive's names depend on class name 
+    std::string const modelName = std::string{"some_pretty_hashick2735_"} + typeid(T).name();
+    ModelMap::const_iterator it = models.find(modelName);
     if (it == models.end()) {
-        T * p = new T{textures};
-        Model::IModel * pM = dynamic_cast<Model::IModel *>(p);	
+        T * p = T::Create(args ...);
+        Model::IModel * pM = static_cast<Model::IModel *>(p);	
         if (!pM) {
             delete p;
-            gWARNING(std::string{"This is not suppose to happen: Check with typeid() gave wrong result!\n "} + typeid(T).name());
+            gWARNING(std::string{"This is not suppose to happen: Check with is_base_of<>() gave wrong result!\n "} + typeid(T).name());
             return nullptr;
         }
         return models.emplace(modelName, pM).first->second.get();
@@ -35,8 +31,16 @@ Model::IModel * Resources::ResourcesManager::load(std::vector<Renderer::TextureG
     return it->second.get();
 }
 
-template<typename T, typename ... Args>
-Model::IModel * Resources::ResourcesManager::loadModel(Args && ... args)
+template<typename T>
+Model::IModel * Resources::ResourcesManager::loadMesh(std::string const & modelName, std::filesystem::path const& relevantPath)
 {
-    return load<T>(args ...);
+    ModelMap::const_iterator it = models.find(modelName);
+    // if model does not exist, then load it
+    if (it == models.end()) {
+        return models.emplace(modelName, std::make_unique<Model::Model3D>(path_to_exec / relevantPath)).first->second.get();
+    }
+    
+    // if model already exists, return it
+    return it->second.get();
+    
 }

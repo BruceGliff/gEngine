@@ -28,9 +28,6 @@ namespace Component
         
 
     public:
-        // Load model from disk by path. It occures in ResourceManager.
-        // If model with name already in ResourceManager, when get it from manager.
-        StaticMesh(std::string const & name, std::filesystem::path const& relevantPath); // TODO check if it is needed
 
         // Takes model from ResourceManager. If it is not found, when where will be nullptr
         StaticMesh(std::string const& name);
