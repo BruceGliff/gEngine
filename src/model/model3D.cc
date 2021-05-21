@@ -4,27 +4,10 @@
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 #include "process/global.h"
 #include "manager/ResourceManager.h"
-
-void Model::Model3D::loadModel(std::filesystem::path const& path)
-{
-    Assimp::Importer import;
-    aiScene const * scene = import.ReadFile(path.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
-
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
-        gWARNING(std::string{ "ASSIMP problem: cannot load model > " } + import.GetErrorString());
-        return;
-    }
-
-
-    m_directory_path = path;
-    m_directory_path.remove_filename();
-
-    processNode(scene->mRootNode, scene);
-}
 
 void Model::Model3D::processNode(aiNode* node, aiScene const* scene)
 {
@@ -106,12 +89,62 @@ std::vector<Renderer::TextureGL*> Model::Model3D::loadMaterialTextures(aiMateria
 }
 
 Model::Model3D::Model3D(std::filesystem::path const& path)
+    : m_importer{new Assimp::Importer{}}
+    , m_directory_path{path}
 {
-    loadModel(path);
+    m_directory_path = path;
+    m_directory_path.remove_filename();
+    m_model_name = path.filename().string();
+    
+    m_scene = m_importer->ReadFile(path.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
+    if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode) {
+        gWARNING(std::string{ "ASSIMP problem: cannot load model > " } + m_importer->GetErrorString());
+        return;
+    }
+
+    retrieveAllMeshInfo()
 }
 
-void Model::Model3D::Draw(Renderer::ShaderProgram const & shader) const
-{
-    for (auto&& mesh : m_meshes)
-        mesh.Draw(shader);
+void Model::Model3D::Draw(Geometry::Transformation const & transform) {
+    drawNode(m_scene->mRootNode, transform);
+}
+
+void Model::Model3D::drawNode(aiNode * node, Geometry::Transformation const & transform) {
+    // process all the node's meshes (if any)
+    for (unsigned i = 0, numMeshes = node->mNumMeshes; i != numMeshes; ++i) {
+        aiMesh* mesh = m_scene->mMeshes[node->mMeshes[i]];
+        drawMesh(mesh, transform); // TODO think how to change transformation
+    }
+    // then do the same for each of its children
+    for (unsigned i = 0, numChildren = node->mNumChildren; i != numChildren; ++i) {
+        drawNode(node->mChildren[i], transform); // TODO think how to change transformation
+    }
+}
+void Model::Model3D::drawMesh(aiMesh * mesh, Geometry::Transformation const & transform) {
+
+
+}
+
+void Model::Model3D::processMesh(aiMesh * mesh) {
+    collectBuffersInfo(mesh);
+    if ()
+
+}
+
+void Model::Model3D::collectTexturesInfo() {
+
+}
+
+void Model::Model3D::collectBuffersInfo(aiMesh * mesh) {
+
+}
+
+void Model::Model3D::retrieveAllMeshInfo(aiNode * node) {
+    for (unsigned i = 0, numMeshes = node->mNumMeshes; i != numMeshes; ++i) {
+        aiMesh* mesh = m_scene->mMeshes[node->mMeshes[i]];
+        processMesh(mesh);
+    }
+    for (unsigned i = 0, numChildren = node->mNumChildren; i != numChildren; ++i) {
+        retrieveAllMeshInfo(node->mChildren[i]);
+    }
 }

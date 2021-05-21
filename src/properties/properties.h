@@ -56,7 +56,7 @@ namespace Property
         Renderer::ShaderProgram * borderShader;    
         Renderer::ShaderProgram * shader;
     public:
-        virtual void Draw(Geometry::Transformation const &) {};
+        virtual void Draw(Geometry::Transformation const &) {}; // TODO make const!?
 
         IDrawable();
         IDrawable(Renderer::ShaderProgram * sp);
