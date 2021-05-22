@@ -23,7 +23,6 @@ namespace Model {
                         : public IModel
                         , public Property::IDrawable
                         {
-        Assimp::Importer * m_importer {};
         aiScene const * m_scene {};
 
         std::filesystem::path m_directory_path;
@@ -52,6 +51,8 @@ namespace Model {
     public:
         Model3D(std::filesystem::path const& path);
         void Draw(Geometry::Transformation const & transform) override;
+
+        ~Model3D();
 
     };
 } // namespace Model

@@ -2,7 +2,7 @@
 
 #include "debug/debug.h"
 
-#include <assimp/Importer.hpp>
+#include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
@@ -89,16 +89,15 @@ std::vector<Renderer::TextureGL*> Model::Model3D::loadMaterialTextures(aiMateria
 }
 
 Model::Model3D::Model3D(std::filesystem::path const& path)
-    : m_importer{new Assimp::Importer{}}
-    , m_directory_path{path}
+    : m_scene {aiImportFile(path.string().c_str(), aiProcess_Triangulate | aiProcess_FlipUVs)}
+    , m_directory_path {path}
 {
     m_directory_path = path;
     m_directory_path.remove_filename();
     m_model_name = path.filename().string();
     
-    m_scene = m_importer->ReadFile(path.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode) {
-        gWARNING(std::string{ "ASSIMP problem: cannot load model > " } + m_importer->GetErrorString());
+        gWARNING(std::string{ "ASSIMP problem: cannot load model > " } + aiGetErrorString());
         return;
     }
 
@@ -127,7 +126,15 @@ void Model::Model3D::drawMesh(aiMesh * mesh, Geometry::Transformation const & tr
 
 void Model::Model3D::processMesh(aiMesh * mesh) {
     collectBuffersInfo(mesh);
-    if ()
+    if (mesh->mMaterialIndex >= 0)
+    {
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        // TODO optimize this
+        std::vector<Renderer::TextureGL*> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE);
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        std::vector<Renderer::TextureGL*> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR);
+        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    }
 
 }
 
@@ -147,4 +154,9 @@ void Model::Model3D::retrieveAllMeshInfo(aiNode * node) {
     for (unsigned i = 0, numChildren = node->mNumChildren; i != numChildren; ++i) {
         retrieveAllMeshInfo(node->mChildren[i]);
     }
+}
+
+
+Model::Model3D::~Model3D() {
+    aiReleaseImport(m_scene);
 }
