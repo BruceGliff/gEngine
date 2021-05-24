@@ -1,26 +1,25 @@
 #pragma once
 
-namespace Property
-{
+namespace Property {
     class ICompound;
 }
 
 
-namespace Component
-{
-    class component_base
-    {
-        Property::ICompound * parent_ = nullptr;
-    public:
-        component_base() = default;
-        component_base(component_base const&)                = delete;
-        component_base(component_base&& other) noexcept;
-        component_base& operator= (component_base const&)    = delete;
-        component_base& operator= (component_base&&)        = delete;
+namespace Component {
 
-        Property::ICompound * GetParent() const noexcept;
-        void SetParent(Property::ICompound * parent) noexcept;
+class component_base {
+    Property::ICompound * parent_ {nullptr};
+public:
+    component_base() = default;
+    component_base(component_base const&)               = delete;
+    component_base(component_base&& other) noexcept;
+    component_base& operator= (component_base const&)   = delete;
+    component_base& operator= (component_base&&)        = delete;
 
-        virtual ~component_base() {}
-    };
-}
+    Property::ICompound * GetParent() const noexcept;
+    void SetParent(Property::ICompound * parent) noexcept;
+
+    virtual ~component_base() {}
+};
+
+} // namespace Component

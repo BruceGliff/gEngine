@@ -1,5 +1,4 @@
 // Class represent regular Color4F
-
 #pragma once
 
 #include "IMatNode.h"
@@ -36,6 +35,7 @@ public:
     // Construct Color by given array
     // lenght of data array can be less 4 floats
     Color(float const * data, unsigned size) {
+        size = size > 4 ? 4 : size;
         for (unsigned i = 0; i < size; ++i) {
             m_color.data[i] = data[i];
         }

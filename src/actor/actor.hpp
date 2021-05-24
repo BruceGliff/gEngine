@@ -3,8 +3,7 @@
 #include <functional>
 
 template <typename T, typename ... Args>
-Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args && ... args)
-{
+Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args && ... args) {
     if (!std::is_base_of<Component::component_base, T>::value) {
         gWARNING(std::string{"Attaching not component: "} + typeid(T).name());
         return *this;
@@ -29,8 +28,7 @@ Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args
 
 
     auto&& it = components.find(comp_name);
-    if (it != components.end())
-    {
+    if (it != components.end()) {
         // delete old components
         // TODO this is work part(maybe)
         // ComponentAggregation oldAggr = std::move(it->second);
@@ -67,8 +65,7 @@ void Actor::actor::removeProperty(std::list<Property::IProcessable *>::iterator 
 }
 
 template <typename componentType>
-componentType * Actor::actor::GetComponentByName(std::string const& comp_name) const noexcept
-{
+componentType * Actor::actor::GetComponentByName(std::string const& comp_name) const noexcept {
     auto&& it = components.find(comp_name);
     if (it != components.end()) {
         return static_cast<componentType *>(it->second.first);

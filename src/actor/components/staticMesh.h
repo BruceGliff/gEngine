@@ -1,9 +1,9 @@
 #pragma once
 
-#include <filesystem>
-
 #include "component_base.h"
 #include "properties/properties.h"
+
+#include <filesystem>
 
 #include <glm/vec3.hpp>
 
@@ -15,39 +15,34 @@ namespace Geometry  {
     class Transformation;
 }
 
-namespace Component
-{
-    class StaticMesh final : 
-                            public component_base, 
-                            public Property::IDrawable,
-                            public Property::IMoveable,
-                            public Property::IScalable
-    {
-        // Non owning ptr
-        Model::IModel * model;
-        
+namespace Component {
 
-    public:
+class StaticMesh final
+    : public component_base
+    , public Property::IDrawable
+    , public Property::IMoveable
+    , public Property::IScalable {
+    // Non owning ptr
+    Model::IModel * model {nullptr};
 
-        // Takes model from ResourceManager. If it is not found, when where will be nullptr
-        StaticMesh(std::string const& name);
+public:
 
-        // Attach already loaded model in static mesh
-        StaticMesh(Model::IModel * model);
+    // Takes model from ResourceManager. If it is not found, when where will be nullptr
+    StaticMesh(std::string const& name);
 
-        // Attach primitive.
-        // TODO check if it is needed
-        //StaticMesh(Model::Primitive const & primitive);
+    // Attach already loaded model in static mesh
+    StaticMesh(Model::IModel * model);
 
-        StaticMesh()                                = delete;
-        StaticMesh(StaticMesh const & )             = delete;
-        StaticMesh(StaticMesh&&)                    = delete;
-        StaticMesh & operator=(StaticMesh const &)  = delete;
-        StaticMesh & operator=(StaticMesh &&)       = delete;
+    StaticMesh()                                = delete;
+    StaticMesh(StaticMesh const & )             = delete;
+    StaticMesh(StaticMesh&&)                    = delete;
+    StaticMesh & operator=(StaticMesh const &)  = delete;
+    StaticMesh & operator=(StaticMesh &&)       = delete;
 
 
-        void Draw(Geometry::Transformation const & tr) override;
+    void Draw(Geometry::Transformation const & tr) override;
 
-        ~StaticMesh();
-    };
-}
+    ~StaticMesh();
+};
+
+} // namespace Component
