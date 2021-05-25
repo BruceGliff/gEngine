@@ -11,7 +11,7 @@
 namespace Material {
 
 class IMatNode {
-public: 
+public:
     virtual ~IMatNode() {}
 };
 
