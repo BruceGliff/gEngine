@@ -7,12 +7,11 @@
 
 // For unique_ptr
 #include "debug/debug.h"
-#include "renderer/TextureGL.h"
+#include "material/TextureGL.h"
 #include "renderer/ShaderProgram.h"
 #include "model/mesh_base.h"
 
-namespace Renderer
-{
+namespace Renderer {
     enum class ETextureType;
 }
 

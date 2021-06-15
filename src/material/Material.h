@@ -18,3 +18,38 @@
  * IMatNode * Ambient_occlusion
  * std::unordered_map<aiTexture_Type, std::vector<IMatNode *>> materials
  * */
+
+#pragma once
+
+#include <assimp/material.h>
+
+#include <unordered_map>
+
+
+namespace Material {
+
+class IMatNode;
+
+class Material {
+ IMatNode * Diffuse             {nullptr};
+ IMatNode * Specular            {nullptr};
+ IMatNode * Ambient             {nullptr};
+ IMatNode * Emissive            {nullptr};
+ IMatNode * Heigh               {nullptr};
+ IMatNode * Normals             {nullptr};
+ IMatNode * Shininess           {nullptr};
+ IMatNode * Opacity             {nullptr};
+ IMatNode * Dispacement         {nullptr};
+ IMatNode * LightMat            {nullptr};
+ IMatNode * Reflectio           {nullptr};
+ IMatNode * Base_colo           {nullptr};
+ IMatNode * Normal_camera       {nullptr};
+ IMatNode * Emission_colo       {nullptr};
+ IMatNode * Metalness           {nullptr};
+ IMatNode * Diffuse_roughness   {nullptr};
+ IMatNode * Ambient_occlusion   {nullptr};
+ std::unordered_map<aiTextureType, std::vector<IMatNode *>> materials {};
+    
+};
+
+} // namespace Material
