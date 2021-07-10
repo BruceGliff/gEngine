@@ -1,4 +1,4 @@
-// class represent raw array of pixels
+// class represents raw array of pixels
 
 #pragma once
 

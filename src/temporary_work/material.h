@@ -20,37 +20,76 @@ class contains all information about material
 
 #include "color.h"
 
-#include <assimp/material.h>
+//#include <assimp/material.h>
 
 #include <unordered_map>
+#include <iostream>
 
 namespace Material {
 
 class Texture;
-enum class MaterialType {
+enum class MaterialType : unsigned {
     Diffuse,
     Ambient,
     Specular
 };
 
-struct IMaterialNode final {
+class IMaterialNode final {
     Texture * m_pTexture {};
     Color m_color {};
-    bool isTexture = false;
+    //bool isTexture = false;
+
+public:
+    template <typename T>
+    T & get() {
+        if constexpr (std::is_same<Color, T>()) {
+            return m_color;
+        } else if constexpr (std::is_same<Texture, T>()) {
+            std::cout << "\nNULL? " << m_pTexture << "\nNULL!\n";
+            // TODO check if texture
+            return *m_pTexture;
+        }
+    }
+
+    IMaterialNode() {
+        std::cout <<  " def node constructor\n";}
 
     IMaterialNode(Texture * pTexture)
         : m_pTexture{pTexture}
-        , isTexture{true} 
-    {}
+        //, isTexture{true} 
+    {std::cout << "Node from texture" << std::endl;}
     IMaterialNode(Color const & color)
         : m_color {color}
-    {}
+    {std::cout << "Node from color\n";}
 
+    bool isTexture() {
+        return m_pTexture;
+    }
+
+    IMaterialNode(IMaterialNode const & other)
+        : m_pTexture{other.m_pTexture}
+        , m_color{other.m_color} {
+        std::cout << "cp ctr\n";
+    }
+
+    IMaterialNode(IMaterialNode && other)
+        : m_pTexture{other.m_pTexture}
+        , m_color{other.m_color} {
+        std::cout << "mv ctr\n";
+    }
+
+    IMaterialNode & operator=(IMaterialNode const & other) {
+        std::cout << "cp op\n";
+        m_pTexture = other.m_pTexture;
+        m_color = other.m_color;
+
+        return *this;
+    }
 };
 
 
 class Material final {
-    // Type is IDiffuse, ISpecular, IAmbient
+    // Type is Diffuse, Specular, Ambient
     std::unordered_map<MaterialType, IMaterialNode> m_material;
 // first work with DSA
     // pIMaterialNode Diffuse             {};
@@ -79,17 +118,25 @@ public:
     // material.Set(color, Ambient)
     // in case of texture ->    copy pointer
     // in case of color ->      copy color
-    void Set(IMaterialNode const & mElt, MaterialType mTy = MaterialType::Diffuse) {
-        m_material.emplace(mTy, mElt);
+    IMaterialNode & Set(IMaterialNode const & mElt, MaterialType mTy = MaterialType::Diffuse) {
+        auto [it, isOk] = m_material.insert_or_assign(mTy, mElt);
+        return it->second;
+        // TODO assertion on return value
     }
 
-    void Set(Color const & color, MaterialType mTy = MaterialType::Diffuse) {
-        m_material.emplace(mTy, color);
+    IMaterialNode & Set(Color const & color, MaterialType mTy = MaterialType::Diffuse) {
+        auto [it, isOk] = m_material.insert_or_assign(mTy, color);
+        return it->second;
     }
 
-    void Set(Texture * pTexture, MaterialType mTy = MaterialType::Diffuse) {
-        m_material.emplace(mTy, pTexture);
+    IMaterialNode & Set(Texture * pTexture, MaterialType mTy = MaterialType::Diffuse) {
+        auto [it, isOk] = m_material.insert_or_assign(mTy, pTexture);
+        return it->second;
     }
+
+    // IMaterialNode & operator[](MaterialType mTy) {
+        
+    // };
 
 
 };
