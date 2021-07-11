@@ -104,7 +104,7 @@ public:
     template <class NodeTy>
     pTexture * Set(pTexture texture) {
         auto [it, isOk] = m_Material.insert_or_assign(getCType<NodeTy>(), IMaterialNode{texture});
-        return it->second.get<pTexture>();
+        return it->second.get<pTexture>();//!!!!!!!!!!
     }
 
     template <typename NodeTy>
