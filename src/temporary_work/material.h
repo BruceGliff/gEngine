@@ -20,8 +20,6 @@ class contains all information about material
 
 #include "color.h"
 
-//#include <assimp/material.h>
-
 #include <unordered_map>
 #include <iostream>
 
@@ -40,27 +38,27 @@ class IMaterialNode final {
     //bool isTexture = false;
 
 public:
+    // getter of Color* or Texture*
     template <typename T>
-    T & get() {
+    T * get() {
         if constexpr (std::is_same<Color, T>()) {
-            return m_color;
+            // if Texture exist(that means no Color) -> return nullptr;
+            if (m_pTexture) {
+                return nullptr;
+            }
+            return &m_color;
         } else if constexpr (std::is_same<Texture, T>()) {
-            std::cout << "\nNULL? " << m_pTexture << "\nNULL!\n";
             // TODO check if texture
-            return *m_pTexture;
+            return m_pTexture;
         }
     }
 
-    IMaterialNode() {
-        std::cout <<  " def node constructor\n";}
+    IMaterialNode() {}
 
     IMaterialNode(Texture * pTexture)
-        : m_pTexture{pTexture}
-        //, isTexture{true} 
-    {std::cout << "Node from texture" << std::endl;}
+        : m_pTexture{pTexture} {}
     IMaterialNode(Color const & color)
-        : m_color {color}
-    {std::cout << "Node from color\n";}
+        : m_color {color} {}
 
     bool isTexture() {
         return m_pTexture;
@@ -68,21 +66,15 @@ public:
 
     IMaterialNode(IMaterialNode const & other)
         : m_pTexture{other.m_pTexture}
-        , m_color{other.m_color} {
-        std::cout << "cp ctr\n";
-    }
+        , m_color{other.m_color} {}
 
     IMaterialNode(IMaterialNode && other)
         : m_pTexture{other.m_pTexture}
-        , m_color{other.m_color} {
-        std::cout << "mv ctr\n";
-    }
+        , m_color{other.m_color} {}
 
     IMaterialNode & operator=(IMaterialNode const & other) {
-        std::cout << "cp op\n";
         m_pTexture = other.m_pTexture;
         m_color = other.m_color;
-
         return *this;
     }
 };
