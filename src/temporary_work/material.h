@@ -1,6 +1,5 @@
 /*
 class contains all information about material
-
 //*/
 
 /**
@@ -20,6 +19,8 @@ class contains all information about material
 
 #include "color.h"
 
+//#include <assimp/material.h>
+
 #include <unordered_map>
 #include <iostream>
 
@@ -38,27 +39,27 @@ class IMaterialNode final {
     //bool isTexture = false;
 
 public:
-    // getter of Color* or Texture*
     template <typename T>
-    T * get() {
+    T & get() {
         if constexpr (std::is_same<Color, T>()) {
-            // if Texture exist(that means no Color) -> return nullptr;
-            if (m_pTexture) {
-                return nullptr;
-            }
-            return &m_color;
+            return m_color;
         } else if constexpr (std::is_same<Texture, T>()) {
+            std::cout << "\nNULL? " << m_pTexture << "\nNULL!\n";
             // TODO check if texture
-            return m_pTexture;
+            return *m_pTexture;
         }
     }
 
-    IMaterialNode() {}
+    IMaterialNode() {
+        std::cout <<  " def node constructor\n";}
 
     IMaterialNode(Texture * pTexture)
-        : m_pTexture{pTexture} {}
+        : m_pTexture{pTexture}
+        //, isTexture{true} 
+    {std::cout << "Node from texture" << std::endl;}
     IMaterialNode(Color const & color)
-        : m_color {color} {}
+        : m_color {color}
+    {std::cout << "Node from color\n";}
 
     bool isTexture() {
         return m_pTexture;
@@ -66,15 +67,21 @@ public:
 
     IMaterialNode(IMaterialNode const & other)
         : m_pTexture{other.m_pTexture}
-        , m_color{other.m_color} {}
+        , m_color{other.m_color} {
+        std::cout << "cp ctr\n";
+    }
 
     IMaterialNode(IMaterialNode && other)
         : m_pTexture{other.m_pTexture}
-        , m_color{other.m_color} {}
+        , m_color{other.m_color} {
+        std::cout << "mv ctr\n";
+    }
 
     IMaterialNode & operator=(IMaterialNode const & other) {
+        std::cout << "cp op\n";
         m_pTexture = other.m_pTexture;
         m_color = other.m_color;
+
         return *this;
     }
 };
