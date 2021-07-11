@@ -5,3 +5,5 @@ This folder contains temporary idea of class relationships:
     Material
     Color
     ResourseManager
+
+TODO change all "std::filesystem::path const &" and "std::string const &" to std::string_view

@@ -17,13 +17,8 @@ namespace Renderer {
 namespace Material {
 
 class Texture final {
-    //raw_texture m_Texture {};
+    unsigned m_ID {};
 
-    unsigned m_ID {0};
-
-    // loads texture on GPU
-    void prepairTexture(unsigned /* GLenum */ Filter,
-                        unsigned /* GLenum */ WrapMode) noexcept {}; // if it is failed - just terminate
 public:
 
     Texture() = default;
@@ -34,11 +29,11 @@ public:
 
     Texture(  std::filesystem::path const& Path,
                 unsigned /* GLenum */ Filter /* = GL_LINEAR */ ,
-                unsigned /* GLenum */ WrapMode /* = GL_CLAMP_TO_EDGE */) noexcept {std::cout << "decoy " << Path.string() << "\n";};
+                unsigned /* GLenum */ WrapMode /* = GL_CLAMP_TO_EDGE */) noexcept; //if it fails - just terminate
 
-    ~Texture() {};
+    ~Texture();
 
-    int dump() { return 4;}
+    void activateTexture(std::string const & prefix, int offset/*,  Shader*/);
 };
 
 } // namespace Material

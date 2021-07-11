@@ -8,6 +8,8 @@ project(${PROJECT_NAME})
 # 2. set all .cc sources files what have .h
 set(SOURCES_CC
 	main.cc
+	raw_texture.cc
+	texture.cc
 
 )
 
