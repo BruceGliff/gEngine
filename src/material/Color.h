@@ -1,12 +1,11 @@
-// Class represent regular Color4F
 #pragma once
 
-#include "IMatNode.h"
+#include <cstring>
+#include <ostream>
 
 namespace Material {
 
-class Color
-    : public IMatNode {
+class Color {
 public:
     // 4 colors: red, green, blue, alpha
     // and data[4] aggregated
@@ -17,6 +16,19 @@ public:
         float data[4] {};
     } m_color;
 
+    Color() = default;
+    Color(Color const & other) noexcept
+        : Color {other.m_color.data}
+    {}
+    Color(Color && other) noexcept
+        : Color {other.m_color.data}
+    {}
+    Color & operator=(Color const & other) noexcept {
+        std::memcpy(m_color.data, other.m_color.data, sizeof(m_color));
+    }
+    Color & operator=(Color && other) noexcept {
+        std::memcpy(m_color.data, other.m_color.data, sizeof(m_color));
+    }
 
     // Construct Color by given components
     Color(float r, float g, float b, float a = 1.f) {
@@ -28,19 +40,19 @@ public:
     // Construct Color by given array
     // It is essential to use data with at least 16byte width
     Color(float const * data) {
-        for (unsigned i = 0; i != 4; ++i) {
-            m_color.data[i] = data[i];
-        }
+        std::memcpy(m_color.data, data, sizeof(m_color));
     }
     // Construct Color by given array
     // lenght of data array can be less 4 floats
     Color(float const * data, unsigned size) {
         size = size > 4 ? 4 : size;
-        for (unsigned i = 0; i < size; ++i) {
-            m_color.data[i] = data[i];
-        }
+        std::memcpy(m_color.data, data, size * sizeof(float));
     }
-
 };
+
+std::ostream & operator<<(std::ostream & os, Color const & color) {
+    os << "Color: ["color.m_color.r << ", " << color.m_color.g << ", " << color.m_color.b << ", " << color.m_color.a << "]";
+    return os;
+}
 
 } // namespace Material
