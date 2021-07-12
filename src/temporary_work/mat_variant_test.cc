@@ -1,7 +1,6 @@
-#include <iostream>
 #include <variant>
 #include <unordered_map>
-#include <typeindex>
+#include <iostream>
 
 struct Color {
     float a{1.f},b{2.f},c{3.f},d{4.f};
@@ -52,28 +51,16 @@ template <> Diffuse * getCType<Diffuse>() { return &ColorTypesHolder.m_dif; };
 template <> Ambient * getCType<Ambient>() { return &ColorTypesHolder.m_amb; };
 
 
-
-// class MyHashFunction {
-// public:
-//     size_t operator()(IMaterialComponentTy const & comp) const {
-//         return std::hash<int>()(comp.getID());
-//     }
-// };
-
 namespace std {
-
-  template <>
-  struct hash<IMaterialComponentTy>
-  {
-    std::size_t operator()(IMaterialComponentTy const & comp) const
-    {
+  template <> struct hash<IMaterialComponentTy> {
+    std::size_t operator()(IMaterialComponentTy const & comp) const {
       return std::hash<int>()(comp.getID());
     }
   };
 
 }
 
-class IMaterialNode final {
+struct IMaterialNode final {
     std::variant<Color, pTexture> m_Component {};
 
 public:
@@ -85,10 +72,10 @@ public:
 
     template <typename T>
     T * get() {
-        if constexpr(std::is_same<T, Color>::value) {
+        if constexpr (std::is_same<Color, T>::value) {
             return std::get_if<Color>(&m_Component);
         }
-        if constexpr(std::is_same<T, pTexture>::value) {
+        if constexpr(std::is_same<pTexture, T>::value) {
             return std::get_if<pTexture>(&m_Component);// TODO:: make *std::get_if and addition check on nullptr
         }
 
@@ -98,28 +85,39 @@ public:
 
 class Material final {
     // map of Diffuse and Color/Texture
-    std::unordered_map<IMaterialComponentTy *, IMaterialNode> m_Material;
+    typedef std::unordered_map<IMaterialComponentTy *, IMaterialNode> MaterialMap;
+    MaterialMap m_Material;
 
 public:
     template <class NodeTy>
     pTexture * Set(pTexture texture) {
-        auto [it, isOk] = m_Material.insert_or_assign(getCType<NodeTy>(), IMaterialNode{texture});
-        return it->second.get<pTexture>();//!!!!!!!!!!
+        auto [it, isOk] = m_Material.insert_or_assign(getCType<NodeTy>(), texture);
+        std::cout << it->first->getID() << std::endl;
+        pTexture * p = std::get_if<pTexture>(&it->second.m_Component);// there will be **p
+        if (p) return p;
+        else return nullptr;
     }
 
     template <typename NodeTy>
     Color * Set(Color const & color) {
-        auto [it, isOk] = m_Material.insert_or_assign(  getCType<NodeTy>(), // Diffuse in map
-                                                        color                            // Color
-                                                      );
-        //return it->second.get<Color>();
-        return nullptr;
+        auto [it, isOk] = m_Material.insert_or_assign(getCType<NodeTy>(), color);
+        return it->second.template get<Color>();
     }
 
     void process() {
         for (auto && n : m_Material) {
             
         }
+    }
+
+    template <typename NodeTy>
+    IMaterialNode & Get() {
+        MaterialMap::iterator it = m_Material.find(getCType<NodeTy>());
+        if (it == m_Material.end()) {
+            std::cout << "No such TYPE" << typeid(NodeTy).name() << "\n";
+        }
+
+        return it->second;
     }
 
 };
@@ -130,7 +128,10 @@ int main() {
     mat.Set<Diffuse>(pTexture{});
     Color & tmp = *mat.Set<Ambient>(Color{});
 
-    std::cout << tmp.c << std::endl;
+    IMaterialNode & n = mat.Get<Ambient>();
+    std::cout << n.get<Color>()->b << std::endl;
+
+    //std::cout << tmp.c << std::endl;
 
     
 }
