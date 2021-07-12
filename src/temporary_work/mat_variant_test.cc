@@ -52,28 +52,16 @@ template <> Diffuse * getCType<Diffuse>() { return &ColorTypesHolder.m_dif; };
 template <> Ambient * getCType<Ambient>() { return &ColorTypesHolder.m_amb; };
 
 
-
-// class MyHashFunction {
-// public:
-//     size_t operator()(IMaterialComponentTy const & comp) const {
-//         return std::hash<int>()(comp.getID());
-//     }
-// };
-
 namespace std {
-
-  template <>
-  struct hash<IMaterialComponentTy>
-  {
-    std::size_t operator()(IMaterialComponentTy const & comp) const
-    {
+  template <> struct hash<IMaterialComponentTy> {
+    std::size_t operator()(IMaterialComponentTy const & comp) const {
       return std::hash<int>()(comp.getID());
     }
   };
 
 }
 
-class IMaterialNode final {
+struct IMaterialNode final {
     std::variant<Color, pTexture> m_Component {};
 
 public:
@@ -85,7 +73,7 @@ public:
 
     template <typename T>
     T * get() {
-        if constexpr(std::is_same<T, Color>::value) {
+        if (std::is_same<T, Color>::value) {
             return std::get_if<Color>(&m_Component);
         }
         if constexpr(std::is_same<T, pTexture>::value) {
@@ -103,17 +91,18 @@ class Material final {
 public:
     template <class NodeTy>
     pTexture * Set(pTexture texture) {
-        auto [it, isOk] = m_Material.insert_or_assign(getCType<NodeTy>(), IMaterialNode{texture});
-        return it->second.get<pTexture>();//!!!!!!!!!!
+        auto [it, isOk] = m_Material.insert_or_assign(getCType<NodeTy>(), texture);
+        pTexture * p = std::get_if<pTexture>(&it->second.m_Component);// there will be **p
+        if (p) return p;
+        else return nullptr;
     }
 
     template <typename NodeTy>
     Color * Set(Color const & color) {
         auto [it, isOk] = m_Material.insert_or_assign(  getCType<NodeTy>(), // Diffuse in map
-                                                        color                            // Color
+                                                        color               // Color
                                                       );
-        //return it->second.get<Color>();
-        return nullptr;
+        return it->second.get<Color>();
     }
 
     void process() {
