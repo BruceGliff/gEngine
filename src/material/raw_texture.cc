@@ -2,11 +2,10 @@
 
 #include "raw_texture.h"
 
-#include "../process/global.h"
-#include "../manager/ResourceManager.h"
-
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <filesystem>
 
 #define STBI_ONLY_PNG
 #define STBI_ONLY_JPEG
@@ -15,18 +14,19 @@
 
 using namespace Material;
 
-raw_texture::raw_texture(std::filesystem::path const& Path) noexcept {
+raw_texture::raw_texture(std::filesystem::path const& Path) noexcept 
+    : m_TexName {Path.filename().string()} {
     // Load texture upside down
     stbi_set_flip_vertically_on_load(true);
     m_Data = stbi_load(Path.string().c_str(), &m_Width, &m_Height, &m_Channels, 0);
-
-    if (!m_Data) {
+    
+    m_IsNoNeedToDelete = !m_Data;
+    if (m_IsNoNeedToDelete) {
         gWARNING(std::string{ "Can not load texture: " } + Path.string());
         generateErrorTexture();
     }
-    m_IsNoNeedToDelete = false;
 }
-Resources::Texture_base::Texture_base() noexcept {
+raw_texture::raw_texture() noexcept {
     generateErrorTexture();
 }
 
@@ -58,8 +58,12 @@ raw_texture::ret_data const & raw_texture::operator()() const noexcept {
 
 void raw_texture::DumpTexture() const {
     static unsigned Indx = 0;
-    static std::filesystem::path const & ExPath = GLOBAL::GetResManager().getPathToExucutable();
-    std::ofstream ppm{ExPath / std::string{"out[" + std::to_string(Indx++) + "]"}, std::ios::binary };
+    // TODO FIX THIS AFTER RESMGR!
+    static std::filesystem::path const & ExPath = "C:\\Code\\gEngine\\build\\bin\\Debug";//GLOBAL::GetResManager().getPathToExucutable();
+
+    std::string const OutFormat{ "out" + std::string{m_IsNoNeedToDelete ? "_error" :  ""} + "_" + m_TexName + "[" + std::to_string(Indx++) + "].ppm"};
+
+    std::ofstream ppm{ExPath / OutFormat, std::ios::binary };
     ppm << "P6\n" << m_Width << ' ' << m_Height << '\n' << 255 << std::endl;
     for (int i = 0; i != m_Height; ++i) {
         for (int j = 0; j != m_Width; ++j) {

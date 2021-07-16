@@ -4,9 +4,11 @@
 #include <sstream>
 #include <fstream>
 
-std::string Resources::ResourcesManager::readFile(std::filesystem::path const& relativePath) const
+using namespace Resources;
+
+std::string ResourcesManager::readFile(std::filesystem::path const& relativePath) const
 {
-    std::ifstream file{ path_to_exec / relativePath, std::ios::in | std::ios::binary};
+    std::ifstream file{ m_PathToExecutable / relativePath, std::ios::in | std::ios::binary};
     if (!file.is_open())
     {
         gERROR(std::string{ "Cannot read file: " + relativePath.lexically_normal().string() });
@@ -18,86 +20,84 @@ std::string Resources::ResourcesManager::readFile(std::filesystem::path const& r
     return buffer.str();
 }
 
-Resources::ResourcesManager::ResourcesManager(std::filesystem::path const& execPath) : 
-    path_to_exec{ std::filesystem::path{execPath}.remove_filename() }
+ResourcesManager::ResourcesManager(std::filesystem::path const& execPath) : 
+    m_PathToExecutable{ std::filesystem::path{execPath}.remove_filename() }
 {}
 
 
-Renderer::ShaderProgram * Resources::ResourcesManager::loadShaders( std::string const& shaderName, 
+Renderer::ShaderProgram * ResourcesManager::loadShaders( std::string const& shaderName, 
                                                                     std::filesystem::path const& vertexPath, 
-                                                                    std::filesystem::path const& fragmentPath)
-{
-    auto && it = shaderPrograms.find(shaderName);
-    if (it != shaderPrograms.end())
+                                                                    std::filesystem::path const& fragmentPath) {
+    auto && it = m_ShaderPrograms.find(shaderName);
+    if (it != m_ShaderPrograms.end())
         return it->second.get(); 
 
     std::string const vertexCode{ readFile(vertexPath) };
     std::string const fragmentCode{ readFile(fragmentPath) };
     // shader can be not compiled!
-    return shaderPrograms.emplace(  shaderName, std::make_unique<Renderer::ShaderProgram>(vertexCode, fragmentCode))
-                                    .first->second.get();
+    return m_ShaderPrograms.emplace(  shaderName, std::make_unique<Renderer::ShaderProgram>(vertexCode, fragmentCode))
+                                      .first->second.get();
 }
 
-Renderer::ShaderProgram * Resources::ResourcesManager::getShaderProgram(std::string const& shaderName) const noexcept
+Renderer::ShaderProgram * ResourcesManager::getShaderProgram(std::string const& shaderName) const noexcept
 {
-    ShaderProgramsMap::const_iterator it = shaderPrograms.find(shaderName);
-    if (it != shaderPrograms.end())
-    {
+    ShaderProgramsMap::const_iterator it = m_ShaderPrograms.find(shaderName);
+    if (it != m_ShaderPrograms.end())
         return it->second.get();
-    }
 
     gWARNING(std::string("No shader program with name: ") + shaderName);
     return nullptr;
 }
 
-Renderer::TextureGL * Resources::ResourcesManager::loadTexture() {
-    TexturesMap::const_iterator it = textures.find("empty");
-    if (it == textures.end()) {
-        return textures.emplace("empty", std::make_unique<Renderer::TextureGL>())
+Material::Texture * ResourcesManager::loadTexture() {
+    TextureMap::const_iterator it = m_Textures.find("empty");
+    if (it == m_Textures.end()) {
+        return m_Textures.emplace("empty", std::make_unique<Material::Texture>())
                                 .first->second.get();
     }
     return it->second.get();
 }
 
-Renderer::TextureGL * Resources::ResourcesManager::loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType)
-{
-    std::filesystem::path const absolutePath{ path_to_exec / relevantPath };
-    
-    TexturesMap::const_iterator it = textures.find(absolutePath);
+Material::Texture * ResourcesManager::loadTexture(   std::filesystem::path const& relevantPath,
+                                                                std::string const & texture_name,
+                                                                GLenum Filter,
+                                                                GLenum WrapMode) {
+    if (Material::Texture * pT = loadTexture(texture_name, true))
+        return pT;
 
-    // if texture does not exist, then load it
-    if (it == textures.end())
-        return textures.emplace(absolutePath, std::make_unique<Renderer::TextureGL>(absolutePath, texType))
-                                .first->second.get();
+    return m_Textures.emplace(texture_name, std::make_unique<Material::Texture>(relevantPath, Filter, WrapMode)).first->second.get();
+}
 
-    // if texture already exists, return it
+Material::Texture * ResourcesManager::loadTexture(std::string const & texture_name, bool no_warning = false) {
+    TextureMap::const_iterator it = m_Textures.find(texture_name);
+    if (it == m_Textures.end()) {
+        if (!no_warning)
+            gWARNING("Attemp to get unexisted texture: " + texture_name);
+
+        return nullptr;
+    }
     return it->second.get();
 }
 
-Model::IModel * Resources::ResourcesManager::getModel(std::string const& modelName) const noexcept
+// its loads existed or generates empty material
+Material::Material * ResourcesManager::loadMaterial(std::string const & material_name) {
+    MaterialMap::const_iterator it = m_Materials.find(material_name);
+    if (it == m_Materials.end())
+        return m_Materials.emplace(material_name, std::make_unique<Material::Material>()).first->second.get();
+    return it->second.get();
+}
+
+Model::IModel * ResourcesManager::getModel(std::string const& modelName) const noexcept
 {
-    ModelMap::const_iterator it = models.find(modelName);
+    ModelMap::const_iterator it = m_Models.find(modelName);
     // if model does not exist, then load it
-    if (it != models.end())
+    if (it != m_Models.end())
         return it->second.get();
 
     gWARNING(std::string{ "No model with name: " } + modelName);
     return nullptr;
 }
 
-Renderer::TextureGL * Resources::ResourcesManager::getTexture(std::string const& textureName) const noexcept
-{
-    TexturesMap::const_iterator it = textures.find(textureName);
-    if (it != textures.end())
-    {
-        return it->second.get();
-    }
-
-    gWARNING(std::string("No texture with name: ") + textureName);
-    return nullptr;
-}
-
-std::filesystem::path const& Resources::ResourcesManager::getPathToExucutable() const
-{
-    return path_to_exec;
+std::filesystem::path const& ResourcesManager::getPathToExucutable() const {
+    return m_PathToExecutable;
 }

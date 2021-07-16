@@ -1,5 +1,3 @@
-// class represent raw array of pixels
-
 #pragma once
 
 namespace std {
@@ -10,17 +8,20 @@ namespace std {
 
 namespace Material {
 
+// class represent raw array of pixels
 class raw_texture {
     // flag if data cant be deleted (if errors occures or it has been already deleted)
-    bool m_IsNoNeedToDelete = true;
+    bool m_IsNoNeedToDelete {true};
     // if errors occure white texture loads
     unsigned char m_WhiteErrorTexture[6] = { 255, 255, 255, 0, 0, 0};
     void generateErrorTexture() noexcept;
 
-    unsigned char* m_Data = 0;
-    int m_Channels = 0;
-    int m_Width = 0;
-    int m_Height = 0;
+    unsigned char* m_Data {};
+    int m_Channels {};
+    int m_Width {};
+    int m_Height {};
+
+    std::string m_TexName {};
 
 public:
     // structure for returning texture data
