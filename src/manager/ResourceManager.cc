@@ -90,7 +90,6 @@ Material::Material * ResourcesManager::loadMaterial(std::string const & material
 Model::IModel * ResourcesManager::getModel(std::string const& modelName) const noexcept
 {
     ModelMap::const_iterator it = m_Models.find(modelName);
-    // if model does not exist, then load it
     if (it != m_Models.end())
         return it->second.get();
 

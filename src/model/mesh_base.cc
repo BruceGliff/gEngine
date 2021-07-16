@@ -3,33 +3,29 @@
 #include "../renderer/ShaderProgram.h"
 
 #include <glad/glad.h>
-#include "renderer/TextureGL.h"
+//#include "../material/Texture.h"
 
-Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned int> const& indices, std::vector<Renderer::TextureGL*> const& textures) :
-    m_vertices(vertices),
-    m_indices(indices),
-    m_textures(textures)
-{
+Model::Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<unsigned> const& indices)
+    : m_vertices(vertices)
+    , m_indices(indices) {
     setupMesh();
 }
-Model::Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<unsigned int> && indices, std::vector<Renderer::TextureGL*> && textures) :
-    m_vertices(std::move(vertices)),
-    m_indices(std::move(indices)),
-    m_textures(std::move(textures))
-{
+Model::Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<unsigned> && indices)
+    : m_vertices(std::move(vertices))
+    , m_indices(std::move(indices)) {
     setupMesh();
 }
 
-void Model::Mesh::Draw(Renderer::ShaderProgram const & shader) const
-{
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
+void Model::Mesh::Draw(Renderer::ShaderProgram const & shader) const {
+    // PROCESS TEXTURES
+    // unsigned int diffuseNr = 1;
+    // unsigned int specularNr = 1;
 
-    for (unsigned int i = 0; i != m_textures.size(); i++)
-    {
-        m_textures[i]->activateTexture(i, shader);
-    }
-    glActiveTexture(GL_TEXTURE0);
+    // for (unsigned int i = 0; i != m_textures.size(); i++)
+    // {
+    //     m_textures[i]->activateTexture(i, shader);
+    // }
+    // glActiveTexture(GL_TEXTURE0);
 
     // draw mesh
     glBindVertexArray(VAO);
@@ -40,8 +36,7 @@ void Model::Mesh::Draw(Renderer::ShaderProgram const & shader) const
 }
 
 
-void Model::Mesh::setupMesh()
-{
+void Model::Mesh::setupMesh() {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);

@@ -75,7 +75,7 @@ namespace Resources {
         // Loads promitives or model3d depends on type T
         template<typename T, typename ... Args>
         Model::IModel * loadModel(Args && ... args);
-        // Gets model by name. Return null if not found
+        // Gets model by name. Return null if not found. Usually for Model3D
         Model::IModel * getModel(std::string const& name) const noexcept;
 
         std::filesystem::path const& getPathToExucutable() const;

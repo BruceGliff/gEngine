@@ -9,7 +9,8 @@
 
 namespace Model {
 
-    class Primitive : public IModel{
+    class Primitive
+        : public IModel {
     protected:
         Primitive(  std::vector<Renderer::TextureGL*> const & texturesIn,
                     std::string const & name);
