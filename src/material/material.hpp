@@ -7,7 +7,7 @@ T * IMaterialNode::get() noexcept {
         Texture ** ppTexture = std::get_if<Texture*>(&m_Component);
         return ppTexture ? *ppTexture : nullptr;
     }
-    gWARNING("Getting non Color and non Texture: " + typeid(T).name());
+    gWARNING(std::string{"Getting non Color and non Texture: "} + typeid(T).name());
     return nullptr;
 }
 
@@ -36,6 +36,6 @@ template <typename NodeTy>
 IMaterialNode & Material::Get() {
     MaterialMap::iterator it = m_Material.find(getComponentTy<NodeTy>());
     if (it == m_Material.end())
-      gERROR("No such Component's type in material: " + typeid(NodeTy).name());
+      gERROR(std::string{"No such Component's type in material: "} + typeid(NodeTy).name());
     return it->second;
 }

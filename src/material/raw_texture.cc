@@ -1,6 +1,7 @@
 #include "debug/debug.h"
 
 #include "raw_texture.h"
+#include "../manager/ResourceManager.h"
 
 #include <iostream>
 #include <fstream>
@@ -59,7 +60,7 @@ raw_texture::ret_data const & raw_texture::operator()() const noexcept {
 void raw_texture::DumpTexture() const {
     static unsigned Indx = 0;
     // TODO FIX THIS AFTER RESMGR!
-    static std::filesystem::path const & ExPath = "C:\\Code\\gEngine\\build\\bin\\Debug";//GLOBAL::GetResManager().getPathToExucutable();
+    static std::filesystem::path const & ExPath = GLOBAL::GetResManager().getPathToExucutable();
 
     std::string const OutFormat{ "out" + std::string{m_IsNoNeedToDelete ? "_error" :  ""} + "_" + m_TexName + "[" + std::to_string(Indx++) + "].ppm"};
 

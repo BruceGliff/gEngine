@@ -60,6 +60,8 @@ set(SOURCES_CC
 	src/material/material.cc
 	src/material/raw_texture.cc
 	src/material/texture.cc
+#objects
+	src/objects/backpack.cc
 )
 
 # 3. generate .h names

@@ -12,7 +12,7 @@
 #include "geometry/geometry_base.h"
 #include "model/model3D.h"
 
-std::string const SHADER_PATH{ "res/shaders/" };
+#include "objects/backpack.h"
 
 int main(int argc, char * argv[])
 {
@@ -22,18 +22,17 @@ int main(int argc, char * argv[])
 
     Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
     // TODO move shader program to actor?staticMesh?
-    auto pObjShaderProgram = resMng.loadShaders("DefaultObjShader", SHADER_PATH + "blending/model.vs", SHADER_PATH + "blending/model.fs");
-    if (!pObjShaderProgram->IsCompiled())
-    {
+    auto pObjShaderProgram = resMng.loadShaders("DefaultObjShader",
+                                                "res/shaders/model_refactoring/model.vs",
+                                                "res/shaders/model_refactoring/model.fs");
+    if (!pObjShaderProgram->IsCompiled()) {
         // TODO Check as it should be in global destructor
         glfwTerminate();
         gERROR("Creating objShader program in main");
     }
     
-    Scene.Spawn<Actor::actor>()->
-                            AttachComponent<Component::StaticMesh>("gun", 
-                                resMng.loadModel<Model::Model3D>("gun", "res/models/gun/Handgun_obj.obj")).
-                            SetScale({0.5,0.5,0.5});
+
+    Scene.Spawn<ABackpack>();
 
     Actor::actor player_actor{};
     player_actor.AttachComponent<Component::camera>("camera");

@@ -6,6 +6,7 @@
 
 #include <variant>
 #include <unordered_map>
+#include <string>
 
 namespace Renderer {
     class ShaderProgram;
@@ -24,12 +25,8 @@ class Texture;
 
 // Return ptr to component type.
 // Diffuse*, Ambient*, Specular*.
-// Or nullptr in case if type is not defined in ColorComponent.cc
 template <typename T>
-T * getComponentTy() {
-  gWARNING("Type not defined" + typeid(T).name());
-  return nullptr;
-}
+T * getComponentTy();
 
 // Class represents type of MaterialComponent stored in node.
 // It is Color or Texture*

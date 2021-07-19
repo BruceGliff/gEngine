@@ -22,6 +22,7 @@ Texture::Texture() noexcept {
 void Texture::prepairTexture(raw_texture const & texture_data,
                             GLenum Filter,
                             GLenum WrapMode) {
+    texture_data.DumpTexture();
     int TextureMode = 0;
     switch (texture_data().Channels) {
         case 4:

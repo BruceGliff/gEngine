@@ -73,7 +73,7 @@ public:
     // Reattaches component if it already exists and deletes old
     // Call: AttachComponent<Component::type>(name, params for type constructor)
     template <typename T, typename ... Args>
-    actor & AttachComponent(std::string const & comp_name, Args && ... args);
+    T * AttachComponent(std::string const & comp_name, Args && ... args);
 
     // Get component by name. Return nullptr if it was not found. Did not delete from actor
     Component::component_base * GetComponent(std::string const& comp_name) const noexcept;

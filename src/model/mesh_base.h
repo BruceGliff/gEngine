@@ -11,7 +11,6 @@
 // forward delaration
 namespace Renderer {
     class ShaderProgram;
-    class Texture;
 } // namespace Renderer
 
 namespace Model {

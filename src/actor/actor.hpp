@@ -3,10 +3,10 @@
 #include <functional>
 
 template <typename T, typename ... Args>
-Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args && ... args) {
+T * Actor::actor::AttachComponent(std::string const & comp_name, Args && ... args) {
     if (!std::is_base_of<Component::component_base, T>::value) {
         gWARNING(std::string{"Attaching not component: "} + typeid(T).name());
-        return *this;
+        return nullptr;
     }
     
     // first - make pair
@@ -39,11 +39,11 @@ Actor::actor & Actor::actor::AttachComponent(std::string const & comp_name, Args
         std::swap(aggregation, it->second);
         delete aggregation.first;
 
-        return *this;
+        return p;
     }
 
     components[comp_name] = std::move(aggregation);
-    return *this;
+    return p;
 
 }
 
