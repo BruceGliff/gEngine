@@ -6,7 +6,7 @@ namespace std {
     } // namespace filesystem
 } // namespace std
 
-namespace Material {
+namespace MaterialNS {
 
 // class represent raw array of pixels
 class raw_texture {

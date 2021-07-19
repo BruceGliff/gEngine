@@ -6,8 +6,7 @@
 
 using namespace Resources;
 
-std::string ResourcesManager::readFile(std::filesystem::path const& relativePath) const
-{
+std::string ResourcesManager::readFile(std::filesystem::path const& relativePath) const {
     std::ifstream file{ m_PathToExecutable / relativePath, std::ios::in | std::ios::binary};
     if (!file.is_open())
     {
@@ -21,9 +20,7 @@ std::string ResourcesManager::readFile(std::filesystem::path const& relativePath
 }
 
 ResourcesManager::ResourcesManager(std::filesystem::path const& execPath) : 
-    m_PathToExecutable{ std::filesystem::path{execPath}.remove_filename() }
-{}
-
+    m_PathToExecutable{ std::filesystem::path{execPath}.remove_filename() } {}
 
 Renderer::ShaderProgram * ResourcesManager::loadShaders( std::string const& shaderName, 
                                                                     std::filesystem::path const& vertexPath, 
@@ -39,8 +36,7 @@ Renderer::ShaderProgram * ResourcesManager::loadShaders( std::string const& shad
                                       .first->second.get();
 }
 
-Renderer::ShaderProgram * ResourcesManager::getShaderProgram(std::string const& shaderName) const noexcept
-{
+Renderer::ShaderProgram * ResourcesManager::getShaderProgram(std::string const& shaderName) const noexcept {
     ShaderProgramsMap::const_iterator it = m_ShaderPrograms.find(shaderName);
     if (it != m_ShaderPrograms.end())
         return it->second.get();
@@ -49,26 +45,26 @@ Renderer::ShaderProgram * ResourcesManager::getShaderProgram(std::string const& 
     return nullptr;
 }
 
-Material::Texture * ResourcesManager::loadTexture() {
+MaterialNS::Texture * ResourcesManager::loadTexture() {
     TextureMap::const_iterator it = m_Textures.find("empty");
     if (it == m_Textures.end()) {
-        return m_Textures.emplace("empty", std::make_unique<Material::Texture>())
+        return m_Textures.emplace("empty", std::make_unique<MaterialNS::Texture>())
                                 .first->second.get();
     }
     return it->second.get();
 }
 
-Material::Texture * ResourcesManager::loadTexture(   std::filesystem::path const& relevantPath,
+MaterialNS::Texture * ResourcesManager::loadTexture(   std::filesystem::path const& relevantPath,
                                                                 std::string const & texture_name,
                                                                 GLenum Filter,
                                                                 GLenum WrapMode) {
-    if (Material::Texture * pT = loadTexture(texture_name, true))
+    if (MaterialNS::Texture * pT = loadTexture(texture_name, true))
         return pT;
 
-    return m_Textures.emplace(texture_name, std::make_unique<Material::Texture>(relevantPath, Filter, WrapMode)).first->second.get();
+    return m_Textures.emplace(texture_name, std::make_unique<MaterialNS::Texture>(relevantPath, Filter, WrapMode)).first->second.get();
 }
 
-Material::Texture * ResourcesManager::loadTexture(std::string const & texture_name, bool no_warning = false) {
+MaterialNS::Texture * ResourcesManager::loadTexture(std::string const & texture_name, bool no_warning = false) {
     TextureMap::const_iterator it = m_Textures.find(texture_name);
     if (it == m_Textures.end()) {
         if (!no_warning)
@@ -80,15 +76,14 @@ Material::Texture * ResourcesManager::loadTexture(std::string const & texture_na
 }
 
 // its loads existed or generates empty material
-Material::Material * ResourcesManager::loadMaterial(std::string const & material_name) {
+MaterialNS::Material * ResourcesManager::loadMaterial(std::string const & material_name) {
     MaterialMap::const_iterator it = m_Materials.find(material_name);
     if (it == m_Materials.end())
-        return m_Materials.emplace(material_name, std::make_unique<Material::Material>()).first->second.get();
+        return m_Materials.emplace(material_name, std::make_unique<MaterialNS::Material>()).first->second.get();
     return it->second.get();
 }
 
-Model::IModel * ResourcesManager::getModel(std::string const& modelName) const noexcept
-{
+Model::IModel * ResourcesManager::getModel(std::string const& modelName) const noexcept {
     ModelMap::const_iterator it = m_Models.find(modelName);
     if (it != m_Models.end())
         return it->second.get();

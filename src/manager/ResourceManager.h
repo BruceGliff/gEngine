@@ -21,10 +21,10 @@ namespace Resources {
         typedef std::unordered_map<std::string, std::unique_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
         ShaderProgramsMap m_ShaderPrograms;
         // Map of the textures
-        typedef std::unordered_map<std::string, std::unique_ptr<Material::Texture>> TextureMap;
+        typedef std::unordered_map<std::string, std::unique_ptr<MaterialNS::Texture>> TextureMap;
         TextureMap m_Textures;
         // Map of the materials
-        typedef std::unordered_map<std::string, std::unique_ptr<Material::Material>> MaterialMap;
+        typedef std::unordered_map<std::string, std::unique_ptr<MaterialNS::Material>> MaterialMap;
         MaterialMap m_Materials;
         // Map of models
         typedef std::unordered_map<std::string, std::unique_ptr<Model::IModel>> ModelMap;
@@ -61,16 +61,16 @@ namespace Resources {
         Renderer::ShaderProgram * getShaderProgram(std::string const& shaderProgramName) const noexcept;
 
         // Loads texture
-        Material::Texture * loadTexture(std::filesystem::path const& relevantPath, std::string const & texture_name,
+        MaterialNS::Texture * loadTexture(std::filesystem::path const& relevantPath, std::string const & texture_name,
                                         GLenum Filter = GL_LINEAR,
                                         GLenum WrapMode = GL_CLAMP_TO_EDGE);
         // Loads default error texture
-        Material::Texture * loadTexture();
+        MaterialNS::Texture * loadTexture();
         // loads texture what already has been loaded. Return nullptr if there is no such texture
-        Material::Texture * loadTexture(std::string const & texture_name, bool no_warning = false);
+        MaterialNS::Texture * loadTexture(std::string const & texture_name, bool no_warning = false);
 
         // Gets or generates material
-        Material::Material * loadMaterial(std::string const & material_name);
+        MaterialNS::Material * loadMaterial(std::string const & material_name);
 
         // Loads promitives or model3d depends on type T
         template<typename T, typename ... Args>

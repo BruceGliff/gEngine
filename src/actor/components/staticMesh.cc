@@ -21,8 +21,11 @@ StaticMesh::StaticMesh(Model::IModel * model)
 
 StaticMesh::~StaticMesh() {}
 
-Material::Material * StaticMesh::AttachMaterial(Material::Material * material) noexcept {
+MaterialNS::Material * StaticMesh::AttachMaterial(MaterialNS::Material * material) noexcept {
+    // TODO check for
+    // return m_Material = material;
     m_Material = material;
+    return m_Material;
 }
 
 void StaticMesh::Draw(Geometry::Transformation const & tr) {
@@ -35,7 +38,7 @@ void StaticMesh::Draw(Geometry::Transformation const & tr) {
     glm::mat4 const model_matrix = glm::scale(model_tr_matrix, tr.scale);
     shader->setMat4("model", model_matrix);
     if (m_Material) {
-        m_Material->process();
+        m_Material->process(*shader);
     } else gWARNING("Material is not attached");
     m_Model->Draw(*shader);
 }

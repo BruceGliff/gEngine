@@ -1,7 +1,7 @@
 #pragma once
 
 #include "component_base.h"
-#include "properties/properties.h"
+#include "../../properties/properties.h"
 
 #include <filesystem>
 
@@ -13,7 +13,7 @@ namespace Model {
 namespace Geometry  {
     class Transformation;
 } // namespace Geometry
-namespace Material {
+namespace MaterialNS {
     class Material;
 } // namespace Material
 
@@ -26,7 +26,7 @@ class StaticMesh final
     , public Property::IScalable {
     // Non owning ptr
     Model::IModel * m_Model {};
-    Material::Material * m_Material {};
+    MaterialNS::Material * m_Material {};
 
 
 public:
@@ -43,7 +43,7 @@ public:
     StaticMesh & operator=(StaticMesh &&)       = delete;
 
     // Attaches already created material to static mesh
-    Material::Material * AttachMaterial(Material::Material *) noexcept;
+    MaterialNS::Material * AttachMaterial(MaterialNS::Material *) noexcept;
     void Draw(Geometry::Transformation const & tr) override;
 
     ~StaticMesh();

@@ -10,8 +10,6 @@ Model::IModel * Resources::ResourcesManager::loadModel(Args && ... args)
     }
 }
 
-
-
 template<typename T, typename ... Args>
 Model::IModel * Resources::ResourcesManager::loadPrimitive(Args && ... args)
 {

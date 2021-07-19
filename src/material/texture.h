@@ -13,7 +13,7 @@ namespace Renderer {
     class ShaderProgram;
 } // namespace Renderer
 
-namespace Material {
+namespace MaterialNS {
 
 class Texture final {
     unsigned m_ID {};
@@ -33,7 +33,7 @@ public:
 
     ~Texture();
 
-    void activateTexture(std::string const & prefix, int offset, Renderer::ShaderProgram const& Shader);
+    void activate(std::string const & prefix, unsigned offset, Renderer::ShaderProgram const& Shader) const;
 };
 
 } // namespace Material
