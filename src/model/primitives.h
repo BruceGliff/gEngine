@@ -7,7 +7,7 @@
 #include "../process/global.h"
 #include "../manager/ResourceManager.h"
 
-namespace Model {
+namespace NSModel {
 class Primitive {
 // PLACEHOLDER mb to be removed
 };
@@ -28,5 +28,5 @@ class Primitive {
     // CONTRUCT_PRIMITIVE(Plane);
     // CONTRUCT_PRIMITIVE(Cube);  
     // #undef CONTRUCT_PRIMITIVE
-} // namespace Model
+} // namespace NSModel
 

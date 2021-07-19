@@ -6,7 +6,7 @@
 
 #include <filesystem>
 
-using namespace MaterialNS;
+using namespace NSMaterial;
 
 Texture::Texture(   std::filesystem::path const& Path,
                     GLenum Filter,
@@ -51,10 +51,13 @@ Texture::~Texture() {
     glDeleteTextures(1, &m_ID);
 }
 
-void Texture::activate(std::string const & prefix, unsigned offset, Renderer::ShaderProgram const& Shader) const {
+void Texture::activate(char const * prefix, unsigned offset, NSRenderer::ShaderProgram const& Shader) const {
     glActiveTexture(GL_TEXTURE0 + offset);  // activate proper texture unit before binding
                                             // retrieve texture number (the N in diffuse_textureN)
-    // prefix is Tex_Diffuse, Tex_Specular and so one..
-    Shader.SetInt(prefix, offset); // TODO it should be done once!?
+    // prefix is _Diffuse, _Specular and so one..
+    std::string const name { std::string{"Tex"}.append(prefix) };
+    std::string const flag {std::string{"IsTex"}.append(prefix) };
+    Shader.SetInt(name.c_str(), offset); // TODO it should be done once!?
+    Shader.SetInt(flag.c_str(), 1); // TODO it should be done once!?
     glBindTexture(GL_TEXTURE_2D, m_ID);
 }

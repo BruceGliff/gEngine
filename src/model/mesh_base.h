@@ -8,12 +8,7 @@
 // TODO This is just from tutorial for testing
 // Make it on my way
 
-// forward delaration
-namespace Renderer {
-    class ShaderProgram;
-} // namespace Renderer
-
-namespace Model {
+namespace NSModel {
 
 struct Vertex {
     glm::vec3 position;
@@ -25,7 +20,7 @@ class IModel {
 protected:
     IModel() {}
 public:
-    virtual void Draw(Renderer::ShaderProgram const & shader) const = 0;
+    virtual void Draw() const = 0;
     virtual ~IModel() {}
 };
 
@@ -38,11 +33,11 @@ class Mesh final
 public:
     Mesh(std::vector<Vertex> const & vertices, std::vector<unsigned> const & indices);
     Mesh(std::vector<Vertex> && vertices, std::vector<unsigned> && indices);
-    void Draw(Renderer::ShaderProgram const & shader) const override;
+    void Draw() const override;
     
 public:
     std::vector<Vertex>   m_vertices;
     std::vector<unsigned> m_indices;
 };
 
-} // namespace Model
+} // namespace NSModel

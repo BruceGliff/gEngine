@@ -3,36 +3,29 @@
 
 #include "debug/debug.h"
 
-void Scene::scene_wrap::construct()
-{
+using namespace NSScene;
+
+void scene_wrap::construct() {
     static bool isExists = 0;
-    if (!isExists)
-    {
+    if (!isExists) {
         curr_scene = new Scene{};
         isExists = true;
         return;
     }
-
     gWARNING("Attempt to create another scene");
 }
 
-
-Scene::Scene & Scene::scene_wrap::GetScene()
-{
+Scene & scene_wrap::GetScene() {
     if (curr_scene)
         return *curr_scene;
-
     gERROR("Attemp to get null scene");
 }
-Scene::Scene const & Scene::scene_wrap::GetScene() const
-{
+Scene const & scene_wrap::GetScene() const {
     if (curr_scene)
         return *curr_scene;
-
     gERROR("Attemp to get null scene");
 }
 
-Scene::scene_wrap::~scene_wrap()
-{
+scene_wrap::~scene_wrap() {
     delete curr_scene;
 }

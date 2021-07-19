@@ -1,6 +1,6 @@
 #include "material.h"
 
-namespace MaterialNS {
+namespace NSMaterial {
 
 #define PLACE_COMPONENT(name) \
   name m_##name{};

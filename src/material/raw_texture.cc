@@ -13,7 +13,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-using namespace MaterialNS;
+using namespace NSMaterial;
 
 raw_texture::raw_texture(std::filesystem::path const& Path) noexcept 
     : m_TexName {Path.filename().string()} {

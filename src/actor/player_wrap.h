@@ -2,14 +2,14 @@
 
 #include <memory>
 
-namespace Actor {
+namespace NSActor {
 
 // forward declaration
 class actor;
 
 // singleton that represent current used playable class
 class player_wrap final {
-    Actor::actor * curr_actor {};
+    actor * curr_actor {};
     bool isExist {false};
 
 public:
@@ -20,14 +20,14 @@ public:
     player_wrap operator=(player_wrap&&)        = delete;
 
     //  Get current actor
-    Actor::actor& GetPlayer();
+    actor& GetPlayer();
     //  Get current actor
-    Actor::actor const & GetPlayer() const;
+    actor const & GetPlayer() const;
 
     // Set actor as current. Info about previous is lost;
-    void SetPlayer(Actor::actor * actor);
+    void SetPlayer(actor * actor);
 
     ~player_wrap() {}
 };
 
-} // namespace Actor
+} // namespace NSActor

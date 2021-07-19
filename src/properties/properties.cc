@@ -3,71 +3,59 @@
 #include "process/global.h"
 #include "manager/ResourceManager.h"
 
-Property::IPlaceable::IPlaceable() : anchor_position{ 0.f, 0.f, 0.f }
-{}
+using namespace NSProperty;
 
-Property::IPlaceable::IPlaceable(glm::vec3 const& pos) : anchor_position{pos}
-{}
-Property::IPlaceable::IPlaceable(IPlaceable && other) noexcept : 
-    anchor_position{ std::move(other.anchor_position) }
-{}
+IPlaceable::IPlaceable()
+    : anchor_position{ 0.f, 0.f, 0.f } {}
 
-glm::vec3& Property::IPlaceable::GetPosition() noexcept
-{
+IPlaceable::IPlaceable(glm::vec3 const& pos)
+    : anchor_position{pos} {}
+IPlaceable::IPlaceable(IPlaceable && other) noexcept
+    : anchor_position{ std::move(other.anchor_position) } {}
+
+glm::vec3& IPlaceable::GetPosition() noexcept {
     return anchor_position;
 }
 
-glm::vec3 const& Property::IPlaceable::GetPosition() const noexcept
-{
+glm::vec3 const& IPlaceable::GetPosition() const noexcept {
     return anchor_position;
 }
 
 
-Property::IMoveable & Property::IMoveable::SetPosition(glm::vec3 const& pos) noexcept
-{
+IMoveable & IMoveable::SetPosition(glm::vec3 const& pos) noexcept {
     anchor_position = pos;
-
     return *this;
 }
 
-Property::IMoveable::IMoveable(IMoveable&& other) noexcept :
-    IPlaceable{std::move(other)}
-{}
+IMoveable::IMoveable(IMoveable&& other) noexcept
+    : IPlaceable{std::move(other)} {}
 
-Property::IRotatable::IRotatable(IRotatable&& other) noexcept :
-    rotator{ std::move(other.rotator) }
-{}
+IRotatable::IRotatable(IRotatable&& other) noexcept
+    : rotator{ std::move(other.rotator) } {}
 
-glm::vec3& Property::IRotatable::GetRotation() noexcept
-{
+glm::vec3& IRotatable::GetRotation() noexcept {
     return rotator;
 }
-glm::vec3 const& Property::IRotatable::GetRotation() const noexcept
-{
+glm::vec3 const& IRotatable::GetRotation() const noexcept {
     return rotator;
 }
 
-Property::IScalable::IScalable(IScalable&& other) noexcept :
-    scale{std::move(other.scale)}
-{}
+IScalable::IScalable(IScalable&& other) noexcept
+    : scale{std::move(other.scale)} {}
 
-glm::vec3& Property::IScalable::GetScale() noexcept
-{
+glm::vec3& IScalable::GetScale() noexcept {
     return scale;
 }
-glm::vec3 const& Property::IScalable::GetScale() const noexcept
-{
+glm::vec3 const& IScalable::GetScale() const noexcept {
     return scale;
 }
 
-Property::IScalable & Property::IScalable::SetScale(glm::vec3 const& sc) noexcept
-{
+IScalable & IScalable::SetScale(glm::vec3 const& sc) noexcept {
     scale = sc;
     return *this;
 }
 
-Property::IDrawable::IDrawable()
-{
+IDrawable::IDrawable() {
     // Be default All drawable shaders load already created shaders. So DefaultObjShader HAS to be created!
     auto & Mgr = GLOBAL::GetResManager();
     borderShader = Mgr.loadShaders("boarderShader", "res/shaders/stencil/border.vs", "res/shaders/stencil/border.fs");
@@ -76,14 +64,12 @@ Property::IDrawable::IDrawable()
         gERROR("Loading unexisted DefaultObjShader! It has to be created first");
 }
 
-Property::IDrawable::IDrawable(Renderer::ShaderProgram * sp)
-{
+IDrawable::IDrawable(NSRenderer::ShaderProgram * sp) {
     auto & Mgr = GLOBAL::GetResManager();
     borderShader = Mgr.loadShaders("boarderShader", "res/shaders/stencil/border.vs", "res/shaders/stencil/border.fs");
     shader = sp;
 }
 
-void Property::IDrawable::SetShaderProgram(Renderer::ShaderProgram * sp) noexcept
-{
+void IDrawable::SetShaderProgram(NSRenderer::ShaderProgram * sp) noexcept {
     shader = sp;
 }

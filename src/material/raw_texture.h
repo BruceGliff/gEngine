@@ -6,7 +6,7 @@ namespace std {
     } // namespace filesystem
 } // namespace std
 
-namespace MaterialNS {
+namespace NSMaterial {
 
 // class represent raw array of pixels
 class raw_texture {
@@ -54,5 +54,5 @@ public:
     void DumpTexture() const;
 };
 
-} // namespace Material
+} // namespace NSMaterial
 

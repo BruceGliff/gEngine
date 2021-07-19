@@ -7,25 +7,22 @@
 #include "manager/Entity.h"
 #include "gismo/grid.h"
 
-namespace Scene
-{
+namespace NSScene {
 // Class that containt all resources in the scene and Process in loop
 // All objects in scene must have Entity to be accessable directly by it
 // We assume, that scene occupies and releases all resources passed to it
-class Scene final
-{
+class Scene final {
     Grid grid;
     // TODO make maped container to scene which represent sorted objects
-    std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>> scene;
+    std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>> scene;
     // TODO make light seperate
     // TODO separate transparent objects and opaque to sort transparent from furthes to nearest
 
-    typedef std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>>::iterator iterator;
-    typedef std::unordered_map<Resources::Entity, std::unique_ptr<Actor::actor>>::const_iterator const_iterator;
+    typedef std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>>::iterator iterator;
+    typedef std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>>::const_iterator const_iterator;
 
     int const sceneDefSize = 100; // default there are max 100 objects in scene to avoid rallocations
     std::vector<const_iterator> blendedObjects;
-
 
 public:
     Scene();
@@ -56,14 +53,14 @@ public:
 
     // TODO think about GetActor throws an exctention.
     // Return ptr of actor with given Entity(id) or nullptr if it is not found
-    Actor::actor * GetActor(Resources::Entity const & en) const noexcept;
+    NSActor::actor * GetActor(NSResources::Entity const & en) const noexcept;
 
     // Return ptr of type T with given Entity(id) or nullptr if it is not found or it cannot be type T
     template <typename T>
-    T * GetActor(Resources::Entity const & en) const noexcept;
+    T * GetActor(NSResources::Entity const & en) const noexcept;
 
     // Return ptr of actor with given Entity(id) or nullptr if it is not found
-    Actor::actor * operator[](Resources::Entity const & en) const noexcept;
+    NSActor::actor * operator[](NSResources::Entity const & en) const noexcept;
 
     iterator begin() noexcept;
     iterator end() noexcept;
@@ -72,6 +69,5 @@ public:
 
 };
 
-}
-
+} //namespace NSScene
 #include "scene.hpp"

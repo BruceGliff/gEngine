@@ -4,26 +4,23 @@
 #include <bitset>
 
 short def = 0;
-using namespace Format;
+using namespace NSFormat;
 
-std::ostream& operator<<(std::ostream& os, SingleCode const& code)
-{
+std::ostream& operator<<(std::ostream& os, SingleCode const& code) {
     // gat console handler, get current style, set new one.
 
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO info;
-    if (!GetConsoleScreenBufferInfo(hConsole, &info))
-    {
+    if (!GetConsoleScreenBufferInfo(hConsole, &info)) {
         std::cerr << "Can not get Console info!";
         return os;
     }
     short toSet = info.wAttributes;
-    switch (code.code_)
-    {
-    case TextFMT::StyleCode::BOLD_OFF:
+    switch (code.code_) {
+    case NSTextFMT::StyleCode::BOLD_OFF:
         toSet |= FOREGROUND_INTENSITY;
         break;
-    case TextFMT::StyleCode::DEF:
+    case NSTextFMT::StyleCode::DEF:
         toSet = def;
         break;
     default:
@@ -32,24 +29,20 @@ std::ostream& operator<<(std::ostream& os, SingleCode const& code)
     }
 
     SetConsoleTextAttribute(hConsole, toSet);
-    
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, Formater const& format)
-{
+std::ostream& operator<<(std::ostream& os, Formater const& format) {
     // get console handler, set params
     SetConsoleTextAttribute(format.hConsole, format.code_);
     return os;
 }
 
-Format::Formater::Formater()
-{
+Formater::Formater() {
     default_console_params = 0;
     CONSOLE_SCREEN_BUFFER_INFO info;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (!GetConsoleScreenBufferInfo(hConsole, &info))
-    {
+    if (!GetConsoleScreenBufferInfo(hConsole, &info)) {
         std::cerr << "Can not get Console info!";
         return;
     }
@@ -59,47 +52,38 @@ Format::Formater::Formater()
     code_ |= default_console_background;
 }
 
-Format::Formater::Formater(Formater const& formater) noexcept
-{
+Formater::Formater(Formater const& formater) noexcept {
     code_ = formater.code_;
 }
 
-Format::Formater& Format::Formater::operator=(Formater const& formater) noexcept
-{
+Formater& Formater::operator=(Formater const& formater) noexcept {
     code_ = formater.code_;
     return *this;
 }
 
-Format::Formater& Format::Formater::clear() noexcept
-{
+Formater& Formater::clear() noexcept {
     code_ = default_console_params;
     return *this;
 }
 
-Format::Formater& Format::Formater::setCode(int code) noexcept
-{    
+Formater& Formater::setCode(int code) noexcept {
     code_ |= code;
     return *this;
 }
 
-Format::Formater& Format::Formater::setCode(TextFMT::StyleCode code) noexcept
-{
-    switch (code)
-    {
-        case TextFMT::StyleCode::BOLD: {
-            code_ &= ~FOREGROUND_INTENSITY;
-            return *this;
-        }
-        case TextFMT::StyleCode::BOLD_OFF: {
-            code_ |= FOREGROUND_INTENSITY;
-            return *this;
-        }
+Formater& Formater::setCode(NSTextFMT::StyleCode code) noexcept {
+    switch (code) {
+    case NSTextFMT::StyleCode::BOLD:
+        code_ &= ~FOREGROUND_INTENSITY;
+        return *this;
+    case NSTextFMT::StyleCode::BOLD_OFF:
+        code_ |= FOREGROUND_INTENSITY;
+        return *this;
     }
     return *this;
 }
 
-Format::Formater& Format::Formater::removeCode(int code) noexcept
-{
+Formater& Formater::removeCode(int code) noexcept {
     code_ &= ~code;
     return *this;
 }

@@ -1,6 +1,6 @@
 #include "../actor/actor.h"
 
-class ABackpack : public Actor::actor {
+class ABackpack : public NSActor::actor {
 
 
 public:

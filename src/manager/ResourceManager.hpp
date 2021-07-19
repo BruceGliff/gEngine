@@ -1,18 +1,15 @@
 #include "../model/primitives.h"
 
 template<typename T, typename ... Args>
-Model::IModel * Resources::ResourcesManager::loadModel(Args && ... args)
-{
-    if constexpr (std::is_base_of<Model::Primitive, T>::value) {
+NSModel::IModel * NSResources::ResourcesManager::loadModel(Args && ... args) {
+    if constexpr (std::is_base_of<NSModel::Primitive, T>::value)
         return loadPrimitive<T>(args ...);
-    } else {
+    else
         return loadMesh<T>(args ...);
-    }
 }
 
 template<typename T, typename ... Args>
-Model::IModel * Resources::ResourcesManager::loadPrimitive(Args && ... args)
-{
+NSModel::IModel *  NSResources::ResourcesManager::loadPrimitive(Args && ... args) {
     //placeholder (mb to be reboved)
     return nullptr;
     // primitive's names depend on class name 
@@ -32,14 +29,11 @@ Model::IModel * Resources::ResourcesManager::loadPrimitive(Args && ... args)
 }
 
 template<typename T>
-Model::IModel * Resources::ResourcesManager::loadMesh(std::string const & modelName, std::filesystem::path const& relevantPath)
-{
+NSModel::IModel *  NSResources::ResourcesManager::loadMesh(std::string const & modelName, std::filesystem::path const& relevantPath) {
     ModelMap::const_iterator it = m_Models.find(modelName);
     // if model does not exist, then load it
-    if (it == m_Models.end()) {
-        return m_Models.emplace(modelName, std::make_unique<Model::Model3D>(m_PathToExecutable / relevantPath)).first->second.get();
-    }
-    
+    if (it == m_Models.end())
+        return m_Models.emplace(modelName, std::make_unique<NSModel::Model3D>(m_PathToExecutable / relevantPath)).first->second.get();    
     // if model already exists, return it
     return it->second.get();
     

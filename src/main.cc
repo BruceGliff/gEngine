@@ -8,9 +8,7 @@
 #include "actor/actor.h"
 #include "scene/scene.h"
 #include "actor/components/camera.h"
-#include "actor/components/staticMesh.h"
 #include "geometry/geometry_base.h"
-#include "model/model3D.h"
 
 #include "objects/backpack.h"
 
@@ -20,7 +18,7 @@ int main(int argc, char * argv[])
     GLOBAL::Initialize(argv[0], 1600, 900, "gEngine");
     auto& Scene = GLOBAL::GetScene();
 
-    Resources::ResourcesManager& resMng = GLOBAL::GetResManager();
+    NSResources::ResourcesManager& resMng = GLOBAL::GetResManager();
     // TODO move shader program to actor?staticMesh?
     auto pObjShaderProgram = resMng.loadShaders("DefaultObjShader",
                                                 "res/shaders/model_refactoring/model.vs",
@@ -34,8 +32,8 @@ int main(int argc, char * argv[])
 
     Scene.Spawn<ABackpack>();
 
-    Actor::actor player_actor{};
-    player_actor.AttachComponent<Component::camera>("camera");
+    NSActor::actor player_actor{};
+    player_actor.AttachComponent<NSComponent::camera>("camera");
     auto pPlayer = Scene.Attach(player_actor);
     GLOBAL::SetPlayer(pPlayer);
 
@@ -44,14 +42,13 @@ int main(int argc, char * argv[])
     int delta_frame = 0;
     auto const prev_time = glfwGetTime();
 
-    Resources::glWindow& win = GLOBAL::GetWindow();
+    NSResources::glWindow& win = GLOBAL::GetWindow();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glEnable(GL_CULL_FACE);
 
-    while (!win.ProcessInput())
-    {
+    while (!win.ProcessInput()) {
         ++delta_frame;
 
         /* Render here */

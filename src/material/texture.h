@@ -9,11 +9,11 @@ namespace std {
         class path;
     } // namespace filesystem
 } // namespace std
-namespace Renderer {
+namespace NSRenderer {
     class ShaderProgram;
 } // namespace Renderer
 
-namespace MaterialNS {
+namespace NSMaterial {
 
 class Texture final {
     unsigned m_ID {};
@@ -33,7 +33,7 @@ public:
 
     ~Texture();
 
-    void activate(std::string const & prefix, unsigned offset, Renderer::ShaderProgram const& Shader) const;
+    void activate(char const * prefix, unsigned offset, NSRenderer::ShaderProgram const& Shader) const;
 };
 
 } // namespace Material

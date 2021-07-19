@@ -13,7 +13,7 @@ namespace Assimp {
 struct aiScene;
 struct aiNode;
 
-namespace Model { 
+namespace NSModel { 
 
 class Model3D final
     : public IModel {
@@ -23,8 +23,8 @@ class Model3D final
 
 public:
     Model3D(std::filesystem::path const& path);
-    void Draw(Renderer::ShaderProgram const & shader) const override;
+    void Draw() const override;
 
 };
 
-} // namespace Model
+} // namespace NSModel

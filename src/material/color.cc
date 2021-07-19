@@ -2,9 +2,7 @@
 
 #include "../renderer/ShaderProgram.h"
 
-#include <string>
-
-using namespace MaterialNS;
+using namespace NSMaterial;
 
 Color::Color(Color const & other) noexcept
     : Color {other.m_color.data} {}
@@ -43,8 +41,13 @@ Color::Color(float const * data, unsigned size) noexcept {
     std::memcpy(m_color.data, data, size * sizeof(float));
 }
 
-void Color::activate(std::string const & prefix, unsigned offset, Renderer::ShaderProgram const & shader) const {
+void Color::activate(char const * prefix, unsigned offset, NSRenderer::ShaderProgram const & Shader) const {
     // TODO activete color
+    // prefix is _Diffuse, _Specular and so one..
+    std::string const name { std::string{"Col"}.append(prefix) };
+    std::string const flag {std::string{"IsTex"}.append(prefix) };
+    Shader.setVec4(name.c_str(), glm::vec4{m_color.r,m_color.g,m_color.b,m_color.a}); // TODO it should be done once!?
+    Shader.SetInt(flag.c_str(), 0); // TODO it should be done once!?
 }
 
 

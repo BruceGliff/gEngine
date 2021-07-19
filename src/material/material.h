@@ -8,11 +8,11 @@
 #include <unordered_map>
 #include <string>
 
-namespace Renderer {
+namespace NSRenderer {
     class ShaderProgram;
-} // namespace Renderer
+} // namespace NSRenderer
 
-namespace MaterialNS {
+namespace NSMaterial {
 
 // FD of Texture class
 class Texture;
@@ -41,7 +41,7 @@ public:
     IMaterialNode & operator=(IMaterialNode const &)  = delete;
     IMaterialNode & operator=(IMaterialNode && other) noexcept;
 
-    void activate(std::string const & prefix, unsigned offset, Renderer::ShaderProgram const & shader) const;
+    void activate(char const * prefix, unsigned offset, NSRenderer::ShaderProgram const & shader) const;
 
     // Returns pointer to handled data (Color or Texture)
     // Returns nullptr if there is type missmatching
@@ -70,9 +70,9 @@ public:
     IMaterialNode & Get();
 
     // To future behavior. Processing all material nodes
-    void process(Renderer::ShaderProgram const & shader) const;
+    void process(NSRenderer::ShaderProgram const & shader) const;
 };
 
 #include "material.hpp"
 
-} // namespace Material
+} // namespace NSMaterial

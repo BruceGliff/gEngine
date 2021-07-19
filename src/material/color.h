@@ -3,11 +3,11 @@
 #include <cstring>
 #include <ostream>
 
-namespace Renderer {
+namespace NSRenderer {
     class ShaderProgram;
 } // namespace Renderer
 
-namespace MaterialNS {
+namespace NSMaterial {
 
 struct Color {
     using uchar = unsigned char;
@@ -38,7 +38,7 @@ struct Color {
     Color(float const * data, unsigned size) noexcept;
 
     // Pass color data to shader (TOBEIMPL)
-    void activate(std::string const & prefix, unsigned offset, Renderer::ShaderProgram const & shader) const;
+    void activate(char const * prefix, unsigned offset, NSRenderer::ShaderProgram const & shader) const;
 };
 
 std::ostream & operator<<(std::ostream & os, Color const & color);

@@ -7,26 +7,26 @@
 
 #include <glm/vec3.hpp>
 
-namespace Model {
+namespace NSModel {
     class IModel;
-} // namespace Model
-namespace Geometry  {
+} // namespace NSModel
+namespace NSGeometry  {
     class Transformation;
-} // namespace Geometry
-namespace MaterialNS {
+} // namespace NSGeometry
+namespace NSMaterial {
     class Material;
-} // namespace Material
+} // namespace NSMaterial
 
-namespace Component {
+namespace NSComponent {
 
 class StaticMesh final
     : public component_base
-    , public Property::IDrawable
-    , public Property::IMoveable
-    , public Property::IScalable {
-    // Non owning ptr
-    Model::IModel * m_Model {};
-    MaterialNS::Material * m_Material {};
+    , public NSProperty::IDrawable
+    , public NSProperty::IMoveable
+    , public NSProperty::IScalable {
+    // Non owning ptrs
+    NSModel::IModel * m_Model {};
+    NSMaterial::Material * m_Material {};
 
 
 public:
@@ -34,7 +34,7 @@ public:
     StaticMesh(std::string const& name);
 
     // Attachs already loaded model to static mesh
-    StaticMesh(Model::IModel * model);
+    StaticMesh(NSModel::IModel * model);
 
     StaticMesh()                                = delete;
     StaticMesh(StaticMesh const & )             = delete;
@@ -43,8 +43,8 @@ public:
     StaticMesh & operator=(StaticMesh &&)       = delete;
 
     // Attaches already created material to static mesh
-    MaterialNS::Material * AttachMaterial(MaterialNS::Material *) noexcept;
-    void Draw(Geometry::Transformation const & tr) override;
+    NSMaterial::Material * AttachMaterial(NSMaterial::Material *) noexcept;
+    void Draw(NSGeometry::Transformation const & tr) override;
 
     ~StaticMesh();
 };

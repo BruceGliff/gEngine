@@ -9,7 +9,7 @@
 #include "process/global.h"
 #include "manager/ResourceManager.h"
 
-using namespace Model;
+using namespace NSModel;
 
 static Mesh processMesh(aiMesh* mesh, aiScene const* scene) {
     std::vector<Vertex> vertices;
@@ -55,7 +55,7 @@ Model3D::Model3D(std::filesystem::path const& path) {
     processNode(scene->mRootNode, scene);
 }
 
-void Model3D::Draw(Renderer::ShaderProgram const & shader) const {
+void Model3D::Draw() const {
     for (auto&& mesh : m_Meshes)
-        mesh.Draw(shader);
+        mesh.Draw();
 }

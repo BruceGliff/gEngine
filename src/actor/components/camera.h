@@ -6,12 +6,12 @@
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Component {
+namespace NSComponent {
 
     class camera
         : public component_base
-        , public Property::IMoveable
-        , public Property::IRotatable
+        , public NSProperty::IMoveable
+        , public NSProperty::IRotatable
 {
     float fov {};
     glm::vec3 front {};

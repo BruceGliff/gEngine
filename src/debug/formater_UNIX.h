@@ -1,13 +1,10 @@
 #pragma once
 
 #include <ostream>
-namespace Format
-{
+namespace NSFormat {
     // Codes of text formating
-    namespace TextFMT
-    {
-        enum ColorCode
-        {
+    namespace NSTextFMT {
+        enum ColorCode {
             BLACK   = 30,
             RED     = 31,
             GREEN   = 32,
@@ -18,8 +15,7 @@ namespace Format
             WHYTE   = 37,
             DEFAULT = 39,
         };
-        enum StyleCode
-        {
+        enum StyleCode {
             BOLD        = 1,
             FAINT       = 2,
             ITALIC      = 3,
@@ -29,13 +25,11 @@ namespace Format
             ITALIC_OFF  = 23,
             UNDERLINE_OFF = 24,
         };
-    }
+    } // namespace NSTextFMT
 
     // empty class responsible for reset format
-    class SingleCode final
-    {
+    class SingleCode final {
         unsigned char code_ = 0;
-
     public:
         SingleCode(int code) : code_{(unsigned char)code} {}
         SingleCode() = default;
@@ -43,8 +37,7 @@ namespace Format
         friend std::ostream& operator<<(std::ostream& os, SingleCode const& code);
     };
     // Contains all flags which apply on out stream
-    class Formater final
-    {
+    class Formater final {
         // flags of which code is applied
         unsigned char set_codes[108] = {};
 
@@ -64,4 +57,4 @@ namespace Format
 
         friend std::ostream& operator<<(std::ostream& os, Formater const& fromat);
     };
-}
+} // namespace NSFormat

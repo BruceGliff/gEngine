@@ -4,11 +4,11 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-using namespace Model;
+using namespace NSModel;
 
-static std::unique_ptr<Mesh> getMesh(std::vector<Renderer::TextureGL*> const &, std::string const &);
+static std::unique_ptr<Mesh> getMesh(std::vector<NSRenderer::TextureGL*> const &, std::string const &);
 
-Primitive::Primitive(   std::vector<Renderer::TextureGL*> const & texturesIn,
+Primitive::Primitive(   std::vector<NSRenderer::TextureGL*> const & texturesIn,
                         std::string const & name) {
     mesh = getMesh(texturesIn, name);
 }

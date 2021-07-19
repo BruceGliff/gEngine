@@ -14,34 +14,30 @@
 #include <initializer_list>
 
 
+using namespace NSResources;
+
 // class will be global variable for GLFW to access
-Resources::WindowSizeProperty WindowProperty;
+WindowSizeProperty WindowProperty;
 
 
-Resources::WindowSizeProperty& Resources::WindowSizeProperty::operator=(std::initializer_list<int>&& list)
-{
-    if (list.size() != 2)
-    {
+WindowSizeProperty& WindowSizeProperty::operator=(std::initializer_list<int>&& list) {
+    if (list.size() != 2) {
         width = 1600;
         height = 900;
         gWARNING(std::string{ "Wrong initializer list size! window will be with size: " } + std::to_string(width) + std::string{ "x" } + std::to_string(height));
         return *this;
     }
-
     width = *list.begin();
     height = *(list.begin() + 1);
-
     return *this;
 }
 
-Resources::glWindow::glWindow(int width, int height, std::string const & win_name) : name{win_name}
-{
+glWindow::glWindow(int width, int height, std::string const & win_name)
+    : name{win_name} {
     WindowProperty = { width, height };
     pWindow = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
     if (!pWindow)
-    {
         gERROR("window creating failed!");
-    }
 
     /* Make the window's context current */
     glfwMakeContextCurrent(pWindow);
@@ -53,35 +49,27 @@ Resources::glWindow::glWindow(int width, int height, std::string const & win_nam
     glfwSetScrollCallback(pWindow, scroll_callback);
 
     glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
 }
 
-Resources::glWindow::operator bool() const noexcept
-{
+glWindow::operator bool() const noexcept {
     return glfwWindowShouldClose(pWindow);
 }
 
-Resources::WindowSizeProperty const & Resources::glWindow::GetWindowSize() const noexcept
-{
+WindowSizeProperty const & glWindow::GetWindowSize() const noexcept {
+    return WindowProperty;
+}
+WindowSizeProperty& glWindow::GetWindowSize() noexcept {
     return WindowProperty;
 }
 
-Resources::WindowSizeProperty& Resources::glWindow::GetWindowSize() noexcept
-{
-    return WindowProperty;
-}
-
-void Resources::glWindow::Draw() const noexcept
-{
+void glWindow::Draw() const noexcept {
     /* Swap front and back buffers */
     glfwSwapBuffers(pWindow);
-
     /* Poll for and process events */
     glfwPollEvents();
 }
 
-bool Resources::glWindow::ProcessInput() const noexcept
-{
+bool glWindow::ProcessInput() const noexcept {
     static float deltaTime = 0.0f;    // Time between current frame and last frame
     static float lastFrame = 0.0f; // Time of last frame
 
@@ -92,7 +80,7 @@ bool Resources::glWindow::ProcessInput() const noexcept
 
     auto& player = GLOBAL::GetPlayer();
     auto& player_pos = player.GetPosition();
-    Component::camera & cam = *player.GetComponentByName<Component::camera>("camera");
+    NSComponent::camera & cam = *player.GetComponentByName<NSComponent::camera>("camera");
     auto& cameraFront = cam.GetFront();
     auto& cameraUp = cam.GetUp();
 
@@ -109,8 +97,7 @@ bool Resources::glWindow::ProcessInput() const noexcept
     return glfwWindowShouldClose(pWindow);
 }
 
-void Resources::glWindow::glfwWindowSizeCallback(GLFWwindow* window, int width, int height)
-{
+void glWindow::glfwWindowSizeCallback(GLFWwindow* window, int width, int height) {
     WindowProperty.width = width;
     WindowProperty.height = height;
     glViewport(0, 0, WindowProperty.width, WindowProperty.height);
@@ -118,20 +105,16 @@ void Resources::glWindow::glfwWindowSizeCallback(GLFWwindow* window, int width, 
  
 
 // TODO check this with Process input!
-void Resources::glWindow::glfwKeyCallback(GLFWwindow* window, int key, int scanmode, int action, int mode)
-{
+void glWindow::glfwKeyCallback(GLFWwindow* window, int key, int scanmode, int action, int mode) {
     // Close window due to escape
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
         // Set up window property what is has to be closed
         glfwSetWindowShouldClose(window, GL_TRUE);
-    }
 }
 
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos_d, double ypos_d)
-{
+void glWindow::mouse_callback(GLFWwindow* window, double xpos_d, double ypos_d) {
     // PARAMS of MOUSE or camera
     //                      ^
     float xpos = static_cast<float>(xpos_d);
@@ -142,9 +125,7 @@ void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos_d, doub
     static float yaw = -90.0f;    
     static float pitch = 0.0f;
 
-
-    if (firstMouse)
-    {
+    if (firstMouse) {
         lastX = xpos;
         lastY = ypos;
         firstMouse = false;
@@ -172,15 +153,14 @@ void Resources::glWindow::mouse_callback(GLFWwindow* window, double xpos_d, doub
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    auto& cameraFront = GLOBAL::GetPlayer().GetComponentByName<Component::camera>("camera")->GetFront();
+    auto& cameraFront = GLOBAL::GetPlayer().GetComponentByName<NSComponent::camera>("camera")->GetFront();
     cameraFront = glm::normalize(front);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void Resources::glWindow::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    auto& fov = static_cast<Component::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
+void glWindow::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    auto& fov = static_cast<NSComponent::camera*>(GLOBAL::GetPlayer().GetComponent("camera"))->GetFOV();
     fov -= (float)yoffset;
     if (fov < 1.0f)
         fov = 1.0f;

@@ -2,12 +2,12 @@
 
 #include <algorithm>
 
-using namespace Component;
+using namespace NSComponent;
 
-Property::ICompound * component_base::GetParent() const noexcept {
+NSProperty::ICompound * component_base::GetParent() const noexcept {
     return parent_;
 }
-void component_base::SetParent(Property::ICompound * parent) noexcept {
+void component_base::SetParent(NSProperty::ICompound * parent) noexcept {
     parent_ = parent;
 }
 

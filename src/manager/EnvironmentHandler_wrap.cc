@@ -7,31 +7,26 @@
 
 #include <iostream>
 
-Resources::EnvironmentHandler_wrap::EnvironmentHandler_wrap() noexcept
-{
-}
+using namespace NSResources;
 
-void Resources::EnvironmentHandler_wrap::construct(int width, int height, std::string const& WindowName, std::string const& path_to_exec)
-{
+EnvironmentHandler_wrap::EnvironmentHandler_wrap() noexcept
+{}
+
+void EnvironmentHandler_wrap::construct(int width, int height, std::string const& WindowName, std::string const& path_to_exec) {
     // Order is important
     glfwInitialization();
     ConstructWindow(width, height, WindowName);
     ConstructManager(path_to_exec);
 }
 
-void Resources::EnvironmentHandler_wrap::glfwInitialization()
-{
+void EnvironmentHandler_wrap::glfwInitialization() {
     static int number_of_copies = 0;
-    if (number_of_copies != 0)
-    {
+    if (number_of_copies != 0) {
         gWARNING("Creating more then one GFLW context is not allowed");
         return;
     }
-
     if (!glfwInit())
-    {
         gERROR("glfl initialization failed!");
-    }
 
     ++number_of_copies;
 
@@ -41,22 +36,18 @@ void Resources::EnvironmentHandler_wrap::glfwInitialization()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
-void Resources::EnvironmentHandler_wrap::ConstructManager(std::string const& path_to_exec)
-{
+void EnvironmentHandler_wrap::ConstructManager(std::string const& path_to_exec) {
     static int counter = 0;
-    if (!counter)
-    {
+    if (!counter) {
         curr_mng = new ResourcesManager{ path_to_exec };
         ++counter;
     }
     else
         gWARNING("attempt to create new ResourceManager");
 }
-void Resources::EnvironmentHandler_wrap::ConstructWindow(int width, int height, std::string const& WindowName)
-{
+void EnvironmentHandler_wrap::ConstructWindow(int width, int height, std::string const& WindowName) {
     static int counter = 0;
-    if (!counter)
-    {
+    if (!counter) {
         curr_window = new glWindow{ width, height, WindowName };
         ++counter;
     }
@@ -64,45 +55,37 @@ void Resources::EnvironmentHandler_wrap::ConstructWindow(int width, int height, 
         gWARNING("attempt to create new glWindow"); // TODO there may be a way to creating lots of windows
 }
 
-Resources::ResourcesManager& Resources::EnvironmentHandler_wrap::GetMenager()
-{
+ResourcesManager& EnvironmentHandler_wrap::GetMenager() {
     if (curr_mng)
         return *curr_mng;
 
     gERROR("Attemt to get null ResourceManager!");
 }
 
-Resources::ResourcesManager const& Resources::EnvironmentHandler_wrap::GetMenager() const
-{
+ResourcesManager const& EnvironmentHandler_wrap::GetMenager() const {
     if (curr_mng)
         return *curr_mng;
 
     gERROR("Attemt to get null ResourceManager!");
 }
 
-Resources::glWindow& Resources::EnvironmentHandler_wrap::GetWindow()
-{
-    if (curr_window)
-    {
+glWindow& EnvironmentHandler_wrap::GetWindow() {
+    if (curr_window) {
         return *curr_window;
     }
     
     gERROR("Attemt to get null glWindow!");
 }
 
-Resources::glWindow const& Resources::EnvironmentHandler_wrap::GetWindow() const
-{
+glWindow const& EnvironmentHandler_wrap::GetWindow() const {
     if (curr_window)
-    {
         return *curr_window;
-    }
 
     gERROR("Attemt to get null glWindow!");
 }
 
 
-Resources::EnvironmentHandler_wrap::~EnvironmentHandler_wrap()
-{
+EnvironmentHandler_wrap::~EnvironmentHandler_wrap() {
     // Order is important
     if (curr_mng)
         delete curr_mng;
@@ -114,5 +97,4 @@ Resources::EnvironmentHandler_wrap::~EnvironmentHandler_wrap()
         gWARNING("Somehow nullptr of glWindow apprears in ~EnvironmentHandler_wrap()!");
 
     glfwTerminate();
-
 }

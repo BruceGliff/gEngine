@@ -6,13 +6,13 @@
 #include <iostream>
 #include <string>
 
-using namespace Actor;
+using namespace NSActor;
 
 actor::actor(actor&& otherActor) noexcept
-    : Resources::Entity{std::move(otherActor)}
-    , Component::component_base{std::move(otherActor)}
-    , Property::IMoveable{std::move(otherActor)}
-    , Property::IScalable{std::move(otherActor)}
+    : NSResources::Entity{std::move(otherActor)}
+    , NSComponent::component_base{std::move(otherActor)}
+    , NSProperty::IMoveable{std::move(otherActor)}
+    , NSProperty::IScalable{std::move(otherActor)}
 
     , components{std::move(otherActor.components)}
     , properties{std::move(otherActor.properties)} {
@@ -23,7 +23,7 @@ actor::actor(actor&& otherActor) noexcept
     }
 }
 
-Component::component_base * actor::GetComponent(std::string const& comp_name) const noexcept {
+NSComponent::component_base * actor::GetComponent(std::string const& comp_name) const noexcept {
     auto&& it = components.find(comp_name);
     if (it != components.end()) {
         return it->second.first;
@@ -32,10 +32,10 @@ Component::component_base * actor::GetComponent(std::string const& comp_name) co
     return nullptr;
 }
 
-Component::component_base * actor::DetachComponent(std::string const& comp_name) noexcept {
+NSComponent::component_base * actor::DetachComponent(std::string const& comp_name) noexcept {
     auto && it = components.find(comp_name);
     if (it != components.end()) {
-        Component::component_base * oldComp = it->second.first;
+        NSComponent::component_base * oldComp = it->second.first;
         remove_properties_from_generated_arrays(it->second.second);
         components.erase(it);
 
@@ -49,7 +49,7 @@ Component::component_base * actor::DetachComponent(std::string const& comp_name)
 actor & actor::DeleteComponent(std::string const& comp_name) noexcept {
     auto && it = components.find(comp_name);
     if (it != components.end()) {
-        Component::component_base * oldComp = it->second.first;
+        NSComponent::component_base * oldComp = it->second.first;
         remove_properties_from_generated_arrays(it->second.second);
         components.erase(it);
 
@@ -59,10 +59,10 @@ actor & actor::DeleteComponent(std::string const& comp_name) noexcept {
     return *this;
 }
 
-void actor::remove_properties_from_generated_arrays(std::vector<std::list<Property::IProcessable *>::iterator> const & prop_array) noexcept {
+void actor::remove_properties_from_generated_arrays(std::vector<std::list<NSProperty::IProcessable *>::iterator> const & prop_array) noexcept {
     for (auto && property : prop_array) {
-        removeProperty<Property::IDrawable>(property);
-        removeProperty<Property::ICompound>(property);
+        removeProperty<NSProperty::IDrawable>(property);
+        removeProperty<NSProperty::ICompound>(property);
     }
 }
 
@@ -72,9 +72,9 @@ actor::~actor() {
     }
 }
 
-void actor::Process(Geometry::Transformation const & tr) {
-    Geometry::Transformation const newTr{ tr + Geometry::Transformation{GetPosition(), GetRotation(), GetScale()} };
+void actor::Process(NSGeometry::Transformation const & tr) {
+    NSGeometry::Transformation const newTr{ tr + NSGeometry::Transformation{GetPosition(), GetRotation(), GetScale()} };
 
-    processProperty<Property::IDrawable>(&Property::IDrawable::Draw,    newTr);
-    processProperty<Property::ICompound>(&Property::ICompound::Process, newTr);
+    processProperty<NSProperty::IDrawable>(&NSProperty::IDrawable::Draw,    newTr);
+    processProperty<NSProperty::ICompound>(&NSProperty::ICompound::Process, newTr);
 }

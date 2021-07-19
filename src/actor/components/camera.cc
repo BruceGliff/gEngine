@@ -3,7 +3,7 @@
 #include "process/global.h"
 #include "window/window_base.h"
 
-using namespace Component;
+using namespace NSComponent;
 
 camera::camera()
     : fov{ 45.f }
@@ -43,14 +43,14 @@ float const& camera::GetFOV() const noexcept {
 
 glm::mat4 camera::GetViewMatrix() const {
     // TODO investigate if rotation is necessaty here
-    Property::ICompound * parent = GetParent();
-    Geometry::Transformation transform;
+    NSProperty::ICompound * parent = GetParent();
+    NSGeometry::Transformation transform;
     transform.displace += GetPosition();
     //transform.rotate   += GetRotation();
 
-    // Go up on hierarchy to got absolute transformation
+    // Go up on hierarchy to get absolute transformation
     while (parent) {
-        if(Property::IPlaceable * ptr = dynamic_cast<Property::IPlaceable *>(parent)) {
+        if(NSProperty::IPlaceable * ptr = dynamic_cast<NSProperty::IPlaceable *>(parent)) {
             transform.displace += ptr->GetPosition();
         }
         // if(Property::IRotatable * ptr = dynamic_cast<Property::IRotatable *>(parent)) {
@@ -58,7 +58,7 @@ glm::mat4 camera::GetViewMatrix() const {
         // }
 
         // Parent has "parent_" only if it is component by itself!
-        if(Component::component_base * ptr = dynamic_cast<Component::component_base *>(parent)) {
+        if(NSComponent::component_base * ptr = dynamic_cast<NSComponent::component_base *>(parent)) {
             parent = ptr->GetParent();
         } else {
             parent = nullptr;
@@ -69,8 +69,8 @@ glm::mat4 camera::GetViewMatrix() const {
     return glm::lookAt(transform.displace, front + transform.displace, up);
 }
 
-glm::mat4 Component::camera::GetProjectionMatrix() const {
-    Resources::WindowSizeProperty const & size = GLOBAL::GetWindow().GetWindowSize();
+glm::mat4 NSComponent::camera::GetProjectionMatrix() const {
+    NSResources::WindowSizeProperty const & size = GLOBAL::GetWindow().GetWindowSize();
 
     return glm::perspective(glm::radians(fov), ((float) size.width) / size.height, nearClamp, farClamp);
 }
