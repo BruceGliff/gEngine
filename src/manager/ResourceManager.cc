@@ -60,7 +60,6 @@ MaterialNS::Texture * ResourcesManager::loadTexture(   std::filesystem::path con
                                                                 GLenum WrapMode) {
     if (MaterialNS::Texture * pT = loadTexture(texture_name, true))
         return pT;
-
     return m_Textures.emplace(texture_name, std::make_unique<MaterialNS::Texture>(relevantPath, Filter, WrapMode)).first->second.get();
 }
 

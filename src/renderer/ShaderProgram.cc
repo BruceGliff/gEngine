@@ -72,10 +72,12 @@ void Renderer::ShaderProgram::Use() const noexcept
     glUseProgram(id);
 }
 
-void Renderer::ShaderProgram::SetInt(std::string const& name, int const value) const noexcept
-{
+void Renderer::ShaderProgram::SetInt(std::string const& name, int const value) const noexcept {
     // By id and name get location of uniform variable
-    glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+    GLint location = glGetUniformLocation(id, name.c_str());
+    if (location == -1)
+        gWARNING(std::string{"Cannot find uniform location of: "} + name);
+    glUniform1i(location, value);
 }
 
 void Renderer::ShaderProgram::setVec3(std::string const name, glm::vec3 const& vec) const noexcept
