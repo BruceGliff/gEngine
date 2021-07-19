@@ -39,6 +39,3 @@ IMaterialNode & Material::Get() {
       gERROR("No such Component's type in material: " + typeid(NodeTy).name());
     return it->second;
 }
-
-
-} // namespace MaterialNS

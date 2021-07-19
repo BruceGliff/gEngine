@@ -4,7 +4,6 @@
 #include "process/global.h"
 #include "manager/ResourceManager.h"
 #include "renderer/ShaderProgram.h"
-#include "renderer/TextureGL.h"
 #include "window/window_base.h"
 #include "actor/actor.h"
 #include "scene/scene.h"

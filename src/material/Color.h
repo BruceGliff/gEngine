@@ -3,6 +3,10 @@
 #include <cstring>
 #include <ostream>
 
+namespace Renderer {
+    class ShaderProgram;
+} // namespace Renderer
+
 namespace MaterialNS {
 
 struct Color {

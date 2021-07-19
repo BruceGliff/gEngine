@@ -64,7 +64,7 @@ MaterialNS::Texture * ResourcesManager::loadTexture(   std::filesystem::path con
     return m_Textures.emplace(texture_name, std::make_unique<MaterialNS::Texture>(relevantPath, Filter, WrapMode)).first->second.get();
 }
 
-MaterialNS::Texture * ResourcesManager::loadTexture(std::string const & texture_name, bool no_warning = false) {
+MaterialNS::Texture * ResourcesManager::loadTexture(std::string const & texture_name, bool no_warning) {
     TextureMap::const_iterator it = m_Textures.find(texture_name);
     if (it == m_Textures.end()) {
         if (!no_warning)

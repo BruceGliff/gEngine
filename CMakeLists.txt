@@ -42,7 +42,6 @@ set(SOURCES_CC
 #model
 	src/model/mesh_base.cc
 	src/model/model3D.cc
-	src/model/primitives.cc
 #manager
 	src/manager/ResourceManager.cc
 	src/manager/EnvironmentHandler_wrap.cc
@@ -80,6 +79,8 @@ list(APPEND SOURCES_H
 		src/actor/actor.hpp
 		src/model/primitives.DEF
 		src/manager/ResourceManager.hpp
+#toberemoved
+		src/model/primitives.h
 	)
 # 6. separte behavior depends on OS
 if(WIN32)

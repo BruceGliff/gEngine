@@ -8,23 +8,25 @@
 #include "../manager/ResourceManager.h"
 
 namespace Model {
+class Primitive {
+// PLACEHOLDER mb to be removed
+};
 
-    class Primitive
-        : public IModel {
-    protected:
-        Primitive(  std::vector<Renderer::TextureGL*> const & texturesIn,
-                    std::string const & name);
-        std::unique_ptr<Mesh> mesh;
+    // class Primitive
+    //     : public IModel {
+    // protected:
+    //     Primitive(std::string const & name);
+    //     std::unique_ptr<Mesh> mesh;
 
-    public:
-        void Draw(Renderer::ShaderProgram const & shader) const override;
-        virtual ~Primitive() {}
-    };
+    // public:
+    //     void Draw(Renderer::ShaderProgram const & shader) const override;
+    //     virtual ~Primitive() {}
+    // };
 
 
-    #include "primitives.DEF"
-    CONTRUCT_PRIMITIVE(Plane);
-    CONTRUCT_PRIMITIVE(Cube);  
-    #undef CONTRUCT_PRIMITIVE
+    // #include "primitives.DEF"
+    // CONTRUCT_PRIMITIVE(Plane);
+    // CONTRUCT_PRIMITIVE(Cube);  
+    // #undef CONTRUCT_PRIMITIVE
 } // namespace Model
 

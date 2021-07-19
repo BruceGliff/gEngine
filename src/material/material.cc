@@ -16,7 +16,8 @@ IMaterialNode & IMaterialNode::operator=(IMaterialNode && other) noexcept {
 }
 
 void IMaterialNode::activate(std::string const & prefix, unsigned offset, Renderer::ShaderProgram const & shader) const {
-    if constexpr (std::holds_alternative<Color>(m_Component))
+    
+    if (std::holds_alternative<Color>(m_Component))
         std::get<Color>(m_Component).activate(prefix, offset, shader);
     else
         std::get<Texture*>(m_Component)->activate(prefix, offset, shader);

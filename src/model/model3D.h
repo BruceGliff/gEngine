@@ -10,13 +10,8 @@
 namespace Assimp {
     class Importer;
 } // namespace Assimp
-class aiScene;
-class aiNode;
-class aiMesh;
-namespace Renderer {
-    class TextureGL;
-} // namspace Renderer;
-
+struct aiScene;
+struct aiNode;
 
 namespace Model { 
 

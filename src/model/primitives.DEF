@@ -4,14 +4,14 @@
 #define CONTRUCT_PRIMITIVE(PRIM)                                                        \
     class PRIM final : public Primitive {                                               \
     private:                                                                            \
-        PRIM(std::vector<Renderer::TextureGL*> const & texturesIn) :                    \
-            Primitive{ texturesIn, #PRIM }                                              \
+        PRIM() :                                                                        \
+            Primitive{#PRIM }                                                           \
         {}                                                                              \
     private:                                                                            \
         static PRIM * construct() {                                                     \
             return construct(GLOBAL::GetResManager().loadTexture());                    \
         }                                                                               \
-        static PRIM * construct(std::vector<Renderer::TextureGL*> const & texturesIn) { \
+        static PRIM * construct() {                                                     \
             return new PRIM {texturesIn};                                               \
         }                                                                               \
         static PRIM * construct(Renderer::TextureGL* texturesIn) {                      \
