@@ -45,9 +45,9 @@ void Color::activate(char const * prefix, unsigned offset, NSRenderer::ShaderPro
     // TODO activete color
     // prefix is _Diffuse, _Specular and so one..
     // TODO try to get rid of string
-    Shader.setVec4( std::string{prefix}.append(".Col").c_str(),
+    Shader.setVec4( std::string{"Material."}.append(prefix).append(".Col").c_str(),
                     glm::vec4{m_color.r,m_color.g,m_color.b,m_color.a}); // TODO it should be done once!?
-    Shader.SetInt(  std::string{prefix}.append(".IsTex").c_str(), 
+    Shader.SetInt(  std::string{"Material."}.append(prefix).append(".IsTex").c_str(), 
                     0); // TODO it should be done once!?
 }
 
