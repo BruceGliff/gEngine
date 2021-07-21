@@ -15,7 +15,7 @@ struct aiNode;
 
 namespace NSModel { 
 
-class Model3D
+class Model3D final
     : public IModel {
     std::vector<Mesh> m_Meshes;
     
