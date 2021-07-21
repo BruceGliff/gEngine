@@ -24,30 +24,44 @@ project(${PROJECT_NAME})
 
 # 2. set all .cc sources files what have .h
 set(SOURCES_CC
+#scene
 	src/scene/gismo/grid.cc
 	src/scene/scene.cc
-	src/debug/debug.cc
-	src/window/window_base.cc
-	src/texture/Texture_base.cc
 	src/scene/scene_wrap.cc
+#debug
+	src/debug/debug.cc
+	src/debug/logger.cc
+#window
+	src/window/window_base.cc
+#renderer
 	src/renderer/ShaderProgram.cc
-	src/renderer/TextureGL.cc
+#properties
 	src/properties/properties.cc
+#process
 	src/process/global.cc
+#model
 	src/model/mesh_base.cc
 	src/model/model3D.cc
-	src/model/primitives.cc
+#manager
 	src/manager/ResourceManager.cc
 	src/manager/EnvironmentHandler_wrap.cc
 	src/manager/Entity.cc
+#geometry
 	src/geometry/geometry_base.cc
-	src/debug/logger.cc
+#actor
 	src/actor/player_wrap.cc
 	src/actor/actor.cc
 	src/actor/components/component_base.cc
 	src/actor/components/camera.cc
 	src/actor/components/staticMesh.cc
-
+#material
+	src/material/color.cc
+	src/material/ColorComponent.cc
+	src/material/material.cc
+	src/material/raw_texture.cc
+	src/material/texture.cc
+#objects
+	src/objects/backpack.cc
 )
 
 # 3. generate .h names
@@ -63,10 +77,12 @@ list(APPEND SOURCES_CC
 	)
 # 5. add .h files which without .cc pair and .hpp files
 list(APPEND SOURCES_H
-		src/texture/stb_image.h
+		src/material/stb_image.h
 		src/actor/actor.hpp
 		src/model/primitives.DEF
 		src/manager/ResourceManager.hpp
+#toberemoved
+		src/model/primitives.h
 	)
 # 6. separte behavior depends on OS
 if(WIN32)

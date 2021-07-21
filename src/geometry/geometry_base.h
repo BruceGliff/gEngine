@@ -3,12 +3,9 @@
 #include <glm/vec3.hpp>
 #include <ostream>
 
-namespace Geometry
-{
-
+namespace NSGeometry {
     // TODO complete this
-    class Transformation final
-    {
+    class Transformation final {
     public:
         glm::vec3 displace{0.f};
         glm::vec3 rotate{0.f};
@@ -25,9 +22,10 @@ namespace Geometry
         // Scale by default does not add up, but multiplies
         Transformation & operator+= (Transformation const & tr);
     };
-    // Scale by default does not add up, but multiplies
-    Transformation operator+ (Transformation const & lval, Transformation const & rval);
-}
+} // namespace NSGeometry
+
+// Scale by default does not add up, but multiplies
+NSGeometry::Transformation operator+ (NSGeometry::Transformation const & lval, NSGeometry::Transformation const & rval);
 
 glm::vec3 operator*(glm::vec3 const& vec, float x);
 std::ostream& operator<<(std::ostream& os, glm::vec3 const& vec);

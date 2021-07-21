@@ -1,7 +1,5 @@
 #include "grid.h"
 
-#include <iostream>
-
 #include "../../renderer/ShaderProgram.h"
 #include "../../process/global.h"
 #include "../../manager/ResourceManager.h"
@@ -12,21 +10,18 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 
-using namespace Scene;
+using namespace NSScene;
 
-Grid::Grid() :
-    Property::IDrawable{GLOBAL::GetResManager().loadShaders("gridShader", "res/shaders/grid/grid.vs", "res/shaders/grid/grid.fs")},
-    slices{10},
-    lenght{static_cast<GLuint>(slices * slices * 8)},
-    sizeOfSlice{2.f}
-{
+Grid::Grid()
+    : NSProperty::IDrawable{GLOBAL::GetResManager().loadShaders("gridShader", "res/shaders/grid/grid.vs", "res/shaders/grid/grid.fs")}
+    , slices{10}
+    , lenght{static_cast<GLuint>(slices * slices * 8)}
+    , sizeOfSlice{2.f} {
     GenerateGrid();
 }
 
-void Grid::GenerateGrid()
-{
-    for (int i = -slices / 2 + 1, j = 0; i != slices / 2; ++i, j += 4)
-    {
+void Grid::GenerateGrid() {
+    for (int i = -slices / 2 + 1, j = 0; i != slices / 2; ++i, j += 4) {
         float const x1 = sizeOfSlice * i;
         float const z1 = sizeOfSlice * (-slices / 2);
         float const z2 = -z1;
@@ -62,10 +57,9 @@ void Grid::GenerateGrid()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Grid::Draw(Geometry::Transformation const & tr)
-{
+void Grid::Draw(NSGeometry::Transformation const & tr) {
     shader->Use();
-    auto mainCam = GLOBAL::GetPlayer().GetComponentByName<Component::camera>("camera");
+    auto mainCam = GLOBAL::GetPlayer().GetComponentByName<NSComponent::camera>("camera");
     shader->setMat4("view", mainCam->GetViewMatrix());
     shader->setMat4("projection", mainCam->GetProjectionMatrix());
     glm::mat4 const model_tr_matrix = glm::translate(glm::mat4{1.0f}, tr.displace);
@@ -77,8 +71,7 @@ void Grid::Draw(Geometry::Transformation const & tr)
     glBindVertexArray(0);
 }
 
-void Grid::Process(Geometry::Transformation const & tr)
-{
+void Grid::Process(NSGeometry::Transformation const & tr) {
     Draw(tr);
     //reinterpret_cast<Property::IDrawable *>(Gismo)->Draw(tr);
 }

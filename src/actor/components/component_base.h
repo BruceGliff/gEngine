@@ -1,26 +1,25 @@
 #pragma once
 
-namespace Property
-{
+namespace NSProperty {
     class ICompound;
-}
+} // namespace NSProperty
 
 
-namespace Component
-{
-    class component_base
-    {
-        Property::ICompound * parent_ = nullptr;
-    public:
-        component_base() = default;
-        component_base(component_base const&)                = delete;
-        component_base(component_base&& other) noexcept;
-        component_base& operator= (component_base const&)    = delete;
-        component_base& operator= (component_base&&)        = delete;
+namespace NSComponent {
 
-        Property::ICompound * GetParent() const noexcept;
-        void SetParent(Property::ICompound * parent) noexcept;
+class component_base {
+    NSProperty::ICompound * parent_ {nullptr};
+public:
+    component_base() = default;
+    component_base(component_base const&)               = delete;
+    component_base(component_base&& other) noexcept;
+    component_base& operator= (component_base const&)   = delete;
+    component_base& operator= (component_base&&)        = delete;
 
-        virtual ~component_base() {}
-    };
-}
+    NSProperty::ICompound * GetParent() const noexcept;
+    void SetParent(NSProperty::ICompound * parent) noexcept;
+
+    virtual ~component_base() {}
+};
+
+} // namespace Component

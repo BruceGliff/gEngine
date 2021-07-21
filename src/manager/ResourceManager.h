@@ -5,96 +5,81 @@
 #include <string>
 #include <filesystem>
 
+#include "../debug/debug.h"
 // For unique_ptr
-#include "debug/debug.h"
-#include "renderer/TextureGL.h"
-#include "renderer/ShaderProgram.h"
-#include "model/mesh_base.h"
+#include "../material/texture.h"
+#include "../material/material.h"
+#include "../renderer/ShaderProgram.h"
+#include "../model/mesh_base.h"
 
-namespace Renderer
-{
-    enum class ETextureType;
-}
+namespace NSResources {
 
+// Contains every resourse which has to be loaded once
+class ResourcesManager final {
+    // Map of the shaders programs
+    typedef std::unordered_map<std::string, std::unique_ptr<NSRenderer::ShaderProgram>> ShaderProgramsMap;
+    ShaderProgramsMap m_ShaderPrograms;
+    // Map of the textures
+    typedef std::unordered_map<std::string, std::unique_ptr<NSMaterial::Texture>> TextureMap;
+    TextureMap m_Textures;
+    // Map of the materials
+    typedef std::unordered_map<std::string, std::unique_ptr<NSMaterial::Material>> MaterialMap;
+    MaterialMap m_Materials;
+    // Map of models
+    typedef std::unordered_map<std::string, std::unique_ptr<NSModel::IModel>> ModelMap;
+    ModelMap m_Models;
 
-// to use unordered_map<filesystem::path, ...>
-namespace std {
-    template <>
-    struct hash<std::filesystem::path>
-    {
-        std::size_t operator()(std::filesystem::path const& k) const
-        {
-            return std::filesystem::hash_value(k);
-        }
-    };
-}
+    // Path to executable file
+    std::filesystem::path const m_PathToExecutable;
 
-namespace Resources
-{
-    // constains shaders, textures
-    class ResourcesManager final
-    {
-        // TODO make ordering or/and access via name and path?
-        // Map of the shaders programs
-        typedef std::unordered_map<std::string, std::unique_ptr<Renderer::ShaderProgram>> ShaderProgramsMap;
-        ShaderProgramsMap shaderPrograms;
+    // reads file from res/ directory fe: readFile(res/shaders/fragment.glsl);
+    std::string readFile(std::filesystem::path const& relativePath) const;
 
-        // Map of the textures
-        typedef std::unordered_map<std::filesystem::path, std::unique_ptr<Renderer::TextureGL>> TexturesMap;
-        TexturesMap textures;
-        // Map of models
-        typedef std::unordered_map<std::string, std::unique_ptr<Model::IModel>> ModelMap;
-        ModelMap models;
+    // loads model
+    template <typename T>
+    NSModel::IModel * loadMesh(std::string const & modelName, std::filesystem::path const& relevantPath);
+    // loads primitives
+    template <typename T, typename ... Args>
+    NSModel::IModel * loadPrimitive(Args && ... args);
 
-        // Path to executable file
-        std::filesystem::path const path_to_exec;
+public:
+    ResourcesManager() = delete;
+    ResourcesManager(ResourcesManager const&) = delete;
+    ResourcesManager(ResourcesManager&&) = delete;
+    ResourcesManager& operator=(ResourcesManager const&) = delete;
+    ResourcesManager& operator=(ResourcesManager&&) = delete;
 
-        // reads file from res/ directory fe: readFile(res/shaders/fragment.glsl);
-        std::string readFile(std::filesystem::path const& relativePath) const;
+    // Lots of copy
+    ResourcesManager(std::filesystem::path const& execPath);
 
-        // loads model
-        template <typename T>
-        Model::IModel * loadMesh(std::string const & modelName, std::filesystem::path const& relevantPath);
-        // loads primitives
-        template <typename T, typename ... Args>
-        Model::IModel * loadPrimitive(Args && ... args);
-
-    public:
-        ResourcesManager() = delete;
-        ResourcesManager(ResourcesManager const&) = delete;
-        ResourcesManager(ResourcesManager&&) = delete;
-        ResourcesManager& operator=(ResourcesManager const&) = delete;
-        ResourcesManager& operator=(ResourcesManager&&) = delete;
-
-        // Lots of copy
-        ResourcesManager(std::filesystem::path const& execPath);
-
-        // Compile shader program with shaderName from the sources - vertexPath and fragmentPath
-        Renderer::ShaderProgram * loadShaders(    std::string const& shaderProgramName,
+    // Compiles shader program with shaderName from the sources - vertexPath and fragmentPath
+    NSRenderer::ShaderProgram * loadShaders(    std::string const& shaderProgramName,
                                                 std::filesystem::path const& vertexPath,
                                                 std::filesystem::path const& fragmentPath);
-        // Return ShaderProgram by name or nullptr if it did not find (map<>.find() may throw an exception?>
-        Renderer::ShaderProgram * getShaderProgram(std::string const& shaderProgramName) const noexcept;
+    // Returns ShaderProgram by name or nullptr if it did not find (map<>.find() may throw an exception?>
+    NSRenderer::ShaderProgram * getShaderProgram(std::string const& shaderProgramName) const noexcept;
 
-        // TODO make texture unique by path
-        // Load texture
-        Renderer::TextureGL * loadTexture(std::filesystem::path const& relevantPath, Renderer::ETextureType texType );
-        // Load default error texture
-        Renderer::TextureGL * loadTexture();
-        
-        // Loads promitives or model3d depends on type T
-        template<typename T, typename ... Args>
-        Model::IModel * loadModel(Args && ... args);
+    // Loads texture
+    NSMaterial::Texture * loadTexture(  std::filesystem::path const& relevantPath, std::string const & texture_name,
+                                        GLenum Filter = GL_LINEAR,
+                                        GLenum WrapMode = GL_CLAMP_TO_EDGE);
+    // Loads default error texture
+    NSMaterial::Texture * loadTexture();
+    // loads texture what already has been loaded. Return nullptr if there is no such texture
+    NSMaterial::Texture * loadTexture(std::string const & texture_name, bool no_warning = false);
 
-        // Gets model by name. Return null if not found
-        Model::IModel * getModel(std::string const& name) const noexcept;
+    // Gets or generates material
+    NSMaterial::Material * loadMaterial(std::string const & material_name);
 
-        // Returns texture by name or nullptr if it did not find
-        Renderer::TextureGL * getTexture(std::string const& textureName) const noexcept;
+    // Loads promitives or model3d depends on type T
+    template<typename T, typename ... Args>
+    NSModel::IModel * loadModel(Args && ... args);
+    // Gets model by name. Return null if not found. Usually for Model3D
+    NSModel::IModel * getModel(std::string const& name) const noexcept;
 
-        std::filesystem::path const& getPathToExucutable() const;
+    std::filesystem::path const& getPathToExucutable() const;
 
-    };
-}
+};
 
+} //namespace NSResources
 #include "ResourceManager.hpp"

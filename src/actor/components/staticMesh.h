@@ -1,53 +1,52 @@
 #pragma once
 
-#include <filesystem>
-
 #include "component_base.h"
-#include "properties/properties.h"
+#include "../../properties/properties.h"
+
+#include <filesystem>
 
 #include <glm/vec3.hpp>
 
-
-namespace Model {
+namespace NSModel {
     class IModel;
-}
-namespace Geometry  {
+} // namespace NSModel
+namespace NSGeometry  {
     class Transformation;
-}
+} // namespace NSGeometry
+namespace NSMaterial {
+    class Material;
+} // namespace NSMaterial
 
-namespace Component
-{
-    class StaticMesh final : 
-                            public component_base, 
-                            public Property::IDrawable,
-                            public Property::IMoveable,
-                            public Property::IScalable
-    {
-        // Non owning ptr
-        Model::IModel * model;
-        
+namespace NSComponent {
 
-    public:
-
-        // Takes model from ResourceManager. If it is not found, when where will be nullptr
-        StaticMesh(std::string const& name);
-
-        // Attach already loaded model in static mesh
-        StaticMesh(Model::IModel * model);
-
-        // Attach primitive.
-        // TODO check if it is needed
-        //StaticMesh(Model::Primitive const & primitive);
-
-        StaticMesh()                                = delete;
-        StaticMesh(StaticMesh const & )             = delete;
-        StaticMesh(StaticMesh&&)                    = delete;
-        StaticMesh & operator=(StaticMesh const &)  = delete;
-        StaticMesh & operator=(StaticMesh &&)       = delete;
+class StaticMesh final
+    : public component_base
+    , public NSProperty::IDrawable
+    , public NSProperty::IMoveable
+    , public NSProperty::IScalable {
+    // Non owning ptrs
+    NSModel::IModel * m_Model {};
+    NSMaterial::Material * m_Material {};
 
 
-        void Draw(Geometry::Transformation const & tr) override;
+public:
+    // Takes model from ResourceManager. If it is not found, when where will be nullptr
+    StaticMesh(std::string const& name);
 
-        ~StaticMesh();
-    };
-}
+    // Attachs already loaded model to static mesh
+    StaticMesh(NSModel::IModel * model);
+
+    StaticMesh()                                = delete;
+    StaticMesh(StaticMesh const & )             = delete;
+    StaticMesh(StaticMesh&&)                    = delete;
+    StaticMesh & operator=(StaticMesh const &)  = delete;
+    StaticMesh & operator=(StaticMesh &&)       = delete;
+
+    // Attaches already created material to static mesh
+    NSMaterial::Material * AttachMaterial(NSMaterial::Material *) noexcept;
+    void Draw(NSGeometry::Transformation const & tr) override;
+
+    ~StaticMesh();
+};
+
+} // namespace Component

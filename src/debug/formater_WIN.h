@@ -2,12 +2,9 @@
 #include <windows.h>   // WinApi header. Has to be included only in windows case!
 
 #include <ostream>
-namespace Format
-{
-    namespace TextFMT
-    {
-        enum ColorCode
-        {
+namespace NSFormat {
+    namespace NSTextFMT {
+        enum ColorCode {
             BLACK             = 0,
             DARKBLUE          = FOREGROUND_BLUE,
             DARKGREEN         = FOREGROUND_GREEN,
@@ -25,8 +22,7 @@ namespace Format
             YELLOW            = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN,
             WHITE             = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
         };
-        enum class StyleCode
-        {
+        enum class StyleCode {
             BOLD        = 1,
             FAINT       = 2,
             ITALIC      = 3,
@@ -38,23 +34,21 @@ namespace Format
 
             DEF
         };
-    }
+    } // namespace NSTextFMT
 
     // empty class responsible for reset format
-    class SingleCode final
-    {
+    class SingleCode final {
     public:
-        TextFMT::StyleCode code_ = TextFMT::StyleCode::DEF;
+        NSTextFMT::StyleCode code_ = NSTextFMT::StyleCode::DEF;
         short prev = 0;
 
-        SingleCode(TextFMT::StyleCode code) : code_{code}  {}
+        SingleCode(NSTextFMT::StyleCode code) : code_{code}  {}
         SingleCode() = default;
         // Rest of constructors and operators are default
         //friend std::ostream& operator<<(std::ostream& os, SingleCode const& code);
     };
     // Contains all flags which apply on out stream
-    class Formater final
-    {
+    class Formater final {
     public:
         // flags of which code is applied
         short code_ = 0;
@@ -73,10 +67,10 @@ namespace Format
         Formater& clear() noexcept;
         // set flag with code to 1
         Formater& setCode(int code) noexcept;
-        Formater& setCode(TextFMT::StyleCode code) noexcept;
+        Formater& setCode(NSTextFMT::StyleCode code) noexcept;
         // set flag with code to 1 
         Formater& removeCode(int code) noexcept;
     };
-}
-std::ostream& operator<<(std::ostream& os, Format::Formater const& fromat);
-std::ostream& operator<<(std::ostream& os, Format::SingleCode const& code);
+} // namespace NSFormat
+std::ostream& operator<<(std::ostream& os, NSFormat::Formater const& fromat);
+std::ostream& operator<<(std::ostream& os, NSFormat::SingleCode const& code);

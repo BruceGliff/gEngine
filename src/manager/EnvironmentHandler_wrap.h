@@ -2,15 +2,14 @@
 
 #include <string>
 
-namespace Resources {
+namespace NSResources {
     // forward declaration
     class ResourcesManager;
     class glWindow;
 
     // singleton that represent current used resources class.
     // It contains handling both ResourceManager and glWindow as the destruction order is important(TODO check if it is true)
-    class EnvironmentHandler_wrap final
-    {
+    class EnvironmentHandler_wrap final {
         ResourcesManager* curr_mng = nullptr;
         glWindow* curr_window = nullptr;
 
@@ -42,4 +41,4 @@ namespace Resources {
 
         ~EnvironmentHandler_wrap();
     };
-}
+} //namespace NSResources

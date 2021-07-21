@@ -1,38 +1,38 @@
 #pragma once
 
 // forward declarations
-namespace Actor {
+namespace NSActor {
     class actor;
-}
-namespace Resources {
+} //namespace NSActor
+namespace NSResources {
     class glWindow;
     class ResourcesManager;
-}
-namespace Scene {
+} //namespace NSResources
+namespace NSScene {
     class Scene;
-}
+} //namespace NSScene
 
-namespace Debug {
+namespace NSDebug {
     class Logger;
-}
+} //namespace NSDebug
 
 namespace GLOBAL {
     // Init all program properties: window, resourseMgr, scene, glad
     void Initialize(char const* path_to_exec, int win_width, int win_height, char const* win_name);
 
     // Return current active ResourceManager
-    Resources::ResourcesManager& GetResManager();
+    NSResources::ResourcesManager& GetResManager();
     // Return current active Window
-    Resources::glWindow& GetWindow();
+    NSResources::glWindow& GetWindow();
     // Return current Scene
-    Scene::Scene & GetScene();
+    NSScene::Scene & GetScene();
     
     // TODO make SetPlayer and player_wrap template T
     // Set actor as curent playable object
-    void SetPlayer(Actor::actor * actor);
+    void SetPlayer(NSActor::actor * actor);
 
     // Get current playable object
-    Actor::actor & GetPlayer();
+    NSActor::actor & GetPlayer();
 
-    Debug::Logger& GetLogger();
-}
+    NSDebug::Logger& GetLogger();
+} // namespace GLOBAL

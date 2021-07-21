@@ -11,21 +11,19 @@
     #include "formater_UNIX.h"
 #endif // gWINDOWS
 
-namespace Debug
-{
+namespace NSDebug {
     // contains plain info: file, line and what happened
-    class DebugInfo
-    {
+    class DebugInfo {
         std::string const file_place;
-        int            const line_place;
+        int         const line_place;
     protected:
         std::string const explain;
     public:
-        DebugInfo()                                = delete;
-        DebugInfo(DebugInfo const&)                = delete;
-        DebugInfo(DebugInfo&&)                    = delete;
+        DebugInfo()                             = delete;
+        DebugInfo(DebugInfo const&)             = delete;
+        DebugInfo(DebugInfo&&)                  = delete;
         DebugInfo& operator= (DebugInfo const&) = delete;
-        DebugInfo& operator= (DebugInfo&&)        = delete;
+        DebugInfo& operator= (DebugInfo&&)      = delete;
 
         // only one constructor 
         DebugInfo(std::string const& file, int line, std::string const& explanation);
@@ -37,15 +35,15 @@ namespace Debug
         virtual ~DebugInfo() {};
     };
     // class represent Warnings with specific formating
-    class Warning final : public DebugInfo
-    {
-        Format::Formater warnFormat;
+    class Warning final
+        : public DebugInfo {
+        NSFormat::Formater warnFormat;
     public:
-        Warning()                             = delete;
-        Warning(Warning const&)                = delete;
-        Warning(Warning&&)                     = delete;
-        Warning& operator= (Warning const&) = delete;
-        Warning& operator= (Warning&&)         = delete;
+        Warning()                            = delete;
+        Warning(Warning const&)              = delete;
+        Warning(Warning&&)                   = delete;
+        Warning& operator= (Warning const&)  = delete;
+        Warning& operator= (Warning&&)       = delete;
 
         // only one constructor
         Warning(std::string const& file, int line, std::string const& explanation);
@@ -53,15 +51,15 @@ namespace Debug
         void Dump(std::ostream& os = std::cout) const override;
     };
     // class represent debug messages
-    class Message final : public DebugInfo
-    {
-        Format::Formater warnFormat;
+    class Message final
+        : public DebugInfo {
+        NSFormat::Formater warnFormat;
     public:
-        Message()                             = delete;
-        Message(Message const&)                = delete;
-        Message(Message&&)                     = delete;
+        Message()                           = delete;
+        Message(Message const&)             = delete;
+        Message(Message&&)                  = delete;
         Message& operator= (Message const&) = delete;
-        Message& operator= (Message&&)         = delete;
+        Message& operator= (Message&&)      = delete;
 
         // only one constructor
         Message(std::string const& file, int line, std::string const& explanation);
@@ -69,15 +67,15 @@ namespace Debug
         void Dump(std::ostream& os = std::cout) const override;
     };
     // class represent Errors with specific formating
-    class Error final : public DebugInfo
-    {
-        Format::Formater errFormat;
+    class Error final
+        : public DebugInfo {
+        NSFormat::Formater errFormat;
     public:
         Error()                         = delete;
-        Error(Error const&)                = delete;
-        Error(Error&&)                     = delete;
+        Error(Error const&)             = delete;
+        Error(Error&&)                  = delete;
         Error& operator= (Error const&) = delete;
-        Error& operator= (Error&&)         = delete;
+        Error& operator= (Error&&)      = delete;
 
         // only one constructor
         Error(std::string const& file, int line, std::string const& explanation);
@@ -86,11 +84,9 @@ namespace Debug
     };
 
     // Class contains all logs due to runnig program
-    class Logger
-    {
+    class Logger {
         // vector of logs: Errors and Warnings
         std::vector<DebugInfo const *> logs;
-
     public:
         Logger()                             = default;
         Logger(Logger const&)                = delete;
@@ -117,4 +113,4 @@ namespace Debug
         ~Logger();
 
     };
-}
+} // namespace NSDebug
