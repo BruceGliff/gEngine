@@ -57,7 +57,9 @@ void Texture::activate(char const * prefix, unsigned offset, NSRenderer::ShaderP
     // prefix is _Diffuse, _Specular and so one..
     std::string const name { std::string{"Tex"}.append(prefix) };
     std::string const flag {std::string{"IsTex"}.append(prefix) };
-    Shader.SetInt(name.c_str(), offset); // TODO it should be done once!?
-    Shader.SetInt(flag.c_str(), 1); // TODO it should be done once!?
+    Shader.SetInt(  std::string{prefix}.append(".Tex").c_str(),
+                    offset); // TODO it should be done once!?
+    Shader.SetInt(  std::string{prefix}.append(".IsTex").c_str(), 
+                    1); // TODO it should be done once!?
     glBindTexture(GL_TEXTURE_2D, m_ID);
 }
