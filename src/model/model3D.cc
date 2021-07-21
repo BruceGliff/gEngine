@@ -59,3 +59,5 @@ void Model3D::Draw() const {
     for (auto&& mesh : m_Meshes)
         mesh.Draw();
 }
+
+Model3D::~Model3D() {}

@@ -10,7 +10,7 @@
 ABackpack::ABackpack() {
   NSResources::ResourcesManager & resMng = GLOBAL::GetResManager();
 
-  NSModel::IModel * model = resMng.loadModel<NSModel::Model3D>("backpack", "res/models/primitives/Cube.obj");
+  NSModel::IModel * model = resMng.loadModel<NSModel::Cube>();
   NSComponent::StaticMesh * mesh = AttachComponent<NSComponent::StaticMesh>("backpack_mesh", model);
   NSMaterial::Material * material = resMng.loadMaterial("backpack_mat");
   material->Set<NSMaterial::Diffuse>(resMng.loadTexture("res/textures/container.png", std::string{"backpack_diffuse"}));

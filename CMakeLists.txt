@@ -42,6 +42,7 @@ set(SOURCES_CC
 #model
 	src/model/mesh_base.cc
 	src/model/model3D.cc
+	src/model/primitives.cc
 #manager
 	src/manager/ResourceManager.cc
 	src/manager/EnvironmentHandler_wrap.cc
@@ -79,7 +80,7 @@ list(APPEND SOURCES_CC
 list(APPEND SOURCES_H
 		src/material/stb_image.h
 		src/actor/actor.hpp
-		src/model/primitives.DEF
+		src/model/primitivesDEF.h
 		src/manager/ResourceManager.hpp
 #toberemoved
 		src/model/primitives.h
