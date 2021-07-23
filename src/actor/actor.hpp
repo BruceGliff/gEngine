@@ -1,5 +1,7 @@
 #include "debug/debug.h"
 
+#include "components/light.h"
+
 #include <functional>
 
 template <typename T, typename ... Args>
@@ -20,6 +22,9 @@ T * NSActor::actor::AttachComponent(std::string const & comp_name, Args && ... a
 
     insertProperty<NSProperty::IDrawable>(component, /*OUT*/ aggregation);
     insertProperty<NSProperty::ICompound>(component, /*OUT*/ aggregation);
+
+    if constexpr (std::is_base_of<NSComponent::ILight, T>::value)
+        lightsInActor.push_back(p);
 
     auto&& it = components.find(comp_name);
     if (it != components.end()) {

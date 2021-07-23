@@ -11,6 +11,7 @@
 #include "geometry/geometry_base.h"
 
 #include "objects/backpack.h"
+#include "objects/sun.h"
 
 int main(int argc, char * argv[])
 {
@@ -31,6 +32,7 @@ int main(int argc, char * argv[])
     
 
     Scene.Spawn<ABackpack>();
+    Scene.Spawn<ALSun>();
 
     NSActor::actor player_actor{};
     player_actor.AttachComponent<NSComponent::camera>("camera");

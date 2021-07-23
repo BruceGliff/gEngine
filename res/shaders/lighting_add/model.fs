@@ -66,6 +66,8 @@ uniform SGlobalLight GlobalLight;
 uniform SPointLight PointLights[NR_POINT_LIGHTS];
 uniform SSpotLight PointLight;
 
+//vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
+
 void main() {
     vec4 diffColor = selectColor(Material._Diffuse);
     vec4 specColor = selectColor(Material._Specular);
@@ -73,6 +75,6 @@ void main() {
 
     if (diffColor.a <  0.1)
         discard;
-    FragColor = ambtColor;
+    FragColor = vec4(normalize(viewPos), 1.f);
 }
 
