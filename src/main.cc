@@ -12,6 +12,7 @@
 
 #include "objects/backpack.h"
 #include "objects/sun.h"
+#include "objects/Cube.h"
 
 int main(int argc, char * argv[])
 {
@@ -32,6 +33,7 @@ int main(int argc, char * argv[])
     
 
     Scene.Spawn<ABackpack>();
+    Scene.Spawn<ACube>()->SetPosition({1.f, 1.f, 1.f});
     Scene.Spawn<ALSun>();
 
     NSActor::actor player_actor{};

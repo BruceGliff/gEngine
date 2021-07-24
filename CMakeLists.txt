@@ -64,6 +64,7 @@ set(SOURCES_CC
 #objects
 	src/objects/backpack.cc
 	src/objects/sun.cc
+	src/objects/Cube.cc
 )
 
 # 3. generate .h names
