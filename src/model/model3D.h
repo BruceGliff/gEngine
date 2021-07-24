@@ -20,11 +20,18 @@ class Model3D final
     std::vector<Mesh> m_Meshes;
     
     void processNode(aiNode* node, aiScene const * scene);
-
 public:
+    Model3D()                            = delete;
+    Model3D(Model3D const &)             = delete;
+    Model3D(Model3D &&)                  = delete;
+    Model3D & operator=(Model3D const &) = delete;
+    Model3D & operator=(Model3D &&)      = delete;
+
+
     Model3D(std::filesystem::path const& path);
     void Draw() const override;
 
+    virtual ~Model3D();
 };
 
 } // namespace NSModel

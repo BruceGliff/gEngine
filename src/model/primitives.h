@@ -2,31 +2,25 @@
 
 #include <memory>
 #include <string>
-#include "mesh_base.h"
-
-#include "../process/global.h"
-#include "../manager/ResourceManager.h"
+#include "Model3D.h"
 
 namespace NSModel {
-class Primitive {
-// PLACEHOLDER mb to be removed
+
+// Primitive is a wrapper of Model3D with default loading path
+class Primitive
+    : public IModel {
+public:
+    // Path is hardcoded: /res/models/primitives/
+    static std::string getFolderPath();
+    virtual void Draw() const override;
+    virtual ~Primitive();
 };
 
-    // class Primitive
-    //     : public IModel {
-    // protected:
-    //     Primitive(std::string const & name);
-    //     std::unique_ptr<Mesh> mesh;
 
-    // public:
-    //     void Draw(Renderer::ShaderProgram const & shader) const override;
-    //     virtual ~Primitive() {}
-    // };
+// All classes declared in primitivesDEF.h
+#define PRIMITIVE_DEF
+#include "primitivesDEF.h"
+#undef PRIMITIVE_DEF
 
-
-    // #include "primitives.DEF"
-    // CONTRUCT_PRIMITIVE(Plane);
-    // CONTRUCT_PRIMITIVE(Cube);  
-    // #undef CONTRUCT_PRIMITIVE
 } // namespace NSModel
 
