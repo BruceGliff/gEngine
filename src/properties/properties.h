@@ -64,6 +64,7 @@ public:
 
     // Assign to each drawable object shader program what is responsible for drawing
     void SetShaderProgram(NSRenderer::ShaderProgram * sp) noexcept;
+    NSRenderer::ShaderProgram * GetShaderProgram() const noexcept;
 
     virtual ~IDrawable(){}
 };

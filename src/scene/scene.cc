@@ -4,6 +4,9 @@
 #include <glm/gtx/norm.hpp>
 
 #include "geometry/geometry_base.h"
+#include "../properties/properties.h"
+#include "../actor/components/light.h"
+#include "../renderer/ShaderProgram.h"
 
 using namespace NSScene;
 
@@ -23,8 +26,20 @@ void Scene::Process() {
                     return  glm::length2(a->second->GetPosition() - camPos) > 
                             glm::length2(b->second->GetPosition() - camPos);
                 });
-    for (auto && x : blendedObjects)
+    for (auto && x : blendedObjects) {
+        NSActor::actor & pA = *x->second.get();
+        if (pA.IsDrawable())
+            std::for_each(pA.drawable_begin(), pA.drawable_end(), [this](NSProperty::IProcessable * proc) {
+                if (NSProperty::IDrawable * Drawable = dynamic_cast<NSProperty::IDrawable *>(proc)) // TODO static_cast?
+                    if (NSRenderer::ShaderProgram * Shader = Drawable->GetShaderProgram())
+                        for (auto const & [key, light] : lightsInScene)
+                            light->Procces(*Shader);
+                else 
+                    gERROR("Not suppose to happen! not Drawable in DrawableList");
+
+            });
         x->second->Process(tr);
+    }
 }
 
 NSActor::actor * Scene::GetActor(NSResources::Entity const & en) const noexcept {
@@ -41,7 +56,18 @@ NSActor::actor * Scene::operator[](NSResources::Entity const & en) const noexcep
     return GetActor(en);
 }
 
-Scene::iterator Scene::begin() noexcept { return scene.begin(); }
-Scene::iterator Scene::end() noexcept { return scene.end(); }
-Scene::const_iterator Scene::begin() const noexcept { return scene.begin(); }
-Scene::const_iterator Scene::end() const noexcept { return scene.end(); }
+bool Scene::emplaceActor(NSActor::actor * pA) {
+    auto && it = scene.find(pA->GetEntity());
+    if (it != scene.end()) {
+        gWARNING(std::string{"This is not suppose to happen: Object already in scene. id: "} + std::to_string(pA->GetEntityID()));
+        return false;
+    }
+    std::for_each(pA->lights_begin(), pA->lights_end(), [this](NSComponent::ILight * light) {
+        lightsInScene.emplace(light->GetEntity(), light);
+    });
+    // TODO make insertion in anothe way. With check return value
+    auto spawned = scene.emplace(pA->GetEntity(), pA);
+    blendedObjects.push_back(spawned.first);
+
+    return true;
+}

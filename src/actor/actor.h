@@ -17,6 +17,9 @@ namespace NSRenderer {
 namespace NSGeometry {
     class Transformation;
 } // namespace NSRenderer
+namespace NSComponent {
+    class ILight;
+} // namespace NSComponent
 
 namespace NSActor {
 // Class represent main object in scene.
@@ -38,15 +41,21 @@ class actor
     // We assume that one component may have a lot of properties, that would be represented as IProcessable *
     // All operations on component must accompanied with operations
     // insertProperty, removeProperty, processProperty
+    typedef std::list<NSProperty::IProcessable *> ProcessablesList;
 
-    typedef std::pair<NSComponent::component_base*, std::vector<std::list<NSProperty::IProcessable *>::iterator>> ComponentAggregation;
+    typedef std::pair<NSComponent::component_base*, std::vector<ProcessablesList::iterator>> ComponentAggregation;
     typedef std::unordered_map<std::string, ComponentAggregation> ComponentMap;
     ComponentMap components {};
 
-    std::unordered_map<std::type_index, std::list<NSProperty::IProcessable *>> properties {};
+    std::unordered_map<std::type_index, ProcessablesList> properties {};
+
+    // This container not for actor itself but for Scene to accumulate all lights in scene
+    typedef std::list<NSComponent::ILight *> LightsList;
+    LightsList lightsInActor {};
 
     // TODO Check if remove throw an exception
-    void remove_properties_from_generated_arrays(std::vector<std::list<NSProperty::IProcessable *>::iterator> const & prop_array) noexcept;
+    // TODO replace list with forward_list
+    void remove_properties_from_generated_arrays(std::vector<ProcessablesList::iterator> const & prop_array) noexcept;
 
     // insert properties are contained in component into aggregation
     template<typename PropertyToInsert>
@@ -54,7 +63,7 @@ class actor
 
     // revome property from arrays TODO : which array?
     template<typename PropertyToDelete>
-    void removeProperty(std::list<NSProperty::IProcessable *>::iterator const & property);
+    void removeProperty(ProcessablesList::iterator const & property);
 
     // Process property.
     // Each property has to be processed within own function
@@ -90,6 +99,20 @@ public:
 
     // Handle behavior of class. Do drawing or physics or so one
     virtual void Process(NSGeometry::Transformation const &) override;
+
+// accessors to IDrawable iterator
+    // This is should be checked before iterating
+    bool IsDrawable() const noexcept;
+    ProcessablesList::const_iterator drawable_begin() const;
+    ProcessablesList::const_iterator drawable_end() const;
+    ProcessablesList::iterator drawable_begin();
+    ProcessablesList::iterator drawable_end();
+
+// accessors to light iterator
+    LightsList::const_iterator lights_begin() const noexcept { return lightsInActor.begin(); }
+    LightsList::const_iterator lights_end() const noexcept { return lightsInActor.end(); }
+    LightsList::iterator lights_begin() noexcept { return lightsInActor.begin(); }
+    LightsList::iterator lights_end() noexcept { return lightsInActor.end(); }
 
     virtual ~actor();
 };

@@ -14,21 +14,13 @@ T * IMaterialNode::get() noexcept {
 // Material
 template <class NodeTy>
 Texture * Material::Set(Texture * texture) {
-    auto [it, isOk] = m_Material.insert_or_assign(getComponentTy<NodeTy>(), texture);
-    if (!isOk) {
-      gWARNING("Insertion node to material fails!");
-      return nullptr;
-    }
+    auto [it, isInsertion] = m_Material.insert_or_assign(getComponentTy<NodeTy>(), texture);
     return it->second.template get<Texture>();
 }
 
 template <typename NodeTy>
 Color * Material::Set(Color const & color) {
-    auto [it, isOk] = m_Material.insert_or_assign(getComponentTy<NodeTy>(), color);
-    if (!isOk) {
-      gWARNING("Insertion node to material fails!");
-      return nullptr;
-    }
+    auto [it, isInsertion] = m_Material.insert_or_assign(getComponentTy<NodeTy>(), color);
     return it->second.template get<Color>();
 }
 

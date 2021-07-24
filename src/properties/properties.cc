@@ -73,3 +73,8 @@ IDrawable::IDrawable(NSRenderer::ShaderProgram * sp) {
 void IDrawable::SetShaderProgram(NSRenderer::ShaderProgram * sp) noexcept {
     shader = sp;
 }
+NSRenderer::ShaderProgram * IDrawable::GetShaderProgram() const noexcept  {
+    if (!shader)
+        gWARNING("Getting null shader");
+    return shader;
+}
