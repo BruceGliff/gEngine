@@ -16,10 +16,7 @@ T * NSScene::Scene::Spawn(Args && ... args) {
         return nullptr;
     }
 
-    auto spawned = scene.emplace(pA->GetEntity(), pA);
-    blendedObjects.push_back(spawned.first);
-
-    return p;
+    return emplaceActor(pA) ? p : nullptr;
 }
 
 template<typename T, typename NoRefT>
@@ -38,16 +35,7 @@ NoRefT * NSScene::Scene::Attach(T && obj) {
         return nullptr;
     }
 
-    auto && it = scene.find(pA->GetEntity());
-    if (it != scene.end()) {
-        gWARNING(std::string{"This is not suppose to happen: Object already in scene. id: "} + std::to_string(pA->GetEntityID()));
-        return nullptr;
-    }
-    
-    auto spawned = scene.emplace(pA->GetEntity(), pA);
-    blendedObjects.push_back(spawned.first);
-
-    return p;
+    return emplaceActor(pA) ? p : nullptr;
 }
 
 template <typename T>

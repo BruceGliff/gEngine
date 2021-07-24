@@ -18,9 +18,8 @@ actor::actor(actor&& otherActor) noexcept
     , properties{std::move(otherActor.properties)} {
 
     // set new parent to components
-    for (auto&& x : components) {
+    for (auto&& x : components)
         x.second.first->SetParent(this);
-    }
 }
 
 NSComponent::component_base * actor::GetComponent(std::string const& comp_name) const noexcept {
@@ -67,9 +66,8 @@ void actor::remove_properties_from_generated_arrays(std::vector<std::list<NSProp
 }
 
 actor::~actor() {
-    for (auto && x : components) {
+    for (auto && x : components)
         delete x.second.first;
-    }
 }
 
 void actor::Process(NSGeometry::Transformation const & tr) {
@@ -77,4 +75,25 @@ void actor::Process(NSGeometry::Transformation const & tr) {
 
     processProperty<NSProperty::IDrawable>(&NSProperty::IDrawable::Draw,    newTr);
     processProperty<NSProperty::ICompound>(&NSProperty::ICompound::Process, newTr);
+}
+
+// TODO create funciton for std::type_index(typeid(NSProperty::IDrawable))
+bool actor::IsDrawable() const noexcept {
+    return properties.find(std::type_index(typeid(NSProperty::IDrawable))) != properties.end();
+}
+actor::ProcessablesList::const_iterator actor::drawable_begin() const {
+    if (!IsDrawable()) gERROR("Before iteration you should check for drawable!");
+    return properties.at(std::type_index(typeid(NSProperty::IDrawable))).begin();
+}
+actor::ProcessablesList::const_iterator actor::drawable_end() const {
+    if (!IsDrawable()) gERROR("Before iteration you should check for drawable!");
+    return properties.at(std::type_index(typeid(NSProperty::IDrawable))).end();
+}
+actor::ProcessablesList::iterator actor::drawable_begin() {
+    if (!IsDrawable()) gERROR("Before iteration you should check for drawable!");
+    return properties.at(std::type_index(typeid(NSProperty::IDrawable))).begin();
+}
+actor::ProcessablesList::iterator actor::drawable_end() {
+    if (!IsDrawable()) gERROR("Before iteration you should check for drawable!");
+    return properties.at(std::type_index(typeid(NSProperty::IDrawable))).end();
 }

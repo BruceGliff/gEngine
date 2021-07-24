@@ -44,10 +44,11 @@ Color::Color(float const * data, unsigned size) noexcept {
 void Color::activate(char const * prefix, unsigned offset, NSRenderer::ShaderProgram const & Shader) const {
     // TODO activete color
     // prefix is _Diffuse, _Specular and so one..
-    std::string const name { std::string{"Col"}.append(prefix) };
-    std::string const flag {std::string{"IsTex"}.append(prefix) };
-    Shader.setVec4(name.c_str(), glm::vec4{m_color.r,m_color.g,m_color.b,m_color.a}); // TODO it should be done once!?
-    Shader.SetInt(flag.c_str(), 0); // TODO it should be done once!?
+    // TODO try to get rid of string
+    Shader.setVec4( std::string{"Material."}.append(prefix).append(".Col").c_str(),
+                    glm::vec4{m_color.r,m_color.g,m_color.b,m_color.a}); // TODO it should be done once!?
+    Shader.SetInt(  std::string{"Material."}.append(prefix).append(".IsTex").c_str(), 
+                    0); // TODO it should be done once!?
 }
 
 

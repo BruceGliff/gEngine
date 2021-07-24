@@ -41,6 +41,7 @@ float const& camera::GetFOV() const noexcept {
     return fov;
 }
 
+// TODO separate global position
 glm::mat4 camera::GetViewMatrix() const {
     // TODO investigate if rotation is necessaty here
     NSProperty::ICompound * parent = GetParent();

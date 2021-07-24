@@ -7,6 +7,10 @@
 #include "manager/Entity.h"
 #include "gismo/grid.h"
 
+namespace NSComponent {
+    class ILight;
+} // namespace NSComponent
+
 namespace NSScene {
 // Class that containt all resources in the scene and Process in loop
 // All objects in scene must have Entity to be accessable directly by it
@@ -14,15 +18,23 @@ namespace NSScene {
 class Scene final {
     Grid grid;
     // TODO make maped container to scene which represent sorted objects
-    std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>> scene;
-    // TODO make light seperate
+    typedef std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>> ActorsMap;
+    ActorsMap scene {};
+    // Light is a component and to each actor in scene we should pass info about light
+    typedef std::unordered_map<NSResources::Entity, NSComponent::ILight *> LightsMap;
+    LightsMap lightsInScene {};
     // TODO separate transparent objects and opaque to sort transparent from furthes to nearest
 
-    typedef std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>>::iterator iterator;
-    typedef std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>>::const_iterator const_iterator;
+    typedef ActorsMap::iterator iterator;
+    typedef ActorsMap::const_iterator const_iterator;
 
     int const sceneDefSize = 100; // default there are max 100 objects in scene to avoid rallocations
     std::vector<const_iterator> blendedObjects;
+
+    // Collect useful info (like light) from actor.
+    // Places it in scene
+    // Return true if emplacement is successful
+    bool emplaceActor(NSActor::actor * pA);
 
 public:
     Scene();
@@ -62,10 +74,10 @@ public:
     // Return ptr of actor with given Entity(id) or nullptr if it is not found
     NSActor::actor * operator[](NSResources::Entity const & en) const noexcept;
 
-    iterator begin() noexcept;
-    iterator end() noexcept;
-    const_iterator begin() const noexcept;
-    const_iterator end() const noexcept;
+    iterator begin() noexcept { return scene.begin(); };
+    iterator end() noexcept {  return scene.end(); };
+    const_iterator begin() const noexcept {  return scene.begin(); };
+    const_iterator end() const noexcept { return scene.end(); };
 
 };
 

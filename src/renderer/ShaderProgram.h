@@ -33,7 +33,7 @@ public:
     // set an id fo texture for uniform variable in fragment shader "tex". Also text is a name
     // value is a slot value at shader program. if there 1 texture, then value 0, if there if second - then 1 ... 
     void SetInt(char const * name, int const value) const noexcept;
-
+    // TODO rename to SetMat4 ..
     // load mat4 by name
     void setMat4(char const * name, glm::mat4 const& mat) const noexcept;
 

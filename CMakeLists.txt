@@ -54,6 +54,7 @@ set(SOURCES_CC
 	src/actor/components/component_base.cc
 	src/actor/components/camera.cc
 	src/actor/components/staticMesh.cc
+	src/actor/components/light.cc
 #material
 	src/material/color.cc
 	src/material/ColorComponent.cc
@@ -62,6 +63,8 @@ set(SOURCES_CC
 	src/material/texture.cc
 #objects
 	src/objects/backpack.cc
+	src/objects/sun.cc
+	src/objects/Cube.cc
 )
 
 # 3. generate .h names
