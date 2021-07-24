@@ -2,7 +2,7 @@
 
 #include "../process/global.h"
 #include "../manager/ResourceManager.h"
-#include "../model/model3D.h"
+#include "../model/primitives.h"
 #include "../actor/components/staticMesh.h"
 
 #include <string>
@@ -10,7 +10,7 @@
 ACube::ACube() {
   NSResources::ResourcesManager & resMng = GLOBAL::GetResManager();
 
-  NSModel::IModel * model = resMng.loadModel<NSModel::Model3D>("cube", "res/models/primitives/Cube.obj");
+  NSModel::IModel * model = resMng.loadModel<NSModel::Cube>();
   NSComponent::StaticMesh * mesh = AttachComponent<NSComponent::StaticMesh>("cube_mesh", model);
   NSMaterial::Material * material = resMng.loadMaterial("cube_mat");
   material->Set<NSMaterial::Diffuse>(resMng.loadTexture("res/textures/container.png", std::string{"container_diffuse"}));
