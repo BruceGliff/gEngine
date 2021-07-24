@@ -77,6 +77,7 @@ void actor::Process(NSGeometry::Transformation const & tr) {
     processProperty<NSProperty::ICompound>(&NSProperty::ICompound::Process, newTr);
 }
 
+// TODO create funciton for std::type_index(typeid(NSProperty::IDrawable))
 bool actor::IsDrawable() const noexcept {
     return properties.find(std::type_index(typeid(NSProperty::IDrawable))) != properties.end();
 }
