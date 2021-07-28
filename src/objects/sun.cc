@@ -14,3 +14,17 @@ ALSun::ALSun() {
   light->SetDiffuse({0.8f, 0.8f, 0.8f});
   light->SetSpecular({0.5f, 0.5f, 0.5f});
 }
+
+void ALSun::Process(NSGeometry::Transformation const & tr) {
+  float const speed = 0.01f;
+  static unsigned frame = 0; // TODO move frame into function params as delay
+
+  NSComponent::GlobalLight * light = GetComponentByName<NSComponent::GlobalLight>("global_light");
+
+  float const x = std::cos(speed * frame++);
+  float const z = std::sin(speed * frame++);
+
+  light->SetDirection({x, -1.f, z});
+
+  actor::Process(tr);
+}

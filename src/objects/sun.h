@@ -1,6 +1,7 @@
 #include "../actor/actor.h"
 
-class ALSun : public NSActor::actor {
+class ALSun final : public NSActor::actor {
 public:
   ALSun();
+  void Process(NSGeometry::Transformation const &) override;
 };
