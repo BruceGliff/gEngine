@@ -42,7 +42,7 @@ public:
     IMoveable(IMoveable const&)                = delete;
     IMoveable(IMoveable&& other) noexcept;
     IMoveable& operator= (IMoveable const&)    = delete;
-    IMoveable& operator= (IMoveable&&)        = delete;
+    IMoveable& operator= (IMoveable&&)         = delete;
 
     virtual ~IMoveable() {};
 };

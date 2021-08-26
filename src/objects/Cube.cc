@@ -18,4 +18,15 @@ ACube::ACube() {
   material->Set<NSMaterial::Ambient>(resMng.loadTexture(std::string{"container_diffuse"}));
   mesh->AttachMaterial(material);
   SetScale({0.1f, 0.1f, 0.1f});
+
+
+  NSComponent::PointLight * light = AttachComponent<NSComponent::PointLight>("light", glm::vec3{1.f, 1.f, 1.f});
+  light->SetAmbient({0.1f, 0.1f, 0.1f});
+  light->SetDiffuse({0.8f, 0.8f, 0.8f});
+  light->SetSpecular({0.5f, 0.5f, 0.5f});
+
+  NSComponent::PointLight * light2 = AttachComponent<NSComponent::PointLight>("light2", glm::vec3{-1.f, -1.f, -1.f});
+  light2->SetAmbient({0.1f, 0.f, 0.f});
+  light2->SetDiffuse({0.8f, 0.f, 0.f});
+  light2->SetSpecular({0.5f, 0.5f, 0.5f});
 }

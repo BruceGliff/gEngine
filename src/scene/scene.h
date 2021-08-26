@@ -23,6 +23,7 @@ class Scene final {
     // Light is a component and to each actor in scene we should pass info about light
     typedef std::unordered_map<NSResources::Entity, NSComponent::ILight *> LightsMap;
     LightsMap lightsInScene {};
+    unsigned m_LightID {0}; // TODO rethink how to pass lightID to procces of PointLight
     // TODO separate transparent objects and opaque to sort transparent from furthes to nearest
 
     typedef ActorsMap::iterator iterator;
@@ -45,7 +46,7 @@ public:
 
     // Process all objects in scene
     void Process();
-
+    unsigned GetLightID() const noexcept { return m_LightID; }; // TODO rethink!
     // TODO as I don't have deletions from scene blendedObjects are increased in
     // Spawn and Attach methods. As there will be deletions, have to think how to
     // delete from blendedObjects.

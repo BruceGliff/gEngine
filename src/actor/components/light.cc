@@ -1,10 +1,16 @@
 #include "light.h"
 
+#include "../../debug/debug.h"
+
 #include "../../renderer/ShaderProgram.h"
+#include "../../process/global.h"
+#include "../../scene/scene.h"
 
 #include <string>
+#include <typeinfo>
 
 using namespace NSComponent;
+
 
 void ILight::PassColorToShader(char const * LightName, NSRenderer::ShaderProgram const & Shader) const {
     std::string prefix {std::string{LightName}.append(".colors.")};
@@ -27,7 +33,8 @@ ILight& ILight::SetSpecular(glm::vec3 const & Specular) noexcept {
 }
 
 GlobalLight::GlobalLight(glm::vec3 const & Direction) noexcept
-    : m_Direction { glm::normalize(Direction)} {}
+    : m_Direction { glm::normalize(Direction)} {
+}
 
 void GlobalLight::Procces(NSRenderer::ShaderProgram const & Shader) const {
     Shader.Use();
@@ -40,3 +47,18 @@ GlobalLight& GlobalLight::SetDirection(glm::vec3 const & Direction) noexcept {
     return *this;
 }
 
+PointLight::PointLight(glm::vec3 const & Position) noexcept {
+    SetPosition(Position);
+}
+
+void PointLight::Procces(NSRenderer::ShaderProgram const & Shader) const {
+    unsigned LightID = GLOBAL::GetScene().GetLightID() - 1;
+
+    Shader.Use();
+    std::string const LightIndx = "PointLights[" + std::to_string(LightID) + "]";
+    Shader.setVec3(std::string{LightIndx + ".position"}.c_str(), GetPosition());
+    Shader.setFloat(std::string{LightIndx + ".constant"}.c_str(), 1.0f);
+    Shader.setFloat(std::string{LightIndx + ".linear"}.c_str(), 0.09f);
+    Shader.setFloat(std::string{LightIndx + ".quadratic"}.c_str(), 0.032f);
+    PassColorToShader(LightIndx.c_str(), Shader);
+}

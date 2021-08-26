@@ -3,6 +3,7 @@
 #include "component_base.h"
 
 #include "../../manager/Entity.h"
+#include "../../properties/properties.h"
 
 #include <glm/vec3.hpp>
 
@@ -47,5 +48,13 @@ public:
     GlobalLight& SetDirection(glm::vec3 const & Direction) noexcept;
 };
 
+class PointLight
+    : public ILight
+    , public NSProperty::IMoveable {
+public:
+    PointLight(glm::vec3 const & Position) noexcept;
+
+    void Procces(NSRenderer::ShaderProgram const & Shader) const override;
+};
 
 } //namespace NSComponent;
