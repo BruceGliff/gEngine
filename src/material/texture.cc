@@ -63,3 +63,43 @@ void Texture::activate(char const * prefix, unsigned offset, NSRenderer::ShaderP
                     1); // TODO it should be done once!?
     glBindTexture(GL_TEXTURE_2D, m_ID);
 }
+
+TextureCube::TextureCube(std::filesystem::path const & FolderWithTextures) {
+    prepairTexture(FolderWithTextures);
+}
+
+void TextureCube::prepairTexture(std::filesystem::path const & FolderWithTextures) {
+    char * Postfix[6]= { 
+        "right.jpg",
+        "left.jpg",
+        "top.jpg",
+        "bottom.jpg",
+        "front.jpg",
+        "back.jpg"
+    };
+
+    glGenTextures(1, &m_ID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_ID);
+
+    // 6 - number of cube's faces.
+    // For each face there should be a texture file
+    for (int i = 0; i != 6; ++i) {
+        raw_texture data {FolderWithTextures / Postfix[i], false};
+        glTexImage2D(   GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 
+                        0, GL_RGB, data().Width, data().Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data().Data
+        );
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
+TextureCube::~TextureCube() {
+    glDeleteTextures(1, &m_ID);
+}
+
+void TextureCube::activate(NSRenderer::ShaderProgram const& Shader) const {
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_ID);
+}

@@ -6,6 +6,7 @@
 #include "actor/actor.h"
 #include "manager/Entity.h"
 #include "gismo/grid.h"
+#include "skybox/skybox.h"
 
 namespace NSComponent {
     class ILight;
@@ -17,6 +18,7 @@ namespace NSScene {
 // We assume, that scene occupies and releases all resources passed to it
 class Scene final {
     Grid grid;
+    Skybox m_Skybox;
     // TODO make maped container to scene which represent sorted objects
     typedef std::unordered_map<NSResources::Entity, std::unique_ptr<NSActor::actor>> ActorsMap;
     ActorsMap scene {};
@@ -44,6 +46,7 @@ public:
     Scene& operator= (Scene const&) = delete;
     Scene& operator= (Scene&&)        = delete;
 
+    Skybox * GetSkybox();
     // Process all objects in scene
     void Process();
     unsigned GetLightID() const noexcept { return m_LightID; }; // TODO rethink!

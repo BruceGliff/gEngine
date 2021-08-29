@@ -14,6 +14,10 @@ Scene::Scene() {
     blendedObjects.reserve(sceneDefSize);
 }
 
+Skybox * Scene::GetSkybox() {
+    return &m_Skybox;
+}
+
 void Scene::Process() {
     NSGeometry::Transformation tr{};
     grid.Draw(tr);
@@ -46,6 +50,8 @@ void Scene::Process() {
             });
         pA.Process(tr);
     }
+    
+    m_Skybox.Draw(tr);
 }
 
 NSActor::actor * Scene::GetActor(NSResources::Entity const & en) const noexcept {

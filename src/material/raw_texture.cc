@@ -15,10 +15,10 @@
 
 using namespace NSMaterial;
 
-raw_texture::raw_texture(std::filesystem::path const& Path) noexcept 
+raw_texture::raw_texture(std::filesystem::path const& Path, bool VerticalFlip) noexcept 
     : m_TexName {Path.filename().string()} {
     // Load texture upside down
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(VerticalFlip);
     m_Data = stbi_load(Path.string().c_str(), &m_Width, &m_Height, &m_Channels, 0);
     
     m_IsNoNeedToDelete = !m_Data;
