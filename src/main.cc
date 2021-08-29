@@ -31,7 +31,6 @@ int main(int argc, char * argv[])
         gERROR("Creating objShader program in main");
     }
     
-
     Scene.Spawn<ABackpack>();
     Scene.Spawn<ACube>()->SetPosition({1.f, 1.f, 1.f});
     Scene.Spawn<ALSun>();

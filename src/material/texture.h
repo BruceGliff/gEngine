@@ -2,6 +2,8 @@
 
 #include "raw_texture.h"
 
+#include <string_view>
+
 #include <glad/glad.h>
 
 namespace std {
@@ -20,7 +22,6 @@ class Texture final {
     void prepairTexture(raw_texture const &, GLenum, GLenum);
 
 public:
-
     Texture() noexcept;
     Texture(Texture const&)             = delete;
     Texture(Texture&&)                  = delete;
@@ -36,4 +37,24 @@ public:
     void activate(char const * prefix, unsigned offset, NSRenderer::ShaderProgram const& Shader) const;
 };
 
-} // namespace Material
+class TextureCube final {
+    unsigned m_ID {};
+    void prepairTexture(std::filesystem::path const & FolderWithTextures);
+
+public:
+    // Loads Cube texture from Folder. /textures/Ocean/*.jpg
+    // Naming "right", "left", "top", "bottom" etc will be added automaticaly
+    TextureCube(std::filesystem::path const & FolderWithTextures);
+
+    TextureCube() = delete;
+    TextureCube(TextureCube const&)             = delete;
+    TextureCube(TextureCube&&)                  = delete;
+    TextureCube& operator=(TextureCube const&)  = delete;
+    TextureCube& operator=(TextureCube&&)       = delete;
+
+    ~TextureCube();
+
+    void activate(NSRenderer::ShaderProgram const& Shader) const;
+};
+
+} // namespace NSMaterial

@@ -26,6 +26,7 @@ project(${PROJECT_NAME})
 set(SOURCES_CC
 #scene
 	src/scene/gismo/grid.cc
+	src/scene/skybox/skybox.cc
 	src/scene/scene.cc
 	src/scene/scene_wrap.cc
 #debug

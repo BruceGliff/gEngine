@@ -14,8 +14,13 @@ Scene::Scene() {
     blendedObjects.reserve(sceneDefSize);
 }
 
+Skybox * Scene::GetSkybox() {
+    return &m_Skybox;
+}
+
 void Scene::Process() {
     NSGeometry::Transformation tr{};
+    m_Skybox.Draw(tr);
     grid.Draw(tr);
 
     auto & camPos = GLOBAL::GetPlayer().GetPosition();

@@ -49,4 +49,4 @@ public:
     ~StaticMesh();
 };
 
-} // namespace Component
+} // namespace NSComponent

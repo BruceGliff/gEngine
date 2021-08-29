@@ -22,6 +22,7 @@ class ResourcesManager final {
     // Map of the textures
     typedef std::unordered_map<std::string, std::unique_ptr<NSMaterial::Texture>> TextureMap;
     TextureMap m_Textures;
+    std::unique_ptr<NSMaterial::TextureCube> m_TextureCube; // Skybox is unique for program
     // Map of the materials
     typedef std::unordered_map<std::string, std::unique_ptr<NSMaterial::Material>> MaterialMap;
     MaterialMap m_Materials;
@@ -67,6 +68,9 @@ public:
     NSMaterial::Texture * loadTexture();
     // loads texture what already has been loaded. Return nullptr if there is no such texture
     NSMaterial::Texture * loadTexture(std::string const & texture_name, bool no_warning = false);
+    // loads Cube texture
+    // Where is only one cube texture, so old one will be deleted
+    NSMaterial::TextureCube * loadTexture(std::filesystem::path const & relevantPathToFolder);
 
     // Gets or generates material
     NSMaterial::Material * loadMaterial(std::string const & material_name);

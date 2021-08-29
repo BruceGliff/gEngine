@@ -72,6 +72,12 @@ NSMaterial::Texture * ResourcesManager::loadTexture(std::string const & texture_
     return it->second.get();
 }
 
+NSMaterial::TextureCube * ResourcesManager::loadTexture(std::filesystem::path const & relevantPathToFolder) {
+    NSMaterial::TextureCube * pTexture = new NSMaterial::TextureCube{m_PathToExecutable / relevantPathToFolder};
+    m_TextureCube.reset(pTexture);
+    return pTexture;
+}
+
 // its loads existed or generates empty material
 NSMaterial::Material * ResourcesManager::loadMaterial(std::string const & material_name) {
     MaterialMap::const_iterator it = m_Materials.find(material_name);

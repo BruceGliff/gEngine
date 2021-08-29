@@ -41,7 +41,8 @@ public:
     raw_texture& operator=(raw_texture const&)  = delete;
     raw_texture& operator=(raw_texture&&)       = delete;
 
-    raw_texture(std::filesystem::path const& AbsolutePath) noexcept;
+    // Do not need flip for TextureCube
+    raw_texture(std::filesystem::path const& AbsolutePath, bool VerticalFlip = true) noexcept;
 
     // Treate raw_texture as collection of data and texture properties
     ret_data const & operator()() const noexcept;
