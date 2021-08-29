@@ -8,6 +8,7 @@ public:                                               \
   PRIM_NAME()                                         \
     : m_model{getFolderPath() + #PRIM_NAME".obj"} {}  \
   void Draw() const override { m_model.Draw(); };     \
+
 };
 
 PRIMITIVE(Cube);

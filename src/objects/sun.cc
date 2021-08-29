@@ -13,8 +13,6 @@ ALSun::ALSun() {
   light->SetAmbient({0.1f, 0.1f, 0.1f});
   light->SetDiffuse({0.8f, 0.8f, 0.8f});
   light->SetSpecular({0.5f, 0.5f, 0.5f});
-<<<<<<< Updated upstream
-=======
 }
 
 void ALSun::Process(NSGeometry::Transformation const & tr) {
@@ -30,5 +28,4 @@ void ALSun::Process(NSGeometry::Transformation const & tr) {
   light->SetDirection({x, -1.f, z});
 
   actor::Process(tr);
->>>>>>> Stashed changes
 }

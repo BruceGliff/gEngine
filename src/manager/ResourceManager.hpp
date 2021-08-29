@@ -10,22 +10,14 @@ NSModel::IModel * NSResources::ResourcesManager::loadModel(Args && ... args) {
 
 template<typename T, typename ... Args>
 NSModel::IModel *  NSResources::ResourcesManager::loadPrimitive(Args && ... args) {
-    //placeholder (mb to be reboved)
-    return nullptr;
-    // primitive's names depend on class name 
-    // std::string const modelName = std::string{"some_pretty_hashick2735_"} + typeid(T).name();
-    // ModelMap::const_iterator it = m_Models.find(modelName);
-    // if (it == m_Models.end()) {
-    //     T * p = T::Create(args ...);
-    //     Model::IModel * pM = static_cast<Model::IModel *>(p);    
-    //     if (!pM) {
-    //         delete p;
-    //         gWARNING(std::string{"This is not suppose to happen: Check with is_base_of<>() gave wrong result!\n "} + typeid(T).name());
-    //         return nullptr;
-    //     }
-    //     return m_Models.emplace(modelName, pM).first->second.get();
-    // }
-    // return it->second.get();
+    //primitive's names depend on class name 
+    std::string const modelName = std::string{"some_pretty_hashick2735_"} + typeid(T).name();
+    ModelMap::const_iterator it = m_Models.find(modelName);
+    // if prim does not exist, then load it
+    if (it == m_Models.end())
+        return m_Models.emplace(modelName, std::make_unique<T>()).first->second.get();    
+    // if prim already exists, return it
+    return it->second.get();
 }
 
 template<typename T>
