@@ -64,10 +64,12 @@ uniform vec3 viewPos;
 // lights
 #define NR_POINT_LIGHTS 10
 uniform SGlobalLight GlobalLight;
+uniform int NumberOFPointLight;
 uniform SPointLight PointLights[NR_POINT_LIGHTS];
 uniform SSpotLight PointLight;
 
 vec3 CalcDirLight(SGlobalLight light, vec3 normal, vec3 viewDir);
+vec3 CalcPointLight(SPointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main() {
     vec4 diffColor = selectColor(Material._Diffuse); // To discard transparent objects
@@ -78,6 +80,8 @@ void main() {
 
     vec3 result = CalcDirLight(GlobalLight, norm, viewDir);
 
+    for(int i = 0; i < NumberOFPointLight; i++)
+        result += CalcPointLight(PointLights[i], norm, FragPos, viewDir);  
 
     FragColor = vec4(result, 1.0);
 }
@@ -98,3 +102,25 @@ vec3 CalcDirLight(SGlobalLight light, vec3 normal, vec3 viewDir) {
     return (ambient + diffuse + specular);
 }
 
+vec3 CalcPointLight(SPointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+    vec3 lightDir = normalize(light.position - fragPos);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float shininess = 32.0; // TODO make it material attribute
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    // attenuation
+    float distance    = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + 
+  			     light.quadratic * (distance * distance));    
+    // combine results
+    vec3 ambient  = light.colors.ambient  * vec3(selectColor(Material._Ambient));
+    vec3 diffuse  = light.colors.diffuse  * diff * vec3(selectColor(Material._Diffuse));
+    vec3 specular = light.colors.specular * spec * vec3(selectColor(Material._Specular));
+    ambient  *= attenuation;
+    diffuse  *= attenuation;
+    specular *= attenuation;
+    return (ambient + diffuse + specular);
+} 

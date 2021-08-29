@@ -16,5 +16,6 @@ ABackpack::ABackpack() {
   material->Set<NSMaterial::Diffuse>(resMng.loadTexture("res/models/backpack/diffuse.jpg", std::string{"backpack_diffuse"}));
   material->Set<NSMaterial::Specular>(resMng.loadTexture("res/models/backpack/specular.jpg", std::string{"backpack_specular"}));
   material->Set<NSMaterial::Ambient>(resMng.loadTexture(std::string{"backpack_diffuse"}));
+
   mesh->AttachMaterial(material);
 }

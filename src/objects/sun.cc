@@ -19,6 +19,7 @@ void ALSun::Process(NSGeometry::Transformation const & tr) {
   float const speed = 0.01f;
   static unsigned frame = 0; // TODO move frame into function params as delay
 
+  // light will be proccesed automaticali in actor
   NSComponent::GlobalLight * light = GetComponentByName<NSComponent::GlobalLight>("global_light");
 
   float const x = std::cos(speed * frame++);
