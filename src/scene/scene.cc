@@ -20,7 +20,6 @@ Skybox * Scene::GetSkybox() {
 
 void Scene::Process() {
     NSGeometry::Transformation tr{};
-    m_Skybox.Draw(tr);
     grid.Draw(tr);
 
     auto & camPos = GLOBAL::GetPlayer().GetPosition();
@@ -51,6 +50,8 @@ void Scene::Process() {
             });
         pA.Process(tr);
     }
+    
+    m_Skybox.Draw(tr);
 }
 
 NSActor::actor * Scene::GetActor(NSResources::Entity const & en) const noexcept {

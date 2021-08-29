@@ -25,7 +25,7 @@ Skybox::Skybox(NSMaterial::TextureCube * Texture) noexcept
 }
 
 void Skybox::Draw(NSGeometry::Transformation const & tr) {
-    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_LEQUAL);
     shader->Use();
     // Optimize it! Probably for each draw iteration, pass this only once for each shader! Same in Grid.cc
     auto mainCam = GLOBAL::GetPlayer().GetComponentByName<NSComponent::camera>("camera"); // bad impl: what if i've named camera "watcher"?
@@ -34,5 +34,5 @@ void Skybox::Draw(NSGeometry::Transformation const & tr) {
 
     m_TextureCube->activate(*shader);
     m_CubeModel->Draw();
-    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
 }
