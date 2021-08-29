@@ -31,21 +31,20 @@ void Scene::Process() {
         NSActor::actor & pA = *x->second.get();
         if (pA.IsDrawable())
             std::for_each(pA.drawable_begin(), pA.drawable_end(), [this](NSProperty::IProcessable * proc) {
-                if (NSProperty::IDrawable * Drawable = dynamic_cast<NSProperty::IDrawable *>(proc)) // TODO static_cast?
+                if (NSProperty::IDrawable * Drawable = dynamic_cast<NSProperty::IDrawable *>(proc))
                     if (NSRenderer::ShaderProgram * Shader = Drawable->GetShaderProgram()) {
+                        m_LightID = 0;
                         for (auto const & [key, light] : lightsInScene) {
-                            if (dynamic_cast<NSComponent::PointLight *>(light))
+                            if (dynamic_cast<NSComponent::PointLight *>(light)) // TODO get rid (rewrite) of this check
                                 ++m_LightID;
                             light->Procces(*Shader);
                         }
-                        std::cout << m_LightID << "\n"; // TODO light ID dublicates : 1 2 for one source and 2 4 for two sources
                         Shader->SetInt("NumberOFPointLight", m_LightID);
                     }
                 else 
                     gERROR("Not suppose to happen! not Drawable in DrawableList");
-
             });
-        x->second->Process(tr);
+        pA.Process(tr);
     }
 }
 

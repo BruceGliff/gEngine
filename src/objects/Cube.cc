@@ -19,7 +19,7 @@ ACube::ACube() {
   mesh->AttachMaterial(material);
   SetScale({0.1f, 0.1f, 0.1f});
 
-
+  // TODO think how to set position properly
   NSComponent::PointLight * light = AttachComponent<NSComponent::PointLight>("light", glm::vec3{1.f, 1.f, 1.f});
   light->SetAmbient({0.1f, 0.1f, 0.1f});
   light->SetDiffuse({0.8f, 0.8f, 0.8f});
