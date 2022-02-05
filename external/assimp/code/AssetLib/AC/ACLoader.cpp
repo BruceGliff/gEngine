@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -116,7 +116,7 @@ inline const char *TAcCheckedLoadFloatArray(const char *buffer, const char *name
     buffer = AcSkipToNextToken(buffer);
     if (0 != name_length) {
         if (0 != strncmp(buffer, name, name_length) || !IsSpace(buffer[name_length])) {
-            ASSIMP_LOG_ERROR("AC3D: Unexpexted token. " + std::string(name) + " was expected.");
+            ASSIMP_LOG_ERROR("AC3D: Unexpected token. ", name, " was expected.");
             return buffer;
         }
         buffer += name_length + 1;
@@ -152,18 +152,9 @@ AC3DImporter::~AC3DImporter() {
 
 // ------------------------------------------------------------------------------------------------
 // Returns whether the class can handle the format of the given file.
-bool AC3DImporter::CanRead(const std::string &pFile, IOSystem *pIOHandler, bool checkSig) const {
-    std::string extension = GetExtension(pFile);
-
-    // fixme: are acc and ac3d *really* used? Some sources say they are
-    if (extension == "ac" || extension == "ac3d" || extension == "acc") {
-        return true;
-    }
-    if (!extension.length() || checkSig) {
-        uint32_t token = AI_MAKE_MAGIC("AC3D");
-        return CheckMagicToken(pIOHandler, pFile, &token, 1, 0);
-    }
-    return false;
+bool AC3DImporter::CanRead(const std::string &pFile, IOSystem *pIOHandler, bool /*checkSig*/) const {
+    static const uint32_t tokens[] = { AI_MAKE_MAGIC("AC3D") };
+    return CheckMagicToken(pIOHandler, pFile, tokens, AI_COUNT_OF(tokens));
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -492,7 +483,7 @@ aiNode *AC3DImporter::ConvertObjectSection(Object &object,
 
                 default:
                     // Coerce unknowns to a polygon and warn
-                    ASSIMP_LOG_WARN_F("AC3D: The type flag of a surface is unknown: ", (*it).flags);
+                    ASSIMP_LOG_WARN("AC3D: The type flag of a surface is unknown: ", (*it).flags);
                     (*it).flags &= ~(Surface::Mask);
                     // fallthrough
 
@@ -690,7 +681,7 @@ aiNode *AC3DImporter::ConvertObjectSection(Object &object,
             if (object.subDiv) {
                 if (configEvalSubdivision) {
                     std::unique_ptr<Subdivider> div(Subdivider::Create(Subdivider::CATMULL_CLARKE));
-                    ASSIMP_LOG_INFO("AC3D: Evaluating subdivision surface: " + object.name);
+                    ASSIMP_LOG_INFO("AC3D: Evaluating subdivision surface: ", object.name);
 
                     std::vector<aiMesh *> cpy(meshes.size() - oldm, nullptr);
                     div->Subdivide(&meshes[oldm], cpy.size(), &cpy.front(), object.subDiv, true);
@@ -698,7 +689,7 @@ aiNode *AC3DImporter::ConvertObjectSection(Object &object,
 
                     // previous meshes are deleted vy Subdivide().
                 } else {
-                    ASSIMP_LOG_INFO("AC3D: Letting the subdivision surface untouched due to my configuration: " + object.name);
+                    ASSIMP_LOG_INFO("AC3D: Letting the subdivision surface untouched due to my configuration: ", object.name);
                 }
             }
         }
@@ -782,7 +773,7 @@ void AC3DImporter::InternReadFile(const std::string &pFile,
     unsigned int version = HexDigitToDecimal(buffer[4]);
     char msg[3];
     ASSIMP_itoa10(msg, 3, version);
-    ASSIMP_LOG_INFO_F("AC3D file format version: ", msg);
+    ASSIMP_LOG_INFO("AC3D file format version: ", msg);
 
     std::vector<Material> materials;
     materials.reserve(5);

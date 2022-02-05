@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -100,20 +100,9 @@ MD5Importer::~MD5Importer() {
 
 // ------------------------------------------------------------------------------------------------
 // Returns whether the class can handle the format of the given file.
-bool MD5Importer::CanRead(const std::string &pFile, IOSystem *pIOHandler, bool checkSig) const {
-    const std::string extension = GetExtension(pFile);
-
-    if (extension == "md5anim" || extension == "md5mesh" || extension == "md5camera")
-        return true;
-    else if (!extension.length() || checkSig) {
-        if (!pIOHandler) {
-            return true;
-        }
-        const char *tokens[] = { "MD5Version" };
-        return SearchFileHeaderForToken(pIOHandler, pFile, tokens, 1);
-    }
-
-    return false;
+bool MD5Importer::CanRead(const std::string &pFile, IOSystem *pIOHandler, bool /*checkSig*/) const {
+    static const char *tokens[] = { "MD5Version" };
+    return SearchFileHeaderForToken(pIOHandler, pFile, tokens, AI_COUNT_OF(tokens));
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -345,7 +334,7 @@ void MD5Importer::LoadMD5MeshFile() {
 
     // Check whether we can read from the file
     if (file.get() == nullptr || !file->FileSize()) {
-        ASSIMP_LOG_WARN("Failed to access MD5MESH file: " + filename);
+        ASSIMP_LOG_WARN("Failed to access MD5MESH file: ", filename);
         return;
     }
     mHadMD5Mesh = true;
@@ -485,7 +474,7 @@ void MD5Importer::LoadMD5MeshFile() {
                     }
 
                     MD5::WeightDesc &weightDesc = meshSrc.mWeights[w];
-                    if (weightDesc.mWeight < AI_MD5_WEIGHT_EPSILON && weightDesc.mWeight >= -AI_MD5_WEIGHT_EPSILON) { 
+                    if (weightDesc.mWeight < AI_MD5_WEIGHT_EPSILON && weightDesc.mWeight >= -AI_MD5_WEIGHT_EPSILON) {
                         continue;
                     }
 
@@ -567,7 +556,7 @@ void MD5Importer::LoadMD5AnimFile() {
 
     // Check whether we can read from the file
     if (!file.get() || !file->FileSize()) {
-        ASSIMP_LOG_WARN("Failed to read MD5ANIM file: " + pFile);
+        ASSIMP_LOG_WARN("Failed to read MD5ANIM file: ", pFile);
         return;
     }
 

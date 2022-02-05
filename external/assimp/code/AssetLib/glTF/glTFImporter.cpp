@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -43,7 +43,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "AssetLib/glTF/glTFImporter.h"
 #include "AssetLib/glTF/glTFAsset.h"
+#if !defined(ASSIMP_BUILD_NO_EXPORT)
 #include "AssetLib/glTF/glTFAssetWriter.h"
+#endif
 #include "PostProcessing/MakeVerboseFormat.h"
 
 #include <assimp/StringComparison.h>
@@ -91,24 +93,14 @@ const aiImporterDesc *glTFImporter::GetInfo() const {
 }
 
 bool glTFImporter::CanRead(const std::string &pFile, IOSystem *pIOHandler, bool /* checkSig */) const {
-    const std::string &extension = GetExtension(pFile);
-
-    if (extension != "gltf" && extension != "glb") {
+    glTF::Asset asset(pIOHandler);
+    try {
+        asset.Load(pFile, GetExtension(pFile) == "glb");
+        std::string version = asset.asset.version;
+        return !version.empty() && version[0] == '1';
+    } catch (...) {
         return false;
     }
-
-    if (pIOHandler) {
-        glTF::Asset asset(pIOHandler);
-        try {
-            asset.Load(pFile, extension == "glb");
-            std::string version = asset.asset.version;
-            return !version.empty() && version[0] == '1';
-        } catch (...) {
-            return false;
-        }
-    }
-
-    return false;
 }
 
 inline void SetMaterialColorProperty(std::vector<int> &embeddedTexIdxs, Asset & /*r*/, glTF::TexProperty prop, aiMaterial *mat,
@@ -234,7 +226,7 @@ void glTFImporter::ImportMeshes(glTF::Asset &r) {
                     buf->EncodedRegion_SetCurrent(mesh.id);
                 } else
                 {
-                    throw DeadlyImportError("GLTF: Can not import mesh: unknown mesh extension (code: \"", to_string(cur_ext->Type),
+                    throw DeadlyImportError("GLTF: Can not import mesh: unknown mesh extension (code: \"", ai_to_string(cur_ext->Type),
                                             "\"), only Open3DGC is supported.");
                 }
             }

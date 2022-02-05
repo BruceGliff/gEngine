@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
+Copyright (c) 2006-2022, assimp team
 
 
 All rights reserved.
@@ -49,7 +49,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AssetLib/IFC/IFCUtil.h"
 #include "Common/PolyTools.h"
 #include "PostProcessing/ProcessHelper.h"
-#include <assimp/Defines.h>
 
 namespace Assimp {
 namespace IFC {
@@ -506,7 +505,7 @@ IfcFloat ConvertSIPrefix(const std::string& prefix)
         return 1e-18f;
     }
     else {
-        IFCImporter::LogError("Unrecognized SI prefix: " + prefix);
+        IFCImporter::LogError("Unrecognized SI prefix: ", prefix);
         return 1;
     }
 }
