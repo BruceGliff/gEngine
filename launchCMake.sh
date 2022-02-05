@@ -7,6 +7,6 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=$BuildType ..
 
 #Build solution. <.> becuse project in project/build/
-cmake --build . --config $BuildType
+cmake --build . --config $BuildType -j ${nproc}
 
 cd ..

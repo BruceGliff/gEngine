@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <glm/gtx/norm.hpp>
 
-#include "geometry/geometry_base.h"
+#include "../geometry/geometry_base.h"
 #include "../properties/properties.h"
 #include "../actor/components/light.h"
 #include "../renderer/ShaderProgram.h"

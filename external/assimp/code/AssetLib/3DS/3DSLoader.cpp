@@ -3,7 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -111,20 +111,9 @@ Discreet3DSImporter::~Discreet3DSImporter() {
 
 // ------------------------------------------------------------------------------------------------
 // Returns whether the class can handle the format of the given file.
-bool Discreet3DSImporter::CanRead(const std::string &pFile, IOSystem *pIOHandler, bool checkSig) const {
-    std::string extension = GetExtension(pFile);
-    if (extension == "3ds" || extension == "prj") {
-        return true;
-    }
-
-    if (!extension.length() || checkSig) {
-        uint16_t token[3];
-        token[0] = 0x4d4d;
-        token[1] = 0x3dc2;
-        //token[2] = 0x3daa;
-        return CheckMagicToken(pIOHandler, pFile, token, 2, 0, 2);
-    }
-    return false;
+bool Discreet3DSImporter::CanRead(const std::string &pFile, IOSystem *pIOHandler, bool /*checkSig*/) const {
+    static const uint16_t token[] = { 0x4d4d, 0x3dc2 /*, 0x3daa */ };
+    return CheckMagicToken(pIOHandler, pFile, token, AI_COUNT_OF(token), 0, sizeof token[0]);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -143,7 +132,13 @@ void Discreet3DSImporter::SetupProperties(const Importer * /*pImp*/) {
 // Imports the given file into the given scene structure.
 void Discreet3DSImporter::InternReadFile(const std::string &pFile,
         aiScene *pScene, IOSystem *pIOHandler) {
-    StreamReaderLE theStream(pIOHandler->Open(pFile, "rb"));
+
+    auto theFile = pIOHandler->Open(pFile, "rb");
+    if (!theFile) {
+        throw DeadlyImportError("3DS: Could not open ", pFile);
+    }
+
+    StreamReaderLE theStream(theFile);
 
     // We should have at least one chunk
     if (theStream.GetRemainingSize() < 16) {
@@ -164,7 +159,7 @@ void Discreet3DSImporter::InternReadFile(const std::string &pFile,
     mRootNode->mHierarchyIndex = -1;
     mRootNode->mParent = nullptr;
     mMasterScale = 1.0f;
-    mBackgroundImage = "";
+    mBackgroundImage = std::string();
     bHasBG = false;
     bIsPrj = false;
 
@@ -266,6 +261,7 @@ void Discreet3DSImporter::ParseMainChunk() {
 
     case Discreet3DS::CHUNK_PRJ:
         bIsPrj = true;
+        break;
     case Discreet3DS::CHUNK_MAIN:
         ParseEditorChunk();
         break;
@@ -298,7 +294,7 @@ void Discreet3DSImporter::ParseEditorChunk() {
         // print the version number
         char buff[10];
         ASSIMP_itoa10(buff, stream->GetI2());
-        ASSIMP_LOG_INFO_F(std::string("3DS file format version: "), buff);
+        ASSIMP_LOG_INFO("3DS file format version: ", buff);
     } break;
     };
     ASSIMP_3DS_END_CHUNK();
@@ -323,7 +319,7 @@ void Discreet3DSImporter::ParseObjectChunk() {
     case Discreet3DS::CHUNK_MAT_MATERIAL:
 
         // Add a new material to the list
-        mScene->mMaterials.push_back(D3DS::Material(std::string("UNNAMED_" + to_string(mScene->mMaterials.size()))));
+        mScene->mMaterials.push_back(D3DS::Material(std::string("UNNAMED_" + ai_to_string(mScene->mMaterials.size()))));
         ParseMaterialChunk();
         break;
 
@@ -442,7 +438,7 @@ void Discreet3DSImporter::ParseChunk(const char *name, unsigned int num) {
         // Read the lense angle
         camera->mHorizontalFOV = AI_DEG_TO_RAD(stream->GetF4());
         if (camera->mHorizontalFOV < 0.001f) {
-            camera->mHorizontalFOV = AI_DEG_TO_RAD(45.f);
+            camera->mHorizontalFOV = float(AI_DEG_TO_RAD(45.f));
         }
 
         // Now check for further subchunks
@@ -927,7 +923,7 @@ void Discreet3DSImporter::ParseFaceChunk() {
             }
         }
         if (0xcdcdcdcd == idx) {
-            ASSIMP_LOG_ERROR_F("3DS: Unknown material: ", sz);
+            ASSIMP_LOG_ERROR("3DS: Unknown material: ", sz);
         }
 
         // Now continue and read all material indices

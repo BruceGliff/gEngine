@@ -1,7 +1,7 @@
 #include "properties.h"
 
-#include "process/global.h"
-#include "manager/ResourceManager.h"
+#include "../process/global.h"
+#include "../manager/ResourceManager.h"
 
 using namespace NSProperty;
 

@@ -2,6 +2,7 @@
 
 using namespace NSFormat;
 
+/*
 std::ostream& operator<<(std::ostream& os, SingleCode const& code) {
     return os << "\033[" << (int)code.code_ << "m";
 }
@@ -18,6 +19,7 @@ std::ostream& operator<<(std::ostream& os, Formater const& fromat) {
         }
     return os << "m";
 }
+*/
 
 Formater::Formater(Formater const& formater) noexcept {
     for (int i = 0; i != 108; ++i)

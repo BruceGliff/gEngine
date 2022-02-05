@@ -3,14 +3,11 @@
 #include "raw_texture.h"
 
 #include <string_view>
+#include <filesystem>
 
 #include <glad/glad.h>
 
-namespace std {
-    namespace filesystem {
-        class path;
-    } // namespace filesystem
-} // namespace std
+
 namespace NSRenderer {
     class ShaderProgram;
 } // namespace Renderer

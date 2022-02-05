@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
+Copyright (c) 2006-2022, assimp team
 
 
 All rights reserved.
@@ -57,6 +57,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // enable verbose log output. really verbose, so be careful.
 #ifdef ASSIMP_BUILD_DEBUG
 #define ASSIMP_BUILD_BLENDER_DEBUG
+#endif
+
+// set this to non-zero to dump BlenderDNA stuff to dna.txt.
+// you could set it on the assimp build command line too without touching it here.
+// !!! please make sure this is set to 0 in the repo !!!
+#ifndef ASSIMP_BUILD_BLENDER_DEBUG_DNA
+#define ASSIMP_BUILD_BLENDER_DEBUG_DNA 0
 #endif
 
 // #define ASSIMP_BUILD_BLENDER_NO_STATS
@@ -469,7 +476,7 @@ public:
      *  in BlenderScene.cpp and is machine-generated.
      *  Converters are used to quickly handle objects whose
      *  exact data type is a runtime-property and not yet
-     *  known at compile time (consier Object::data).*/
+     *  known at compile time (consider Object::data).*/
     void RegisterConverters();
 
     // --------------------------------------------------------
@@ -495,7 +502,7 @@ public:
             const Structure &structure,
             const FileDatabase &db) const;
 
-#ifdef ASSIMP_BUILD_BLENDER_DEBUG
+#if ASSIMP_BUILD_BLENDER_DEBUG_DNA
     // --------------------------------------------------------
     /** Dump the DNA to a text file. This is for debugging purposes.
      *  The output file is `dna.txt` in the current working folder*/

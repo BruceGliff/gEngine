@@ -1,10 +1,6 @@
 #pragma once
 
-namespace std {
-    namespace filesystem {
-        class path;
-    } // namespace filesystem
-} // namespace std
+#include <filesystem>
 
 namespace NSMaterial {
 

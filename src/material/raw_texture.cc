@@ -1,4 +1,4 @@
-#include "debug/debug.h"
+#include "../debug/debug.h"
 
 #include "raw_texture.h"
 #include "../manager/ResourceManager.h"

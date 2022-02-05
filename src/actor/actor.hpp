@@ -1,4 +1,4 @@
-#include "debug/debug.h"
+#include "../debug/debug.h"
 
 #include "components/light.h"
 

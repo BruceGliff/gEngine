@@ -1,7 +1,7 @@
 # Open Asset Import Library (assimp)
 # ----------------------------------------------------------------------
 #
-# Copyright (c) 2006-2020, assimp team
+# Copyright (c) 2006-2022, assimp team
 #
 # All rights reserved.
 #
@@ -43,7 +43,7 @@
 # 3) Add libassimp using the file lists (eliminates duplication of file names between
 #    source groups and library command)
 #
-cmake_minimum_required( VERSION 3.0 )
+cmake_minimum_required( VERSION 3.10 )
 SET( HEADER_PATH ../include/assimp )
 
 if(NOT ANDROID AND ASSIMP_ANDROID_JNIIOSYSTEM)
@@ -69,7 +69,6 @@ SET( PUBLIC_HEADERS
   ${HEADER_PATH}/ColladaMetaData.h
   ${HEADER_PATH}/commonMetaData.h
   ${HEADER_PATH}/defs.h
-  ${HEADER_PATH}/Defines.h
   ${HEADER_PATH}/cfileio.h
   ${HEADER_PATH}/light.h
   ${HEADER_PATH}/material.h
@@ -80,6 +79,7 @@ SET( PUBLIC_HEADERS
   ${HEADER_PATH}/matrix4x4.inl
   ${HEADER_PATH}/mesh.h
   ${HEADER_PATH}/pbrmaterial.h
+  ${HEADER_PATH}/GltfMaterial.h
   ${HEADER_PATH}/postprocess.h
   ${HEADER_PATH}/quaternion.h
   ${HEADER_PATH}/quaternion.inl
@@ -142,6 +142,7 @@ SET( PUBLIC_HEADERS
   ${HEADER_PATH}/MathFunctions.h
   ${HEADER_PATH}/Exceptional.h
   ${HEADER_PATH}/ByteSwapper.h
+  ${HEADER_PATH}/Base64.hpp
 )
 
 SET( Core_SRCS
@@ -174,6 +175,7 @@ SET( Common_SRCS
   Common/ImporterRegistry.cpp
   Common/DefaultProgressHandler.h
   Common/DefaultIOStream.cpp
+  Common/IOSystem.cpp
   Common/DefaultIOSystem.cpp
   Common/ZipArchiveIOSystem.cpp
   Common/PolyTools.h
@@ -201,6 +203,7 @@ SET( Common_SRCS
   Common/material.cpp
   Common/AssertHandler.cpp
   Common/Exceptional.cpp
+  Common/Base64.cpp
 )
 SOURCE_GROUP(Common FILES ${Common_SRCS})
 
@@ -298,7 +301,6 @@ SET(ASSIMP_EXPORTERS_DISABLED "") # disabled exporters list (used to print)
 
 ADD_ASSIMP_IMPORTER( AMF
   AssetLib/AMF/AMFImporter.hpp
-  AssetLib/AMF/AMFImporter_Macro.hpp
   AssetLib/AMF/AMFImporter_Node.hpp
   AssetLib/AMF/AMFImporter.cpp
   AssetLib/AMF/AMFImporter_Geometry.cpp
@@ -372,6 +374,12 @@ ADD_ASSIMP_IMPORTER( IRRMESH
   AssetLib/Irr/IRRMeshLoader.h
   AssetLib/Irr/IRRShared.cpp
   AssetLib/Irr/IRRShared.h
+)
+
+ADD_ASSIMP_IMPORTER( IQM
+  AssetLib/IQM/IQMImporter.cpp
+  AssetLib/IQM/iqm.h
+  AssetLib/IQM/IQMImporter.h
 )
 
 ADD_ASSIMP_IMPORTER( IRR
@@ -558,7 +566,7 @@ ADD_ASSIMP_IMPORTER( IFC
 if (ASSIMP_BUILD_IFC_IMPORTER)
   if (MSVC)
     set_source_files_properties(Importer/IFC/IFCReaderGen1_2x3.cpp Importer/IFC/IFCReaderGen2_2x3.cpp PROPERTIES COMPILE_FLAGS "/bigobj")
-  elseif(CMAKE_COMPILER_IS_MINGW)
+  elseif(MINGW)
     set_source_files_properties(Importer/IFC/IFCReaderGen1_2x3.cpp Importer/IFC/IFCReaderGen2_2x3.cpp PROPERTIES COMPILE_FLAGS "-O2 -Wa,-mbig-obj")
   endif()
 endif ()
@@ -664,6 +672,10 @@ if (NOT ASSIMP_NO_EXPORT)
   ADD_ASSIMP_EXPORTER( 3MF
     AssetLib/3MF/D3MFExporter.h
     AssetLib/3MF/D3MFExporter.cpp)
+
+  ADD_ASSIMP_EXPORTER( PBRT
+    Pbrt/PbrtExporter.h
+    Pbrt/PbrtExporter.cpp)
 
   ADD_ASSIMP_EXPORTER( ASSJSON
     AssetLib/Assjson/cencode.c
@@ -797,7 +809,23 @@ ADD_ASSIMP_IMPORTER( X
 
 ADD_ASSIMP_IMPORTER( X3D
   AssetLib/X3D/X3DImporter.cpp
+  AssetLib/X3D/X3DImporter_Geometry2D.cpp
+  AssetLib/X3D/X3DImporter_Geometry3D.cpp
+  AssetLib/X3D/X3DImporter_Group.cpp
+  AssetLib/X3D/X3DImporter_Light.cpp
+  AssetLib/X3D/X3DImporter_Metadata.cpp
+  AssetLib/X3D/X3DImporter_Networking.cpp
+  AssetLib/X3D/X3DImporter_Postprocess.cpp
+  AssetLib/X3D/X3DImporter_Rendering.cpp
+  AssetLib/X3D/X3DImporter_Shape.cpp
+  AssetLib/X3D/X3DImporter_Texturing.cpp
   AssetLib/X3D/X3DImporter.hpp
+  AssetLib/X3D/X3DImporter_Macro.hpp
+  AssetLib/X3D/X3DImporter_Node.hpp
+  AssetLib/X3D/X3DGeoHelper.cpp
+  AssetLib/X3D/X3DGeoHelper.h
+  AssetLib/X3D/X3DXmlHelper.cpp
+  AssetLib/X3D/X3DXmlHelper.h
 )
 
 ADD_ASSIMP_IMPORTER( GLTF
@@ -817,7 +845,10 @@ ADD_ASSIMP_IMPORTER( GLTF
   AssetLib/glTF2/glTF2Importer.h
 )
 
-ADD_ASSIMP_IMPORTER( 3MF
+ADD_ASSIMP_IMPORTER(3MF
+  AssetLib/3MF/3MFTypes.h
+  AssetLib/3MF/XmlSerializer.h
+  AssetLib/3MF/XmlSerializer.cpp
   AssetLib/3MF/D3MFImporter.h
   AssetLib/3MF/D3MFImporter.cpp
   AssetLib/3MF/D3MFOpcPackage.h
@@ -840,7 +871,7 @@ ADD_ASSIMP_IMPORTER( MMD
 # optimizations that take up extra space. Given that the issue is a string table overflowing, -Os seemed appropriate
 # Also, I'm not positive if both link & compile flags are needed, but this hopefully ensures that the issue should not
 # recur for edge cases such as static builds.
-if ((CMAKE_COMPILER_IS_MINGW) AND (CMAKE_BUILD_TYPE MATCHES Debug))
+if ((MINGW) AND (CMAKE_BUILD_TYPE MATCHES Debug))
   message("-- Applying MinGW StepFileGen1.cpp Debug Workaround")
   SET_SOURCE_FILES_PROPERTIES(Importer/StepFile/StepFileGen1.cpp PROPERTIES COMPILE_FLAGS -Os )
   SET_SOURCE_FILES_PROPERTIES(Importer/StepFile/StepFileGen1.cpp PROPERTIES LINK_FLAGS -Os )
@@ -870,6 +901,7 @@ ELSE()
     ../contrib/pugixml/src/pugiconfig.hpp
     ../contrib/pugixml/src/pugixml.hpp
   )
+  INCLUDE_DIRECTORIES("../contrib/pugixml/src")
   SOURCE_GROUP( Contrib\\Pugixml FILES ${Pugixml_SRCS})
 ENDIF()
 
@@ -920,6 +952,7 @@ IF(ASSIMP_HUNTER_ENABLED)
   find_package(minizip CONFIG REQUIRED)
 ELSE()
   SET( unzip_SRCS
+    ../contrib/unzip/crypt.c
     ../contrib/unzip/crypt.h
     ../contrib/unzip/ioapi.c
     ../contrib/unzip/ioapi.h
@@ -930,24 +963,27 @@ ELSE()
 ENDIF()
 
 # zip (https://github.com/kuba--/zip)
-IF(ASSIMP_HUNTER_ENABLED)
-  hunter_add_package(zip)
-  find_package(zip CONFIG REQUIRED)
-ELSE()
-  SET( ziplib_SRCS
-    ../contrib/zip/src/miniz.h
-    ../contrib/zip/src/zip.c
-    ../contrib/zip/src/zip.h
-  )
+separate_arguments(ASSIMP_EXPORTERS_LIST UNIX_COMMAND ${ASSIMP_EXPORTERS_ENABLED})
+IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
+  IF(ASSIMP_HUNTER_ENABLED)
+    hunter_add_package(zip)
+    find_package(zip CONFIG REQUIRED)
+  ELSE()
+    SET( ziplib_SRCS
+      ../contrib/zip/src/miniz.h
+      ../contrib/zip/src/zip.c
+      ../contrib/zip/src/zip.h
+    )
 
-  # TODO if cmake required version has been updated to >3.12.0, collapse this to the second case only
-  if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
-  	add_definitions(-DMINIZ_USE_UNALIGNED_LOADS_AND_STORES=0)
-  else()
-  	add_compile_definitions(MINIZ_USE_UNALIGNED_LOADS_AND_STORES=0)
-  endif()
+    # TODO if cmake required version has been updated to >3.12.0, collapse this to the second case only
+    if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
+      add_definitions(-DMINIZ_USE_UNALIGNED_LOADS_AND_STORES=0)
+    else()
+      add_compile_definitions(MINIZ_USE_UNALIGNED_LOADS_AND_STORES=0)
+    endif()
 
-  SOURCE_GROUP( ziplib FILES ${ziplib_SRCS} )
+    SOURCE_GROUP( ziplib FILES ${ziplib_SRCS} )
+  ENDIF()
 ENDIF()
 
 # openddlparser
@@ -1029,14 +1065,24 @@ IF(ASSIMP_HUNTER_ENABLED)
   hunter_add_package(RapidJSON)
   find_package(RapidJSON CONFIG REQUIRED)
 ELSE()
-  INCLUDE_DIRECTORIES( "../contrib/rapidjson/include" )
-  INCLUDE_DIRECTORIES( "../contrib" )
-  INCLUDE_DIRECTORIES( "../contrib/pugixml/src" )
-  ADD_DEFINITIONS( -DRAPIDJSON_HAS_STDSTRING=1 )
+  INCLUDE_DIRECTORIES("../contrib/rapidjson/include")
+  ADD_DEFINITIONS( -DRAPIDJSON_HAS_STDSTRING=1)
   option( ASSIMP_RAPIDJSON_NO_MEMBER_ITERATOR "Suppress rapidjson warning on MSVC (NOTE: breaks android build)" ON )
   if(ASSIMP_RAPIDJSON_NO_MEMBER_ITERATOR)
     ADD_DEFINITIONS( -DRAPIDJSON_NOMEMBERITERATORCLASS )
   endif()
+ENDIF()
+
+# stb
+IF(ASSIMP_HUNTER_ENABLED)
+  hunter_add_package(stb)
+  find_package(stb CONFIG REQUIRED)
+ELSE()
+  SET( stb_SRCS
+    ../contrib/stb/stb_image.h
+  )
+  INCLUDE_DIRECTORIES("../contrib")
+  SOURCE_GROUP( Contrib\\stb FILES ${stb_SRCS})
 ENDIF()
 
 # VC2010 fixes
@@ -1097,6 +1143,7 @@ SET( assimp_src
   ${open3dgc_SRCS}
   ${ziplib_SRCS}
   ${Pugixml_SRCS}
+  ${stb_SRCS}
   # Necessary to show the headers in the project when using the VC++ generator:
 
   ${PUBLIC_HEADERS}
@@ -1116,6 +1163,11 @@ IF (ASSIMP_BUILD_NONFREE_C4D_IMPORTER)
   INCLUDE_DIRECTORIES(${C4D_INCLUDES})
 ENDIF ()
 
+IF (ASSIMP_BUILD_DRACO)
+  INCLUDE_DIRECTORIES(${draco_INCLUDE_DIRS})
+  ADD_DEFINITIONS( -DASSIMP_ENABLE_DRACO )
+ENDIF()
+
 ADD_LIBRARY( assimp ${assimp_src} )
 ADD_LIBRARY(assimp::assimp ALIAS assimp)
 
@@ -1128,10 +1180,13 @@ ELSE()
   TARGET_COMPILE_OPTIONS(assimp PRIVATE -Werror)
 ENDIF()
 
+# adds C_FLAGS required to compile zip.c on old GCC 4.x compiler
+TARGET_COMPILE_FEATURES(assimp PRIVATE c_std_99)
+
 TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
 )
 
 IF(ASSIMP_HUNTER_ENABLED)
@@ -1144,11 +1199,21 @@ IF(ASSIMP_HUNTER_ENABLED)
       ZLIB::zlib
       RapidJSON::rapidjson
       utf8cpp
-      zip::zip
       pugixml
+      stb::stb
   )
+  if(TARGET zip::zip)
+    target_link_libraries(assimp PUBLIC zip::zip)
+  endif()
+
+  if (ASSIMP_BUILD_DRACO)
+    target_link_libraries(assimp PUBLIC ${draco_LIBRARIES})
+  endif()
 ELSE()
-  TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES} )
+  TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES})
+  if (ASSIMP_BUILD_DRACO)
+    target_link_libraries(assimp ${draco_LIBRARIES})
+  endif()
 ENDIF()
 
 if(ASSIMP_ANDROID_JNIIOSYSTEM)
@@ -1206,6 +1271,12 @@ SET_TARGET_PROPERTIES( assimp PROPERTIES
   OUTPUT_NAME assimp${LIBRARY_SUFFIX}
 )
 
+if (WIN32 AND CMAKE_COMPILER_IS_GNUCXX AND BUILD_SHARED_LIBS)
+  set_target_properties(assimp PROPERTIES
+    SUFFIX "-${ASSIMP_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  )
+endif()
+
 if (APPLE)
   if (ASSIMP_BUILD_FRAMEWORK)
     SET_TARGET_PROPERTIES( assimp PROPERTIES
@@ -1249,7 +1320,7 @@ INSTALL( TARGETS assimp
   RUNTIME DESTINATION ${ASSIMP_BIN_INSTALL_DIR}
   FRAMEWORK DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
   COMPONENT ${LIBASSIMP_COMPONENT}
-  INCLUDES DESTINATION include
+  INCLUDES DESTINATION ${ASSIMP_INCLUDE_INSTALL_DIR}
 )
 INSTALL( FILES ${PUBLIC_HEADERS} DESTINATION ${ASSIMP_INCLUDE_INSTALL_DIR}/assimp COMPONENT assimp-dev)
 INSTALL( FILES ${COMPILER_HEADERS} DESTINATION ${ASSIMP_INCLUDE_INSTALL_DIR}/assimp/Compiler COMPONENT assimp-dev)

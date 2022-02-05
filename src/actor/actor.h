@@ -1,8 +1,8 @@
 #pragma once
 
 #include "components/component_base.h"
-#include "properties/properties.h"
-#include "manager/Entity.h"
+#include "../properties/properties.h"
+#include "../manager/Entity.h"
 
 #include <unordered_map>
 #include <string>

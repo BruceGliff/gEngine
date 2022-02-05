@@ -3,9 +3,7 @@
 Open Asset Import Library (assimp)
 ---------------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
-
-
+Copyright (c) 2006-2022, assimp team
 
 All rights reserved.
 
@@ -114,6 +112,7 @@ using namespace Assimp::ASE;
 // ------------------------------------------------------------------------------------------------
 Parser::Parser(const char *szFile, unsigned int fileFormatDefault) {
     ai_assert(nullptr != szFile);
+
     filePtr = szFile;
     iFileFormat = fileFormatDefault;
 
@@ -490,6 +489,7 @@ void Parser::ParseLV1MaterialListBlock() {
                 if (iIndex >= iMaterialCount) {
                     LogWarning("Out of range: material index is too large");
                     iIndex = iMaterialCount - 1;
+                    return;
                 }
 
                 // get a reference to the material
@@ -497,6 +497,12 @@ void Parser::ParseLV1MaterialListBlock() {
                 // parse the material block
                 ParseLV2MaterialBlock(sMat);
                 continue;
+            }
+            if( iDepth == 1 ){
+                // CRUDE HACK: support missing brace after "Ascii Scene Exporter v2.51"
+                LogWarning("Missing closing brace in material list");
+                --filePtr;
+                return;
             }
         }
         AI_ASE_HANDLE_TOP_LEVEL_SECTION();
@@ -671,7 +677,7 @@ void Parser::ParseLV3MapBlock(Texture &map) {
                 if (!ParseString(temp, "*MAP_CLASS"))
                     SkipToNextToken();
                 if (temp != "Bitmap" && temp != "Normal Bump") {
-                    ASSIMP_LOG_WARN_F("ASE: Skipping unknown map type: ", temp);
+                    ASSIMP_LOG_WARN("ASE: Skipping unknown map type: ", temp);
                     parsePath = false;
                 }
                 continue;
@@ -685,7 +691,7 @@ void Parser::ParseLV3MapBlock(Texture &map) {
                     // Files with 'None' as map name are produced by
                     // an Maja to ASE exporter which name I forgot ..
                     ASSIMP_LOG_WARN("ASE: Skipping invalid map entry");
-                    map.mMapName = "";
+                    map.mMapName = std::string();
                 }
 
                 continue;
@@ -900,7 +906,6 @@ void Parser::ParseLV2LightSettingsBlock(ASE::Light &light) {
         }
         AI_ASE_HANDLE_SECTION("2", "LIGHT_SETTINGS");
     }
-    return;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -1119,7 +1124,7 @@ void Parser::ParseLV2NodeTransformBlock(ASE::BaseNode &mesh) {
                                          "this is no spot light or target camera");
                     }
                 } else {
-                    ASSIMP_LOG_ERROR("ASE: Unknown node transformation: " + temp);
+                    ASSIMP_LOG_ERROR("ASE: Unknown node transformation: ", temp);
                     // mode = 0
                 }
                 continue;
@@ -1777,7 +1782,9 @@ void Parser::ParseLV4MeshFace(ASE::Face &out) {
 
     // *MESH_MTLID  is optional, too
     while (true) {
-        if ('*' == *filePtr) break;
+        if ('*' == *filePtr) {
+            break;
+        }
         if (IsLineEnd(*filePtr)) {
             return;
         }
@@ -1826,8 +1833,9 @@ void Parser::ParseLV4MeshFloatTriple(ai_real *apOut, unsigned int &rIndexOut) {
 void Parser::ParseLV4MeshFloatTriple(ai_real *apOut) {
     ai_assert(nullptr != apOut);
 
-    for (unsigned int i = 0; i < 3; ++i)
+    for (unsigned int i = 0; i < 3; ++i) {
         ParseLV4MeshFloat(apOut[i]);
+    }
 }
 // ------------------------------------------------------------------------------------------------
 void Parser::ParseLV4MeshFloat(ai_real &fOut) {

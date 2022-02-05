@@ -69,7 +69,7 @@ TextureCube::TextureCube(std::filesystem::path const & FolderWithTextures) {
 }
 
 void TextureCube::prepairTexture(std::filesystem::path const & FolderWithTextures) {
-    char * Postfix[6]= { 
+    char const * Postfix[6] = { 
         "right.jpg",
         "left.jpg",
         "top.jpg",

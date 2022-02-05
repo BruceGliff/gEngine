@@ -1,7 +1,7 @@
 #include "camera.h"
-#include "geometry/geometry_base.h"
-#include "process/global.h"
-#include "window/window_base.h"
+#include "../../geometry/geometry_base.h"
+#include "../../process/global.h"
+#include "../../window/window_base.h"
 
 using namespace NSComponent;
 

@@ -1,7 +1,7 @@
-#include "debug/debug.h"
+#include "../debug/debug.h"
 
 #include "actor.h"
-#include "geometry/geometry_base.h"
+#include "../geometry/geometry_base.h"
 
 #include <iostream>
 #include <string>

@@ -2,7 +2,7 @@
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------
 
-Copyright (c) 2006-2020, assimp team
+Copyright (c) 2006-2022, assimp team
 All rights reserved.
 
 Redistribution and use of this software in source and binary forms,
@@ -48,7 +48,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Common/PolyTools.h"
 #include "PostProcessing/ProcessHelper.h"
 
-#include <assimp/Defines.h>
 
 #include <iterator>
 #include <tuple>
@@ -513,7 +512,7 @@ void ProcessPolygonalBoundedBooleanHalfSpaceDifference(const Schema_2x3::IfcPoly
             }
 
             // we got a list of in-out-combinations of intersections. That should be an even number of intersections, or
-            // we're fucked.
+            // we are facing a non-recoverable error.
             if ((intersections.size() & 1) != 0) {
                 IFCImporter::LogWarn("Odd number of intersections, can't work with that. Omitting half space boundary check.");
                 continue;
@@ -700,7 +699,7 @@ void ProcessBooleanExtrudedAreaSolidDifference(const Schema_2x3::IfcExtrudedArea
             continue;
         }
 
-        GenerateOpenings(openings, std::vector<IfcVector3>(1, IfcVector3(1, 0, 0)), temp, false, true);
+        GenerateOpenings(openings, temp, false, true);
         result.Append(temp);
 
         vit += pcount;
@@ -715,7 +714,7 @@ void ProcessBoolean(const Schema_2x3::IfcBooleanResult &boolean, TempMesh &resul
     //   DIFFERENCE
     if (const Schema_2x3::IfcBooleanResult *const clip = boolean.ToPtr<Schema_2x3::IfcBooleanResult>()) {
         if (clip->Operator != "DIFFERENCE") {
-            IFCImporter::LogWarn("encountered unsupported boolean operator: " + (std::string)clip->Operator);
+            IFCImporter::LogWarn("encountered unsupported boolean operator: ", (std::string)clip->Operator);
             return;
         }
 
@@ -756,7 +755,7 @@ void ProcessBoolean(const Schema_2x3::IfcBooleanResult &boolean, TempMesh &resul
             ProcessBooleanExtrudedAreaSolidDifference(as, result, first_operand, conv);
         }
     } else {
-        IFCImporter::LogWarn("skipping unknown IfcBooleanResult entity, type is " + boolean.GetClassName());
+        IFCImporter::LogWarn("skipping unknown IfcBooleanResult entity, type is ", boolean.GetClassName());
     }
 }
 
