@@ -1,7 +1,7 @@
 #include "scene_wrap.h"
 #include "scene.h"
 
-#include "debug/debug.h"
+#include "../debug/debug.h"
 
 using namespace NSScene;
 

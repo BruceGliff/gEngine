@@ -1,15 +1,15 @@
 #include "global.h"
 
-#include "debug/logger.h"
-#include "debug/debug.h"
+#include "../debug/logger.h"
+#include "../debug/debug.h"
 
-#include "manager/EnvironmentHandler_wrap.h"
-#include "scene/scene_wrap.h"
-#include "actor/player_wrap.h"
+#include "../manager/EnvironmentHandler_wrap.h"
+#include "../scene/scene_wrap.h"
+#include "../actor/player_wrap.h"
 
-#include "manager/ResourceManager.h"
-#include "window/window_base.h"
-#include "scene/scene.h"
+#include "../manager/ResourceManager.h"
+#include "../window/window_base.h"
+#include "../scene/scene.h"
 
 // GLOBAL enviroment with window and resourcesMGR context
 NSResources::EnvironmentHandler_wrap ENV_MGR{};

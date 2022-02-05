@@ -34,7 +34,9 @@ namespace NSFormat {
         SingleCode(int code) : code_{(unsigned char)code} {}
         SingleCode() = default;
         // Rest of constructors and operators are default
-        friend std::ostream& operator<<(std::ostream& os, SingleCode const& code);
+        friend std::ostream& operator<<(std::ostream& os, SingleCode const& code) {
+          return os << "\033[" << (int)code.code_ << "m";
+        }
     };
     // Contains all flags which apply on out stream
     class Formater final {
@@ -55,6 +57,17 @@ namespace NSFormat {
         // set flag with code to 1 
         Formater& removeCode(int code) noexcept;
 
-        friend std::ostream& operator<<(std::ostream& os, Formater const& fromat);
+        friend std::ostream& operator<<(std::ostream& os, Formater const& fromat) {
+          os << "\033[";
+          bool hasToPutSemicolon = false;
+          for (int i = 0; i != 108; ++i)
+            if (fromat.set_codes[i]) {
+              if (hasToPutSemicolon)
+                os << ';';
+              os << i;
+              hasToPutSemicolon = true;
+            }
+          return os << "m";
+        }
     };
 } // namespace NSFormat

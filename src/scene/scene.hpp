@@ -1,4 +1,4 @@
-#include "debug/debug.h"
+#include "../debug/debug.h"
 
 template<typename T, typename ... Args>
 T * NSScene::Scene::Spawn(Args && ... args) {

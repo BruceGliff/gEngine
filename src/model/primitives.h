@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <string>
-#include "Model3D.h"
+#include "model3D.h"
 
 namespace NSModel {
 

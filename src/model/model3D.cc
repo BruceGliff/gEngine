@@ -1,13 +1,13 @@
 #include "model3D.h"
 
-#include "debug/debug.h"
+#include "../debug/debug.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include "process/global.h"
-#include "manager/ResourceManager.h"
+#include "../process/global.h"
+#include "../manager/ResourceManager.h"
 
 using namespace NSModel;
 

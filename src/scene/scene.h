@@ -3,8 +3,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "actor/actor.h"
-#include "manager/Entity.h"
+#include "../actor/actor.h"
+#include "../manager/Entity.h"
 #include "gismo/grid.h"
 #include "skybox/skybox.h"
 
